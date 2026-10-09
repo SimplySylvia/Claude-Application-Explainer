@@ -1,0 +1,9 @@
+{
+  "name": "application-explainer",
+  "version": "1.0.0",
+  "description": "Build an internal, self-contained HTML Product & Engineering Guide for any application repo — product overview, features, site map, architecture diagrams, tech stack, environments, local dev, testing, glossary, search, optional screenshots — verified against the code.",
+  "author": {
+    "name": "Sylvia Hart"
+  },
+  "keywords": ["documentation", "onboarding", "explainer", "architecture", "guide"]
+}

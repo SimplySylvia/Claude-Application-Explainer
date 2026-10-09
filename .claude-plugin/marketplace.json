@@ -1,0 +1,14 @@
+{
+  "name": "application-explainer",
+  "description": "Marketplace for the application-explainer Claude Code plugin.",
+  "owner": {
+    "name": "Sylvia Hart"
+  },
+  "plugins": [
+    {
+      "name": "application-explainer",
+      "source": "./",
+      "description": "Build an internal, self-contained HTML Product & Engineering Guide for any application repo, verified against the code."
+    }
+  ]
+}

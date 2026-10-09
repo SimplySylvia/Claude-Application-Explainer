@@ -1,0 +1,204 @@
+/* Default design tokens: a neutral palette with light and dark themes.
+   Replace with the target app's tokens; keep the same variable names or map them. */
+
+:root {
+  /* ---------- typography ---------- */
+  --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, helvetica, arial, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-emphasis: 600;
+  --font-size-heading-lg: 28px;
+  --line-height-heading-lg: 36px;
+  --letter-spacing-heading-lg: -0.01em;
+  --font-size-heading-md: 24px;
+  --line-height-heading-md: 32px;
+  --letter-spacing-heading-md: -0.0075em;
+  --font-size-heading-sm: 20px;
+  --font-size-body-lg: 18px;
+  --line-height-body-lg: 24px;
+  --font-size-body-md: 16px;
+  --font-size-body-sm: 14px;
+  --line-height-prose: 1.5;
+  @media screen and (width > 768px) {
+    --font-size-body-md: 15px;
+    --font-size-body-sm: 13px;
+  }
+
+  /* ---------- spacing, radius, motion, layers ---------- */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 40px;
+  --space-4xl: 48px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-full: 999px;
+  --bezier-in: cubic-bezier(0, 0.5, 0.2, 1);
+  --focus-glow: 0 0 0 2px var(--color-focus-glow);
+  --focus-glow-error: 0 0 0 2px var(--color-focus-glow-error);
+  --z-dropdown: 9;
+  --z-fullpage: 11;
+  --z-modal: 99;
+
+  /* ---------- palette (shade 20 = lightest tint, 80 = darkest) ---------- */
+  color-scheme: light;
+  --hex-white: #fff;
+  --hex-gray-10: #f8f9fa;
+  --hex-gray-20: #f1f3f5;
+  --hex-gray-30: #e5e7eb;
+  --hex-gray-40: #d1d5db;
+  --hex-gray-50: #9ca3af;
+  --hex-gray-60: #6b7280;
+  --hex-gray-70: #4b5563;
+  --hex-gray-80: #374151;
+  --hex-gray-90: #1f2937;
+  --hex-gray-95: #161b22;
+  --hex-gray-100: #0f1318;
+  --hex-red-20: #fee2e2;   --hex-red-30: #fecaca;   --hex-red-40: #ef4444;   --hex-red-50: #dc2626;
+  --hex-red-60: #b91c1c;   --hex-red-70: #7f1d1d;   --hex-red-80: #450a0a;
+  --hex-orange-20: #ffedd5; --hex-orange-30: #fed7aa; --hex-orange-40: #f97316; --hex-orange-50: #c2410c;
+  --hex-orange-60: #9a3412; --hex-orange-70: #7c2d12; --hex-orange-80: #431407;
+  --hex-yellow-20: #fef9c3; --hex-yellow-30: #fef08a; --hex-yellow-40: #eab308; --hex-yellow-50: #a16207;
+  --hex-yellow-60: #854d0e; --hex-yellow-70: #713f12; --hex-yellow-80: #422006;
+  --hex-green-20: #dcfce7; --hex-green-30: #bbf7d0; --hex-green-40: #22c55e; --hex-green-50: #15803d;
+  --hex-green-60: #166534; --hex-green-70: #14532d; --hex-green-80: #052e16;
+  --hex-teal-20: #ccfbf1;  --hex-teal-30: #99f6e4;  --hex-teal-40: #14b8a6;  --hex-teal-50: #0f766e;
+  --hex-teal-60: #115e59;  --hex-teal-70: #134e4a;  --hex-teal-80: #042f2e;
+  --hex-blue-20: #dbeafe;  --hex-blue-30: #bfdbfe;  --hex-blue-40: #3b82f6;  --hex-blue-50: #2563eb;
+  --hex-blue-60: #1d4ed8;  --hex-blue-70: #1e3a8a;  --hex-blue-80: #172554;
+  --hex-purple-20: #ede9fe; --hex-purple-30: #ddd6fe; --hex-purple-40: #8b5cf6; --hex-purple-50: #6d28d9;
+  --hex-purple-60: #5b21b6; --hex-purple-70: #4c1d95; --hex-purple-80: #2e1065;
+  --hex-pink-20: #fce7f3;  --hex-pink-30: #fbcfe8;  --hex-pink-40: #ec4899;  --hex-pink-50: #be185d;
+  --hex-pink-60: #9d174d;  --hex-pink-70: #831843;  --hex-pink-80: #500724;
+
+  /* ---------- semantic colors: light ---------- */
+  --color-bg-light: var(--hex-white);
+  --color-bg: var(--hex-gray-10);
+  --color-red-bg: var(--hex-red-20);       --color-red-bg-alt: var(--hex-red-30);       --color-red: var(--hex-red-50);
+  --color-red-fg-alt: var(--hex-red-60);   --color-red-fg: var(--hex-red-70);
+  --color-orange-bg: var(--hex-orange-20); --color-orange-bg-alt: var(--hex-orange-30); --color-orange: var(--hex-orange-50);
+  --color-orange-fg-alt: var(--hex-orange-60); --color-orange-fg: var(--hex-orange-70);
+  --color-yellow-bg: var(--hex-yellow-20); --color-yellow-bg-alt: var(--hex-yellow-30); --color-yellow: var(--hex-yellow-50);
+  --color-yellow-fg-alt: var(--hex-yellow-60); --color-yellow-fg: var(--hex-yellow-70);
+  --color-green-bg: var(--hex-green-20);   --color-green-bg-alt: var(--hex-green-30);   --color-green: var(--hex-green-50);
+  --color-green-fg-alt: var(--hex-green-60); --color-green-fg: var(--hex-green-70);
+  --color-teal-bg: var(--hex-teal-20);     --color-teal-bg-alt: var(--hex-teal-30);     --color-teal: var(--hex-teal-50);
+  --color-teal-fg-alt: var(--hex-teal-60); --color-teal-fg: var(--hex-teal-70);
+  --color-blue-bg: var(--hex-blue-20);     --color-blue-bg-alt: var(--hex-blue-30);     --color-blue: var(--hex-blue-50);
+  --color-blue-fg-alt: var(--hex-blue-60); --color-blue-fg: var(--hex-blue-70);
+  --color-purple-bg: var(--hex-purple-20); --color-purple-bg-alt: var(--hex-purple-30); --color-purple: var(--hex-purple-50);
+  --color-purple-fg-alt: var(--hex-purple-60); --color-purple-fg: var(--hex-purple-70);
+  --color-pink-bg: var(--hex-pink-20);     --color-pink-bg-alt: var(--hex-pink-30);     --color-pink: var(--hex-pink-50);
+  --color-pink-fg-alt: var(--hex-pink-60); --color-pink-fg: var(--hex-pink-70);
+  --color-gray-bg: var(--hex-gray-20);     --color-gray-bg-alt: var(--hex-gray-30);     --color-gray: var(--hex-gray-60);
+  --color-gray-fg-alt: var(--hex-gray-70); --color-gray-fg: var(--hex-gray-80);
+  --color-gray-bg-transparent: hsl(220 9% 46% / 12%);
+
+  --color-text: var(--hex-gray-100);
+  --color-text-light: var(--hex-gray-60);
+  --color-text-danger: var(--hex-red-50);
+  --color-link: var(--hex-blue-50);
+  --color-icon: var(--hex-gray-60);
+  --color-icon-hover: var(--hex-gray-80);
+  --color-icon-light: var(--hex-gray-40);
+  --color-border: hsl(220 13% 13% / 15%);
+  --color-border-light: hsl(220 13% 13% / 8%);
+  --color-input-bg: var(--hex-white);
+  --color-input-border: var(--color-border);
+  --color-input-border-focus: var(--hex-blue-50);
+  --color-focus-glow: hsl(221 83% 53% / 45%);
+  --color-focus-glow-error: var(--hex-red-30);
+  --color-button-default: var(--hex-white);
+  --color-button-default-hover: var(--hex-gray-20);
+  --color-button-default-active: var(--hex-gray-30);
+  --color-button-default-border: var(--color-border);
+  --color-button-primary: var(--hex-blue-50);
+  --color-button-primary-hover: var(--hex-blue-60);
+  --color-button-primary-text: var(--hex-white);
+  --color-button-icon: transparent;
+  --color-button-icon-hover: hsl(220 13% 13% / 8%);
+  --color-nav-item-active-bg: var(--hex-blue-20);
+  --color-nav-item-active-text: var(--hex-blue-60);
+  --color-nav-item-inactive-text: var(--hex-gray-90);
+  --color-nav-item-inactive-text-hover: var(--hex-blue-50);
+  --color-tag-default: var(--color-gray-bg-transparent);
+  --color-tag-default-hover: var(--hex-gray-30);
+  --color-menu-item-hover: var(--hex-gray-20);
+  --color-toast-bg: var(--hex-gray-90);
+  --color-toast-text: var(--hex-white);
+
+  --shadow-lv1: 0 1px 3px hsl(220 13% 13% / 10%);
+  --shadow-lv2: 0 4px 8px hsl(220 13% 13% / 10%);
+  --shadow-lv3: 0 8px 16px hsl(220 13% 13% / 12%);
+  --shadow-lv4: 0 16px 32px hsl(220 13% 13% / 14%);
+}
+[data-theme='light'] {
+  color-scheme: light;
+}
+[data-theme='dark'] {
+  /* ---------- semantic colors: dark ---------- */
+  color-scheme: dark;
+  --color-bg-light: var(--hex-gray-95);
+  --color-bg: var(--hex-gray-100);
+  --color-red-bg: var(--hex-red-80);       --color-red-bg-alt: var(--hex-red-70);       --color-red: var(--hex-red-40);
+  --color-red-fg-alt: var(--hex-red-30);   --color-red-fg: var(--hex-red-20);
+  --color-orange-bg: var(--hex-orange-80); --color-orange-bg-alt: var(--hex-orange-70); --color-orange: var(--hex-orange-40);
+  --color-orange-fg-alt: var(--hex-orange-30); --color-orange-fg: var(--hex-orange-20);
+  --color-yellow-bg: var(--hex-yellow-80); --color-yellow-bg-alt: var(--hex-yellow-70); --color-yellow: var(--hex-yellow-40);
+  --color-yellow-fg-alt: var(--hex-yellow-30); --color-yellow-fg: var(--hex-yellow-20);
+  --color-green-bg: var(--hex-green-80);   --color-green-bg-alt: var(--hex-green-70);   --color-green: var(--hex-green-40);
+  --color-green-fg-alt: var(--hex-green-30); --color-green-fg: var(--hex-green-20);
+  --color-teal-bg: var(--hex-teal-80);     --color-teal-bg-alt: var(--hex-teal-70);     --color-teal: var(--hex-teal-40);
+  --color-teal-fg-alt: var(--hex-teal-30); --color-teal-fg: var(--hex-teal-20);
+  --color-blue-bg: var(--hex-blue-80);     --color-blue-bg-alt: var(--hex-blue-70);     --color-blue: var(--hex-blue-40);
+  --color-blue-fg-alt: var(--hex-blue-30); --color-blue-fg: var(--hex-blue-20);
+  --color-purple-bg: var(--hex-purple-80); --color-purple-bg-alt: var(--hex-purple-70); --color-purple: var(--hex-purple-40);
+  --color-purple-fg-alt: var(--hex-purple-30); --color-purple-fg: var(--hex-purple-20);
+  --color-pink-bg: var(--hex-pink-80);     --color-pink-bg-alt: var(--hex-pink-70);     --color-pink: var(--hex-pink-40);
+  --color-pink-fg-alt: var(--hex-pink-30); --color-pink-fg: var(--hex-pink-20);
+  --color-gray-bg: var(--hex-gray-90);     --color-gray-bg-alt: var(--hex-gray-80);     --color-gray: var(--hex-gray-50);
+  --color-gray-fg-alt: var(--hex-gray-40); --color-gray-fg: var(--hex-gray-30);
+  --color-gray-bg-transparent: hsl(220 14% 80% / 12%);
+
+  --color-text: var(--hex-gray-20);
+  --color-text-light: var(--hex-gray-50);
+  --color-text-danger: var(--hex-red-40);
+  --color-link: var(--hex-blue-40);
+  --color-icon: var(--hex-gray-50);
+  --color-icon-hover: var(--hex-gray-30);
+  --color-icon-light: var(--hex-gray-70);
+  --color-border: hsl(0 0% 100% / 13%);
+  --color-border-light: hsl(0 0% 100% / 7%);
+  --color-input-bg: var(--hex-gray-100);
+  --color-input-border: var(--color-border);
+  --color-input-border-focus: var(--hex-blue-40);
+  --color-focus-glow: hsl(217 91% 60% / 70%);
+  --color-focus-glow-error: var(--hex-red-70);
+  --color-button-default: var(--hex-gray-90);
+  --color-button-default-hover: var(--hex-gray-80);
+  --color-button-default-active: var(--hex-gray-70);
+  --color-button-default-border: var(--color-border);
+  --color-button-primary: var(--hex-blue-50);
+  --color-button-primary-hover: var(--hex-blue-40);
+  --color-button-primary-text: var(--hex-white);
+  --color-button-icon: transparent;
+  --color-button-icon-hover: hsl(0 0% 100% / 8%);
+  --color-nav-item-active-bg: var(--hex-blue-80);
+  --color-nav-item-active-text: var(--hex-blue-30);
+  --color-nav-item-inactive-text: var(--hex-gray-20);
+  --color-nav-item-inactive-text-hover: var(--hex-blue-30);
+  --color-tag-default: var(--color-gray-bg-transparent);
+  --color-tag-default-hover: var(--hex-gray-80);
+  --color-menu-item-hover: hsl(0 0% 100% / 6%);
+  --color-toast-bg: var(--hex-gray-20);
+  --color-toast-text: var(--hex-gray-100);
+
+  --shadow-lv1: 0 1px 3px hsl(0 0% 0% / 40%);
+  --shadow-lv2: 0 4px 8px hsl(0 0% 0% / 40%), 0 2px 4px hsl(0 0% 0% / 30%);
+  --shadow-lv3: 0 8px 16px hsl(0 0% 0% / 40%), 0 4px 8px hsl(0 0% 0% / 30%);
+  --shadow-lv4: 0 16px 32px hsl(0 0% 0% / 45%), 0 8px 16px hsl(0 0% 0% / 30%);
+}
