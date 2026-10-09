@@ -1,5 +1,7 @@
 # Authoring: sections, diagrams, styling
 
+Contents: [Section files](#section-files) · [Building blocks](#building-blocks) · [Diagrams](#diagrams-diagramspy) · [Styling and branding](#styling-and-branding) · [Collapse defaults](#collapse-defaults-guide_configpy) · [Glossary naming](#glossary-naming-auto-linking) · [Writing style](#writing-style)
+
 ## Section files
 
 Write one file per section: `sections/<id>.html`. The build depends on this skeleton:
@@ -138,4 +140,4 @@ def request():
 - Plain, direct, present tense. Lead with what the reader needs.
 - Tables and short bullets over prose. Specifics (paths, flags, commands) over adjectives.
 - Every claim verifiable in the repo. Say "about" for counts.
-- No personal data, health data, or credential values. Schema and table names are fine.
+- No personal data (names, contact details, health or financial records) or credential values. Schema and table names are fine.

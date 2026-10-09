@@ -27,6 +27,8 @@ def main():
     write = '--write' in args
     order = args[args.index('--order') + 1:] if '--order' in args else None
     files = [a for a in (args[:args.index('--order')] if order else args) if a != '--write']
+    if len(files) < 2:
+        sys.exit(__doc__)
     gpath, drafts = files[0], files[1:]
     src = open(gpath, encoding='utf-8').read()
     head, rest = src.split('<tr class="group"', 1)

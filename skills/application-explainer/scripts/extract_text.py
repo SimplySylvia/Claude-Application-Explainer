@@ -17,6 +17,8 @@ def aliases(term):
     return [a.lower() for a in out]
 
 def main():
+    if len(sys.argv) != 3:
+        sys.exit(__doc__)
     src, out = sys.argv[1], sys.argv[2]
     os.makedirs(out, exist_ok=True)
     s = open(src, encoding='utf-8').read()

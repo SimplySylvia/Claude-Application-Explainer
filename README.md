@@ -40,6 +40,22 @@ For agents that don't load plugins, see [`skills/application-explainer/PROMPT.md
 | `.claude-plugin/plugin.json` | Plugin manifest |
 | `.claude-plugin/marketplace.json` | Marketplace manifest (lists this repo as its only plugin) |
 | `skills/application-explainer/` | The skill: `SKILL.md`, build `engine/`, `starter/` template, `scripts/`, `references/` |
+| `agents/` | Read-only subagents the skill fans out to: `repo-researcher`, `structure-reviewer`, `section-verifier`, `glossary-drafter` |
+| `evals/` | `claude plugin eval` suite: trigger, near-miss, and end-to-end cases on a small fixture app |
+
+## Testing the skill
+
+The suite in `evals/` runs against a small fictional app that `evals/_fixture/make-app.sh` creates.
+
+```bash
+# Trigger and near-miss cases: does the skill fire when it should, and stay out of the way when it shouldn't?
+claude plugin eval . --tag trigger nearmiss --scaffold
+
+# End to end: builds a whole guide and runs QA (slow; grants the tools the build needs)
+claude plugin eval . --tag e2e --scaffold --runs 1 --allow-tools Bash Write Edit
+```
+
+Run the trigger and near-miss cases after any change to the skill's `description`.
 
 ## Releasing
 

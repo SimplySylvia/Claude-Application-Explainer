@@ -8,14 +8,15 @@ The guide documents internal architecture, security controls, environments, and 
 
 ## Options
 
+Ask the user what their company already uses, and pick the simplest option that keeps the file behind company sign-in.
+
 | Option | Effort | Notes |
 |---|---|---|
-| **Company Drive, domain-restricted** | None | Drive doesn't render HTML. Readers download the file and open it in a browser; everything works because it's self-contained. |
-| **Google Apps Script web app** (recommended for a link) | ~10 min | Serves the HTML from a private Drive file to signed-in company accounts. Tested with a 4.3 MB guide that includes screenshots. |
-| **Private GitHub Pages** | Low | Only if the org's plan supports private Pages. |
-| **Bucket or Cloud Run behind IAP** | Medium | Needs the platform/infra team. |
+| **Company file share** (Google Drive, SharePoint/OneDrive, Box), restricted to the company | None | Most don't render HTML. Readers download the file and open it in a browser; everything works because it's self-contained. |
+| **Internal static hosting** (intranet, private GitHub Pages, a bucket or container behind SSO) | Low–medium | Gives a real link. Private GitHub Pages needs a plan that supports it; SSO-protected hosting usually needs the platform team. |
+| **Google Apps Script web app** (Google Workspace companies) | ~10 min | Serves the HTML from a private Drive file to signed-in company accounts. Tested with a 4.3 MB guide that includes screenshots. Setup below. |
 
-## Apps Script setup
+## Apps Script setup (Google Workspace)
 
 The code is `apps-script/Code.gs` in this skill.
 
@@ -28,7 +29,7 @@ The code is `apps-script/Code.gs` in this skill.
 3. **Deploy:** Deploy → New deployment → ⚙ → **Web app**. Execute as **Me**, Who has access **Only myself** first. Make the window at least 1440×900 so the dialog fits.
 4. **Authorization is the user's step:** the user clicks **Authorize access** → Allow. That grants an OAuth permission, so don't do it for them.
 5. **The user tests the `/exec` URL.**
-6. **With the user's OK,** go to Deploy → Manage deployments → ✏️ → Who has access: **Anyone within <Company>** → Deploy. The URL stays the same.
+6. **With the user's OK,** go to Deploy → Manage deployments → ✏️ → Who has access: **Anyone within <your organization>** → Deploy. The URL stays the same.
 7. **Record the URL, file ID, and access level** in the guide README.
 
 **Updating:** rebuild, then in Drive use **Manage versions → Upload new version** on the same file. The URL and file ID don't change.

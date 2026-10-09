@@ -1,5 +1,5 @@
 // Serves a guide HTML file from Drive as an internal web app.
-// Deploy: Deploy → New deployment → Web app. Execute as: Me. Who has access: Only myself (test), then Anyone within <Company>.
+// Deploy: Deploy → New deployment → Web app. Execute as: Me. Who has access: Only myself (test), then Anyone within <your organization>.
 const FILE_ID = 'paste-the-drive-file-id-here';
 const TITLE = 'Product & Engineering Guide';
 

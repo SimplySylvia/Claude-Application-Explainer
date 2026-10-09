@@ -1,5 +1,7 @@
 # Lessons learned (from the first guide)
 
+The accuracy rules and common mistakes are summarized in `SKILL.md`; this file has the detail and the tooling gotchas.
+
 ## Accuracy
 
 - **Spot-check agent findings before acting.** Several confident review findings were wrong (e.g. "the pre-commit hook doesn't run lint-staged" when an Nx target did). Several were right and important: wrong deploy order, which services call an AI model directly, routes that were server endpoints and not pages.
@@ -12,11 +14,6 @@
 - **Redirect-only routes:** read what a route actually does, e.g. a route that only redirects and logs an event.
 - **Gates aren't always data:** a tab that says "page not found" may be behind a feature flag, not missing data. Read the gate in code.
 - **Unclear vendor names:** grep with lowercase and snake_case variants (`acme_vendor` for "Acme Vendor"), not just display names.
-
-## Repo hygiene
-
-- **The app repo is read-only:** report stale docs, bugs, or suspicious config to the user. Don't fix them.
-- **Secrets:** if you find a hardcoded secret, report the file:line only. Never print the value.
 
 ## Build and tooling
 

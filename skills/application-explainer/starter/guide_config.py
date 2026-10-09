@@ -7,7 +7,7 @@ BRAND_COLOR = '#1f6feb'                           # logo tile, part badges; use 
 LOGO_SVG = ('<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>')  # white glyph on the brand tile
 
 # Design tokens. Default: build/tokens.css. Point at the app's own token CSS (copied into this folder) if it has one;
-# the variable names used by the styles are listed in references/design-tokens.md of the skill.
+# it must define the variables the styles use (see "Styling and branding" in the skill's references/authoring.md).
 TOKENS_CSS = None
 # Embedded fonts: [(family, weight, path-relative-to-this-folder), ...]. Fonts must be referenced by the tokens' font-family.
 FONTS = []

@@ -5,7 +5,7 @@ Optional. This adds a Screen column to the features table and a gallery to the s
 ## Before capturing (ask the user)
 
 - **Which environment** (staging, local), and confirm the user is signed in to it in Chrome.
-- **Is the data synthetic?** If any real personal or health data could appear, stop and confirm scope first. Prefer synthetic test accounts.
+- **Is the data synthetic?** If any real personal data could appear, stop and confirm scope first. Prefer synthetic test accounts.
 - **Staff names and avatars:** always scrub them (below), even on staging.
 - **Window size:** Chrome must be a normal window, not fullscreen. Resize to 1440×900, which gives a viewport of about 1440×723.
 
@@ -20,12 +20,14 @@ window.__settle = async function (ms) { ms = ms || 12000; const t0 = Date.now();
     await new Promise(r => setTimeout(r, 300)); } await new Promise(r => setTimeout(r, 700)); };
 // SPA navigation without a reload (works for history-based routers)
 window.__go = async function (path) { history.pushState({}, '', path); dispatchEvent(new PopStateEvent('popstate')); await __settle(); return location.pathname + location.search; };
-// Scrub staff identity: emails, "Name (Role)", "Name, Role", avatars, names above role lines
-const ROLE = /\b(Lead|Coordinator|Manager|Admin|Engineer|Nurse|Physician|Specialist|Director|Analyst|Support)\b/;
+// Scrub staff identity. Set STAFF_DOMAIN to the company's email domain first.
+const STAFF_DOMAIN = 'example.com';
+// Emails, "Name (Role)", "Name, Role", avatars, names above role lines
+const ROLE = /\b(Lead|Coordinator|Manager|Admin|Engineer|Specialist|Agent|Representative|Director|Analyst|Support)\b/;
 window.__scrub = function () { let n = 0; const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); const nodes = [];
   while (w.nextNode()) nodes.push(w.currentNode);
   nodes.forEach(t => { let v = t.nodeValue, o = v;
-    v = v.replace(/[A-Za-z0-9._%+-]+@COMPANY_DOMAIN/g, 'staff@COMPANY_DOMAIN');
+    v = v.replace(new RegExp('[A-Za-z0-9._%+-]+@' + STAFF_DOMAIN.replace(/\./g, '\\.'), 'g'), 'staff@' + STAFF_DOMAIN);
     v = v.replace(/\b[A-Z][a-z]+(?: [A-Z][a-z'-]+){1,2} \((?=[^)]*\b(?:Lead|Coordinator|Manager|Admin|Specialist))[^)]*\)/g, 'Staff member');
     if (v !== o) { t.nodeValue = v; n++; } });
   document.querySelectorAll('img[src*="googleusercontent"],img[class*=vatar],[class*=vatar] img,[class*=Avatar]').forEach(e => { e.style.filter = 'blur(6px)'; n++; });
@@ -44,7 +46,10 @@ window.__go2 = async function (p) { const r = await __go(p); await __settle(); r
 4. Recompress into the guide (zsh doesn't word-split variables, so loop in Python for batches):
 
 ```bash
+# macOS
 sips -s format jpeg -s formatOptions 72 <saved-path> --out <guide>/screenshots/<name>.jpg
+# Linux/Windows (ImageMagick)
+magick <saved-path> -quality 72 <guide>/screenshots/<name>.jpg
 ```
 
 5. Use `browser_batch` to chain navigate → settle → hover → screenshot. Keep long JS probes under about 40 s, or split them.
