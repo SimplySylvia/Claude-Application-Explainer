@@ -3,6 +3,50 @@
 All notable changes to this plugin. Versions match `version` in `.claude-plugin/plugin.json`; update an installed
 copy with `/plugin marketplace update`.
 
+## 1.3.0 (2026-10-13)
+
+### Skill
+
+- New **topic-explainer** skill: a smaller guide to one technology and how the app uses it. It covers what the
+  technology is, core concepts, a usage map and flow diagram, a guided walkthrough of one real flow, patterns and
+  gotchas, common changes, the pinned version compared with the latest release, and official docs. It runs only
+  when asked for by name (`/topic-explainer`, "topic explainer") or after the user accepts an offer; a plain "what is
+  X and how do we use it" question gets a direct answer.
+- Topic guides can be **separate** (`<app>-<topic>-guide/`, the default) or a **deep dive** inside an existing
+  application-explainer guide. When a guide for the repo exists, Claude asks which.
+- New agents `tech-researcher` (web search and fetch only, never sees the repo; prompts carry only the technology,
+  version, and generic questions) and `source-verifier` (checks web claims against the cited pages).
+- `new_guide.py --topic "<Topic>"` scaffolds a topic guide; `--into <guide>` adds the topic as one part before
+  Reference, with `<topic>-` prefixed sections, a `TOPICS` entry, a diagram, and a checklist in `PROGRESS.md`.
+- `changed_since.py` reports `DOCS STALE` for topics whose docs were never checked or were checked more than 90 days
+  ago; `--mark-docs <slug>` records a re-check.
+- The build opens outside links in a new tab (marked ↗) and counts them as citations. Section ids may contain
+  hyphens.
+- **Code blocks with syntax highlighting** in any guide: `<pre class="code" data-lang="js" data-title="…">`,
+  highlighted at build time by the new `engine/highlight.py` (JavaScript/TypeScript/JSX, Python, shell, JSON, SQL,
+  YAML, HTTP, GraphQL), with a language label, title, Copy button, and colors for both themes. Nothing is loaded
+  from outside the file. The build warns on unknown languages and on a bare `<pre>`.
+- Topic guides show concepts in code: the concepts section has a "Concepts in code" example per idea, and the
+  walkthrough and recipes quote the repo lines they discuss.
+- `tech-researcher` returns a fixed-shape report of about 1,000 words, with code examples for the pinned version.
+  Claude saves it to `GUIDE/research/<topic>.md` and spot-checks key claims by opening the cited pages (the rule is
+  that nothing from the repo goes to the web, not that only agents may fetch).
+- Walkthroughs say where a flow stops when the code doesn't run end to end, and "Try it yourself" lists only steps
+  that work as the repo stands.
+- The application-explainer starter uses code blocks too: a copy-paste quick start in Local development, one real
+  test in Testing strategy, and the weekly commands in the Cheat sheet.
+
+### Repo
+
+- Evals: `trigger-topic-explainer`, `nearmiss-topic-question` (answers and offers, doesn't start a guide),
+  `topic-asks-guide-mode` (asks separate guide vs deep dive when a guide exists), and `safety-topic-web-queries`
+  (no repo details in web searches, fetches, or the researcher's prompt; the pinned version is documented).
+- Unit tests for topic scaffolding, deep dives, external links, docs freshness, and syntax highlighting.
+- The live demo has an **Express deep dive** (part 5) built with the topic explainer, linked from its Tech stack and
+  Architecture sections, plus code blocks in Local development, Testing, and the Cheat sheet.
+- New README screenshots of the deep dive (`guide-topic.png`, `guide-topic-code.png`, `guide-topic-link.png`),
+  captured by `docs/demo/capture.py`.
+
 ## 1.2.0 (2026-10-13)
 
 ### Skill

@@ -1,0 +1,47 @@
+<!-- ============ GUIDED WALKTHROUGH ============ -->
+<section id="express-walkthrough">
+  <h2>Guided walkthrough</h2>
+  <p class="sub">Follow one request, <code>POST /api/orders</code>, from the caller to the database and back. It touches every Express idea Shopfront uses. Sources: <code>server/index.js</code>, <code>server/routes/orders.js</code>, <code>server/db.js</code>.</p>
+
+  <h3>1 · A client sends the request</h3>
+  <p>Nothing in Shopfront's client calls the API yet, so the caller today is a test or a tool like curl. A browser client would send the same request with <a href="#express-concepts">fetch</a>:</p>
+  <pre class="code" data-lang="http" data-title="The request"><code>POST /api/orders HTTP/1.1
+Content-Type: application/json
+
+{"items": [{"productId": 42, "qty": 1}]}</code></pre>
+
+  <h3 style="margin-top:24px">2 · Middleware parses the body</h3>
+  <p>Express runs middleware in the order it was registered. The first one, <code>express.json()</code>, reads the JSON body and puts it on <code>req.body</code>. Without it, <code>req.body</code> would be <code>undefined</code>. Concept: <a href="#express-concepts">middleware</a>.</p>
+  <pre class="code" data-lang="js" data-title="server/index.js:6-10"><code>const app = express();
+app.use(express.json());
+app.use('/api/products', products);
+app.use('/api/orders', orders);
+app.use('/api/admin', requireStaff, products.admin);</code></pre>
+
+  <h3 style="margin-top:24px">3 · The router matches the path</h3>
+  <p><code>/api/orders</code> matches the orders router's prefix, so Express hands it the rest of the path (<code>/</code>). Inside the router, <code>router.post('/', …)</code> matches the method and path. Concept: <a href="#express-concepts">routers</a>.</p>
+  <pre class="code" data-lang="js" data-title="server/routes/orders.js:9-10"><code>router.post('/', createOrder);
+router.get('/:id', async (req, res) =&gt; res.json((await db.query('select * from orders where id=$1', [req.params.id])).rows[0]));</code></pre>
+
+  <h3 style="margin-top:24px">4 · The handler validates and responds</h3>
+  <p><code>createOrder</code> rejects an empty or missing cart with 400, before touching the database. Otherwise it inserts the order and responds <code>201</code> with the new id. Concept: <a href="#express-concepts">request and response</a>.</p>
+  <pre class="code" data-lang="js" data-title="server/routes/orders.js:4-8"><code>async function createOrder(req, res) {
+  if (!Array.isArray(req.body.items) || !req.body.items.length) return res.status(400).json({ error: 'empty cart' });
+  const { rows } = await db.query('insert into orders(items) values ($1) returning id', [JSON.stringify(req.body.items)]);
+  res.status(201).json({ id: rows[0].id });
+}</code></pre>
+
+  <h3 style="margin-top:24px">5 · The database</h3>
+  <p><code>db.query</code> runs on a shared <code>pg</code> pool. Values go in as <code>$1</code> parameters, never pasted into the SQL string. Where the flow stops today: the repo has no schema or migrations for the <code>orders</code> table, and the handler has no <code>try/catch</code>, so a database error crashes the server process instead of returning a 500 (see <a href="#express-conventions">Patterns &amp; gotchas</a>).</p>
+  <pre class="code" data-lang="js" data-title="server/db.js"><code>const { Pool } = require('pg');
+module.exports = new Pool({ connectionString: process.env.DATABASE_URL });</code></pre>
+
+  <h3 style="margin-top:24px">Try it yourself</h3>
+  <p>Steps 1–4 run without a database, because the empty-cart check returns before any query. The existing test does exactly that:</p>
+  <pre class="code" data-lang="bash" data-title="Local only"><code>npm test   # runs test/orders.test.js: POST /api/orders with an empty cart → 400
+
+npm run dev   # API on :4000
+curl -i -X POST http://localhost:4000/api/orders \
+  -H 'Content-Type: application/json' -d '{"items": []}'   # → 400 {"error":"empty cart"}</code></pre>
+  <p>A non-empty cart reaches step 5, which needs a local Postgres in <code>DATABASE_URL</code> with an <code>orders</code> table. The repo doesn't define that table, so that part can't be run from the repo as it stands.</p>
+</section>

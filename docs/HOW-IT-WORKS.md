@@ -69,6 +69,56 @@ that must hold before Claude ticks it off.
 Claude rejected, and why), open questions, and repo problems to report. If a session ends or its context gets
 summarized, the next one reads it and picks up where the last left off.
 
+## Topic guides
+
+The topic-explainer skill runs a shorter checklist for one technology. Claude starts it only when you ask for a
+topic explainer (or run `/topic-explainer`), or say yes after it offers one.
+
+```mermaid
+flowchart TD
+    ask(["You ask for a topic explainer"]) --> scope
+    scope{{"0 · Scope<br/>topic, version in the lockfile, audience,<br/>separate guide or deep dive?"}} --> scaffold
+    scaffold["1 · Scaffold<br/>new_guide.py --topic, or --into an existing guide"] --> discover
+
+    subgraph discover ["2 · Discover"]
+        direction LR
+        repo["Claude or repo-researcher<br/>where the repo uses it"]
+        web["tech-researcher<br/>official docs for that version<br/>(name + version only)"]
+        repo ~~~ web
+    end
+    discover --> outline{{"Outline approved"}}
+    outline --> write["3 · Write<br/>concepts, usage map, walkthrough,<br/>gotchas, recipes, versions, docs"]
+
+    write --> review
+    subgraph review ["4 · Review"]
+        direction LR
+        sv["section-verifier<br/>repo claims"]
+        src["source-verifier<br/>web claims"]
+        sv ~~~ src
+    end
+    review --> glossary["5 · Glossary"] --> qa["6 · QA"] --> share{{"7 · Share internally"}}
+
+    classDef gate fill:#fff4e5,stroke:#d97706,color:#7c2d12
+    classDef agent fill:#ede9fe,stroke:#7c3aed,color:#3b0764
+    class scope,outline,share gate
+    class repo,web,sv,src agent
+```
+
+The web research is split from the repo on purpose: `tech-researcher` and `source-verifier` are the only agents
+with web tools, and they never see the repo. Their prompts carry only the technology, its version, and generic
+questions.
+
+Claude saves the research report to `research/<topic>.md` in the guide folder and spot-checks its key claims
+(version facts, security fixes) by opening the cited pages. Those are public docs, and nothing from the repo goes
+into the URL. Concept sections show each idea as a short, highlighted code example adapted from the docs for the
+pinned version. The walkthrough quotes the real repo lines at each step and says where the flow stops if the code
+doesn't run end to end.
+
+When the repo already has a guide, Claude asks where the topic should live. A **separate guide** is its own folder
+(`<app>-<topic>-guide/`). A **deep dive** adds one part to the existing guide (`sections/<topic>-*.html`, before
+Reference) and records the topic in its `TOPICS` registry, so updates and sharing happen once. The [live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/) has an Express deep dive as
+part 5, linked from its Tech stack and Architecture sections.
+
 ## Updating a guide
 
 Guides record the commit they were built from (`SOURCE_COMMIT` in `guide_config.py`). When you ask Claude to
@@ -90,6 +140,8 @@ update one:
 | [`structure-reviewer`](../agents/structure-reviewer.md) | 4 · Review | Read only | Reviews order, gaps, duplication, and cross-links across the whole guide |
 | [`section-verifier`](../agents/section-verifier.md) | 4 · Review | Read only | Fact-checks each claim in its sections against the repo and reports wrong, stale, or missing items |
 | [`glossary-drafter`](../agents/glossary-drafter.md) | 6 · Glossary | Read; write one draft file in the guide's `qa/` folder | Drafts glossary rows for one area, each with a definition and repo paths |
+| [`tech-researcher`](../agents/tech-researcher.md) | Topic 2 · Discover | Web search and fetch only; never sees the repo | Researches one technology at the pinned version: concepts, latest release, breaking changes, official links |
+| [`source-verifier`](../agents/source-verifier.md) | Topic 4 · Review | Read the guide; fetch its cited URLs | Checks each web-sourced claim against the page it cites, for the right version |
 
 Each phase is described in detail in
 [`references/workflow.md`](../skills/application-explainer/references/workflow.md), and the agent prompts are in

@@ -24,7 +24,7 @@ def wrap_section(section_html, sid):
 
     Returns the new HTML and the subsections as [(id, title)] for the sidebar.
     """
-    m = re.match(r'(?s)(.*?<section id="\w+">\s*)<h2>(.*?)</h2>(\s*<p class="sub">.*?</p>)?(.*)(</section>\s*)$', section_html)
+    m = re.match(r'(?s)(.*?<section id="[\w-]+">\s*)<h2>(.*?)</h2>(\s*<p class="sub">.*?</p>)?(.*)(</section>\s*)$', section_html)
     assert m, sid
     prefix, title, sub, body, suffix = m.groups()
     sub = sub or ''

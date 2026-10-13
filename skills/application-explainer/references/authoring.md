@@ -64,6 +64,19 @@ Write one file per section: `sections/<id>.html`. The build depends on this skel
 - Caption: `<p class="caption">…</p>`
 - Inline code: `<code>…</code>`
 
+**Code block.** Syntax-highlighted at build time, with a language label, optional title, and a Copy button:
+
+```html
+<pre class="code" data-lang="js" data-title="server/routes/orders.js:4-8"><code>async function createOrder(req, res) {
+  if (!Array.isArray(req.body.items)) return res.status(400).json({ error: 'empty cart' });
+}</code></pre>
+```
+
+- Put it at block level (not inside a `<p>`), and escape `&`, `<`, `>` in the code as in any HTML. Common leading indentation is removed.
+- `data-lang`: `js` (also `jsx`, `ts`, `tsx`), `python`, `bash` (`sh`, `shell`, `console`), `json`, `sql`, `yaml`, `http`, `graphql`, or `text`. The build warns on unknown languages and on a bare `<pre>`.
+- `data-title`: where it came from. Use `path:lines` for code quoted from the repo, or "Example (v6 docs)" for an illustration, linked in the text next to it.
+- Keep blocks short (about 15 lines). Point to the file for the rest. Never put secrets, tokens, or real data in examples: use placeholders like `<your-token>` and `42`.
+
 **Route tree** (site map):
 
 ```html

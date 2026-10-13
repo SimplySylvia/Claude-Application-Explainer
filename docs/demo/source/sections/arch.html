@@ -1,7 +1,7 @@
 <!-- ============ ARCHITECTURE ============ -->
 <section id="arch">
   <h2>Architecture</h2>
-  <p class="sub">A React client calls one Express API, which reads and writes PostgreSQL. GitHub Actions tests every push and deploys <code>main</code> as a Docker image.</p>
+  <p class="sub">A React client calls one Express API, which reads and writes PostgreSQL (follow one request through it in the <a href="#express-walkthrough">Express deep dive</a>). GitHub Actions tests every push and deploys <code>main</code> as a Docker image.</p>
   <div class="diagram" data-diagram="arch"></div>
   <p class="caption"><b>Staff access:</b> <code>/api/admin</code> is guarded by <code>requireStaff</code> in <code>server/auth.js</code>, which only checks that an <code>x-staff-role</code> header is present. The comment above it says a company SSO proxy sets a signed session cookie, but the code doesn't read a cookie. Confirm which the proxy actually sends.</p>
 </section>

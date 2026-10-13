@@ -1,0 +1,30 @@
+<!-- ============ COMMON CHANGES ============ -->
+<section id="express-recipes">
+  <h2>Common changes</h2>
+  <p class="sub">The API changes you're most likely to make in Shopfront, and how to test each one with Jest and supertest (<code>npm test</code>). Sources: <code>server/</code>, <code>test/orders.test.js</code>, <code>package.json</code>.</p>
+  <table>
+    <tr><th style="width:22%">Task</th><th>Steps</th><th style="width:26%">Where</th></tr>
+    <tr><td><b>Add an endpoint</b></td><td>1. Add <code>router.get/post(…)</code> to the resource's router. 2. Validate input and return <code>res.status(…).json(…)</code>. 3. Add a supertest test.</td><td><code>server/routes/</code>, <code>test/</code></td></tr>
+    <tr><td><b>Add a resource</b></td><td>1. Create <code>server/routes/&lt;name&gt;.js</code> exporting a router. 2. Mount it in <code>server/index.js</code> with <code>app.use('/api/&lt;name&gt;', …)</code>.</td><td><code>server/index.js:8-10</code></td></tr>
+    <tr><td><b>Protect an endpoint</b></td><td>Mount it behind <code>requireStaff</code> like <code>/api/admin</code>, or pass the middleware to one route: <code>router.post('/', requireStaff, handler)</code>.</td><td><code>server/auth.js</code></td></tr>
+    <tr><td><b>Handle async errors</b></td><td>Wrap the handler body in <code>try/catch</code> and call <code>next(err)</code>, then register one error-handling middleware last in <code>server/index.js</code>.</td><td><code>server/index.js</code></td></tr>
+    <tr><td><b>Return 404 for a missing row</b></td><td>Check <code>rows[0]</code> and <code>return res.sendStatus(404)</code> (or a JSON error) when it's missing.</td><td><code>server/routes/orders.js:10</code></td></tr>
+  </table>
+
+  <h3 style="margin-top:24px">Adding an endpoint, in code</h3>
+  <p>A cancel endpoint in the orders router, written the way the rest of the file is, plus the error handling it currently lacks:</p>
+  <pre class="code" data-lang="js" data-title="server/routes/orders.js (example change)"><code>router.post('/:id/cancel', async (req, res, next) =&gt; {
+  try {
+    const { rows } = await db.query('update orders set status = $2 where id = $1 returning id', [req.params.id, 'cancelled']);
+    if (!rows[0]) return res.status(404).json({ error: 'no such order' });
+    res.json({ id: rows[0].id, status: 'cancelled' });
+  } catch (err) {
+    next(err); // Express 4 won't do this for you
+  }
+});</code></pre>
+  <p>And its test, in the style of <code>test/orders.test.js</code>:</p>
+  <pre class="code" data-lang="js" data-title="test/orders.test.js (example)"><code>test('cancel needs a real order', async () =&gt; {
+  await request(app).post('/api/orders/999/cancel').expect(404);
+});</code></pre>
+  <p class="caption">The <code>status</code> column is illustrative: the repo has no schema, so check the real table first. The test needs a database, unlike the existing empty-cart test.</p>
+</section>

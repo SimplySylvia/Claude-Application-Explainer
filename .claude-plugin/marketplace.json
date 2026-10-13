@@ -8,7 +8,7 @@
     {
       "name": "application-explainer",
       "source": "./",
-      "description": "Build an internal, self-contained HTML Product & Engineering Guide for any application repo, verified against the code."
+      "description": "Build internal, self-contained HTML guides for an application repo, or for one technology and how the app uses it, verified against the code."
     }
   ]
 }

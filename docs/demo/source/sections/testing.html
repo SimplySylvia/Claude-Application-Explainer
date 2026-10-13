@@ -8,4 +8,12 @@
     <tr><td><b>Client</b></td><td>None yet</td><td>No component or end-to-end tests exist.</td><td>—</td></tr>
   </table>
   <p class="caption">CI runs lint and the full Jest suite on every push.</p>
+
+  <h3 style="margin-top:24px">What a test looks like</h3>
+  <p>The one API test today: it imports the app and sends a request through Supertest, so no server or database is needed for this case.</p>
+  <pre class="code" data-lang="js" data-title="test/orders.test.js"><code>const request = require('supertest');
+const app = require('../server');
+test('rejects an empty cart', async () =&gt; {
+  await request(app).post('/api/orders').send({ items: [] }).expect(400);
+});</code></pre>
 </section>

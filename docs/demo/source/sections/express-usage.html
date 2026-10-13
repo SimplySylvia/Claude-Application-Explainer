@@ -1,0 +1,35 @@
+<!-- ============ WHERE THE APP USES IT ============ -->
+<section id="express-usage">
+  <h2>Where Shopfront uses Express</h2>
+  <p class="sub">Express is Shopfront's whole API server: one app, three routers, one auth middleware, and Postgres behind it, in about 6 tracked files under <code>server/</code> and <code>test/</code> (<code>git ls-files server test | wc -l</code>). The React client doesn't call the API yet. Sources: <code>server/index.js</code>, <code>server/routes/</code>, <code>package.json</code>.</p>
+  <div class="diagram" data-diagram="express-flow"></div>
+  <p class="caption">A request passes through the middleware in the order <code>server/index.js</code> registers it: JSON parsing, then the router whose prefix matches, then the handler. <code>/api/admin</code> requests go through <code>requireStaff</code> first. The <a href="#express-walkthrough">guided walkthrough</a> follows steps 1–5.</p>
+
+  <h3 style="margin-top:24px">Endpoints</h3>
+  <table class="stack">
+    <colgroup><col style="width:28%"><col><col style="width:26%"></colgroup>
+    <tr><th>Endpoint</th><th>What it does</th><th>Where (repo path)</th></tr>
+    <tr class="group" style="--accent: var(--c-client)"><td colspan="3"><span class="row-icon" data-icon="inbox"></span>Public</td></tr>
+    <tr><td><b>GET /api/products</b></td><td>Every product row, as a JSON array.</td><td><code>server/routes/products.js:3</code></td></tr>
+    <tr><td><b>GET /api/products/:id</b></td><td>One product by id; responds 200 with no product if the id doesn't exist.</td><td><code>server/routes/products.js:4</code></td></tr>
+    <tr><td><b>POST /api/orders</b></td><td>Validates <code>items</code> (400 <code>empty cart</code>), inserts an order, returns <code>201 { id }</code>.</td><td><code>server/routes/orders.js:4-9</code></td></tr>
+    <tr><td><b>GET /api/orders/:id</b></td><td>One order by id; same no-row behavior as products.</td><td><code>server/routes/orders.js:10</code></td></tr>
+    <tr class="group" style="--accent: var(--c-edge)"><td colspan="3"><span class="row-icon" data-icon="lock"></span>Staff (behind requireStaff)</td></tr>
+    <tr><td><b>POST /api/admin/products</b></td><td>Echoes the request body back with 201. Nothing is saved yet.</td><td><code>server/routes/products.js:5-6</code>, <code>server/index.js:10</code></td></tr>
+  </table>
+
+  <h3 style="margin-top:24px">Building blocks</h3>
+  <table class="stack">
+    <colgroup><col style="width:22%"><col><col style="width:28%"></colgroup>
+    <tr><th>Piece</th><th>Role</th><th>Where</th></tr>
+    <tr class="group" style="--accent: var(--c-run)"><td colspan="3"><span class="row-icon" data-icon="server"></span>Server</td></tr>
+    <tr><td><b>App</b></td><td>Creates the app, registers middleware and routers, listens on <code>PORT</code> or 4000 only when run directly, and exports <code>app</code> for tests.</td><td><code>server/index.js</code></td></tr>
+    <tr><td><b>express.json()</b></td><td>Parses JSON request bodies into <code>req.body</code> for every route.</td><td><code>server/index.js:7</code></td></tr>
+    <tr><td><b>Routers</b></td><td><code>express.Router()</code> per resource, mounted at a prefix with <code>app.use</code>.</td><td><code>server/routes/products.js</code>, <code>server/routes/orders.js</code></td></tr>
+    <tr><td><b>requireStaff</b></td><td>Middleware: calls <code>next()</code> when the <code>x-staff-role</code> header is present, otherwise 403.</td><td><code>server/auth.js</code></td></tr>
+    <tr class="group" style="--accent: var(--c-data)"><td colspan="3"><span class="row-icon" data-icon="db"></span>Data &amp; tests</td></tr>
+    <tr><td><b>db</b></td><td>A shared <code>pg</code> connection pool from <code>DATABASE_URL</code>; handlers call <code>db.query</code> with <code>$1</code> placeholders.</td><td><code>server/db.js</code></td></tr>
+    <tr><td><b>supertest</b></td><td>Sends requests to the exported <code>app</code> in Jest tests, without starting a server.</td><td><code>test/orders.test.js</code></td></tr>
+    <tr><td><b>express</b></td><td>Range <code>^4.19.2</code>, no lockfile (see <a href="#express-versions">Versions</a>).</td><td><code>package.json:10</code></td></tr>
+  </table>
+</section>

@@ -21,7 +21,7 @@ For each section: what it answers, where to look, and the expected shape.
 | id | Core? | Answers | Where to look | Shape |
 |---|---|---|---|---|
 | `arch` | core | How clients, services, stores, and third parties connect | IaC, service entry points, deploy config, outbound clients | Diagram + caption |
-| `request` | optional | What happens on one request, end to end (auth, middleware, resolver, DB) | Server entry, middleware chain, API layer, data-loading layer | Numbered diagram + step table |
+| `request` | optional | What happens on one request, end to end (auth, middleware, resolver, DB) | Server entry, middleware chain, API layer, data-loading layer | Numbered diagram + step table + key code excerpts |
 | `stack` | core | Languages, frameworks, libraries, infra, tooling, by layer, with versions | Manifests, lockfiles, Dockerfiles, IaC, CI | Grouped table |
 | `frontend` | optional | App shell, routing, state/data fetching, design system, codegen | Frontend src, providers, design-system package | Cards + table |
 | `automation` | optional | Rules/workflow engine: triggers, evaluation, effects, debugging | Rule models, consumers, schedulers | Diagram + table |
@@ -45,19 +45,20 @@ For each section: what it answers, where to look, and the expected shape.
 
 | id | Core? | Answers | Where to look | Shape |
 |---|---|---|---|---|
-| `localdev` | core | Machine setup → running app → daily loop → recipes for common changes | README, setup scripts, package scripts, env templates, git hooks | Numbered subsections with tables |
-| `testing` | core | Test layers, tools, where tests live, how to run one, what CI runs | Test configs, CI, test helpers and factories | Table + cards |
+| `localdev` | core | Machine setup → running app → daily loop → recipes for common changes | README, setup scripts, package scripts, env templates, git hooks | Numbered subsections with tables + a copy-paste quick-start code block |
+| `testing` | core | Test layers, tools, where tests live, how to run one, what CI runs | Test configs, CI, test helpers and factories | Table + cards + one real test as a code block |
 
 ## Part 5 · Reference
 
 | id | Core? | Answers | Where to look | Shape |
 |---|---|---|---|---|
-| `cheatsheet` | core | Weekly commands and lookups | Package scripts, Makefiles, CLIs | Table |
+| `cheatsheet` | core | Weekly commands and lookups | Package scripts, Makefiles, CLIs | Table + copy-paste code block |
 | `glossary` | core | Every domain, vendor, and internal term in the guide | The guide text itself + the repo | Grouped 3-column table (term · meaning · where) |
 
 ## Verification notes
 
-- **Commands** must exist in package scripts, Makefiles, or CLIs. Run `--help` if unsure; never guess flags.
+- **Commands** must exist in package scripts, Makefiles, or CLIs. Run `--help` if unsure; never guess flags. Show multi-step setup as one copy-paste code block (`authoring.md`, Code block).
+- **Code excerpts** must match the cited lines: title them `path:start-end`.
 - **Counts** ("~340 jobs") come from directory tallies. Say "about" and note how you counted.
 - **Feature flags:** name the flag and where it's checked. Flags often gate both a route and its menu item.
 - **Routes:** check the router, not just links. Redirects and nested routes are easy to get wrong.

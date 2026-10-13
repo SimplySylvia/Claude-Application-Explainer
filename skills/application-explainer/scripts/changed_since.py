@@ -3,15 +3,20 @@
 
     python3 changed_since.py <guide>            # report: changed files, affected sections, uncovered changes
     python3 changed_since.py <guide> --mark     # after updating: record the repo's current HEAD as SOURCE_COMMIT
+    python3 changed_since.py <guide> --mark-docs <slug> [...]   # after re-checking a topic's web docs: record today
 
 Reads SOURCE_REPO and SOURCE_COMMIT from <guide>/guide_config.py, diffs the repo from that commit to HEAD
 (read-only git commands), and matches changed files against the repo paths each section cites in <code> spans.
 A section is affected when it cites a changed file or a folder containing one. Changed files that no section cites
 are listed separately: they may need new content. --mark also updates the commit in FOOTER.
+
+Guides with technology deep dives (TOPICS in guide_config.py) also get a docs check: a topic whose official docs
+were never checked, or were checked more than DOCS_MAX_AGE days ago, is listed as DOCS STALE.
 """
-import ast, os, re, subprocess, sys
+import ast, datetime, os, re, subprocess, sys
 
 CODE = re.compile(r'<code>([^<]+)</code>')
+DOCS_MAX_AGE = 90
 
 
 def git(repo, *args):
@@ -37,6 +42,38 @@ def config(guide):
     return path, src, repo, vals['SOURCE_COMMIT']
 
 
+def topics(src):
+    m = re.search(r'^TOPICS = (.+)$', src, re.M)
+    return ast.literal_eval(m.group(1)) if m else {}
+
+
+def docs_report(src, today):
+    for slug, t in sorted(topics(src).items()):
+        checked = t.get('docs_checked') or ''
+        if not checked:
+            print(f'DOCS STALE {slug}: {t.get("name", slug)} docs never checked; run tech-researcher, then --mark-docs {slug}')
+            continue
+        age = (today - datetime.date.fromisoformat(checked)).days
+        if age > DOCS_MAX_AGE:
+            print(f'DOCS STALE {slug}: {t.get("name", slug)} docs last checked {checked} ({age} days ago); '
+                  f're-run tech-researcher, then --mark-docs {slug}')
+        else:
+            print(f'docs ok {slug}: checked {checked} ({age} days ago)')
+
+
+def mark_docs(path, src, slugs, today):
+    ts = topics(src)
+    unknown = [x for x in slugs if x not in ts]
+    if not slugs or unknown:
+        sys.exit(f'--mark-docs needs topic slug(s) from TOPICS: {", ".join(sorted(ts)) or "(none)"}'
+                 + (f'; unknown: {", ".join(unknown)}' if unknown else ''))
+    for x in slugs:
+        ts[x]['docs_checked'] = today.isoformat()
+    src = re.sub(r'^TOPICS = .*$', lambda _: f'TOPICS = {ts!r}', src, flags=re.M)
+    open(path, 'w', encoding='utf-8').write(src)
+    print(f'docs_checked = {today.isoformat()} for {", ".join(slugs)}')
+
+
 def cited_paths(html):
     """Repo-looking paths in <code> spans: anything with a slash or a file extension, minus URLs and routes."""
     out = set()
@@ -56,6 +93,10 @@ def main():
         sys.exit(__doc__)
     guide = os.path.abspath(args[0])
     path, src, repo, since = config(guide)
+    today = datetime.date.today()
+    if '--mark-docs' in args:
+        mark_docs(path, src, [x for x in args[args.index('--mark-docs') + 1:] if not x.startswith('-')], today)
+        return
     head = git(repo, 'rev-parse', 'HEAD')
 
     if '--mark' in args:
@@ -66,6 +107,7 @@ def main():
         print(f'SOURCE_COMMIT {short_old} -> {short_new}')
         return
 
+    docs_report(src, today)
     changed = [f for f in git(repo, 'diff', '--name-only', f'{since}..HEAD').splitlines() if f]
     print(f'{len(changed)} file(s) changed in {repo} since {since[:10]} (HEAD {head[:10]})')
     if not changed:

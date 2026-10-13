@@ -54,6 +54,24 @@ Then open Claude Code in the app repo you want documented and ask, for example:
 >
 > Use the application-explainer skill on this app.
 
+### Topic guides
+
+For one technology, run `/topic-explainer` (or ask for a "topic explainer") and name it:
+
+> /topic-explainer GraphQL
+>
+> Build a topic explainer for React Router in this app.
+
+You get a smaller guide covering what the technology is, its core concepts with code examples (for an API
+library: how to make a request, handle an error, test an endpoint), where the app uses it, a guided walkthrough of
+one real flow through the code, patterns and gotchas, common changes, the version the repo pins compared with the
+latest release, and links to the official docs, all researched online for that version.
+
+If the repo already has a Product & Engineering Guide, Claude asks whether to build a **separate topic guide** (the
+default) or add the topic as a **deep dive** inside the existing guide, so your main internal doc stays current in
+one place. A plain question like "what is GraphQL and how does this app use it?" gets a normal answer, with an offer
+to build a topic guide. It never starts one on its own.
+
 Later, when the code has changed, ask Claude to update the guide. It checks which sections cite files that changed
 since the guide was built and re-verifies only those.
 
@@ -82,7 +100,10 @@ Claude works through a checklist of nine phases: scope, scaffold, discover, writ
 and share. It writes the guide itself and hands research, fact-checking, and glossary drafting to subagents
 that run in parallel. It stops for your approval at each key decision, and commits the guide after every phase.
 
-**[See the full workflow diagram and who does what →](docs/HOW-IT-WORKS.md)**
+Topic guides run a shorter checklist: scope, scaffold, discover (the repo and the web in parallel), write, review,
+glossary, QA, and share.
+
+**[See the full workflow diagrams and who does what →](docs/HOW-IT-WORKS.md)**
 
 ## Guardrails
 
@@ -90,6 +111,9 @@ that run in parallel. It stops for your approval at each key decision, and commi
 - **No secrets or personal data** in the guide. A suspected secret is reported by file and line only.
 - **Claude asks before** writing anything (until you've agreed the scope), changing accounts, flags, or roles,
   going through OAuth consent, deploying or publishing, and capturing screens that might show real personal data.
+- **Topic guides keep the repo off the web.** Web research runs in a separate agent that only gets the technology
+  name, its version, and generic questions. Company and app names, paths, code, config, and data never go into a
+  search query or URL, and fetched pages are treated as untrusted.
 - **The guide is internal.** It documents architecture and security controls, so don't publish it publicly (see
   [`references/sharing.md`](skills/application-explainer/references/sharing.md)).
 
@@ -123,6 +147,7 @@ Claude writes to a **guide folder** outside the app repo (default: a sibling `<a
   pipeline, observability, security, and AI features. See the full catalog in
   [`references/sections.md`](skills/application-explainer/references/sections.md).
 - **SVG diagrams** with a pan/zoom viewer.
+- **Code blocks** with syntax highlighting and a Copy button, highlighted when the guide is built.
 - **A glossary** of domain, vendor, and internal terms. Mentions of a term link to it and show its definition on hover.
 - **⌘K search** across all pages.
 - **Dark and light themes.**
@@ -131,11 +156,28 @@ Claude writes to a **guide folder** outside the app repo (default: a sibling `<a
 
 Before Claude hands the guide over, `qa_check.py` must pass on both HTML files with zero TODOs.
 
+### Topic guides
+
+A separate topic guide lives in `<app>-<topic>-guide/` with the same layout (no screenshots), plus
+`research/<topic>.md`, the web research report Claude worked from. It has three pages:
+
+- **The concept:** what the technology is and how it compares, then its core concepts in a table linked to the
+  versioned docs, followed by a short highlighted code example for each.
+- **In \<app\>:** a usage map with a flow diagram; a guided walkthrough of one real flow, quoting the repo lines at
+  each step; patterns and gotchas; common changes with example code and tests.
+- **Reference:** the version the repo pins vs. the latest release (including security fixes in between), official
+  docs with the date each was checked, and a glossary.
+
+As a **deep dive**, the same sections become one part of an existing guide, with ids prefixed by the topic
+(`express-walkthrough`) and its terms merged into the guide's glossary. Link to it from the rest of the guide, for
+example from the tech stack row for that technology. `guide_config.py` records each topic and when its docs were
+last checked, and updates flag docs older than 90 days.
+
 ### Example
 
 **[Open the live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/)**: a complete guide for **Shopfront**, the small fictional app used by the evals
-(`evals/_fixture/make-app.sh`). A real app produces more sections and longer tables. The screenshots below are
-from the same guide.
+(`evals/_fixture/make-app.sh`), with an **Express deep dive** built by the topic explainer as part 5. A real app
+produces more sections and longer tables. The screenshots below are from the same guide.
 
 <table>
   <tr>
@@ -148,6 +190,28 @@ from the same guide.
   </tr>
 </table>
 
+The Express deep dive, added with the topic explainer:
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/guide-topic.png" alt="Express deep dive: what Express is, with the deep dive as a header tab and in the sidebar"></td>
+    <td width="50%"><img src="docs/images/guide-topic-code.png" alt="Concepts in code: highlighted Express examples with Copy buttons"></td>
+  </tr>
+  <tr>
+    <td><b>A deep dive is one more part</b> of the main guide: its own header tab and sidebar group, cited to the
+    official Express 4 docs (↗) and the repo.</td>
+    <td><b>Concepts in code:</b> a highlighted, copyable example for each idea, adapted from the docs for the version
+    the app pins (dark theme).</td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/images/guide-topic-link.png" alt="Tech stack table: the Express row links to the Express deep dive"></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Linked from the main guide:</b> the Tech stack row for Express (and the Architecture summary)
+    point readers to the deep dive.</td>
+  </tr>
+</table>
+
 The Engineering page at the top of this README shows the architecture diagram in the light theme. Its caption
 flags a mismatch between a code comment and what the code actually does: the kind of finding the verification
 pass is there to catch.
@@ -157,6 +221,7 @@ pass is there to catch.
 - [Claude Code](https://docs.claude.com/en/docs/claude-code) with plugin support
 - Python 3.9+ (build engine and scripts; standard library only)
 - Google Chrome or Chromium (for `qa_check.py` and screenshots)
+- Web access, for topic guides only (the research agent reads official docs and release notes)
 
 ## Repository layout
 
@@ -165,7 +230,8 @@ pass is there to catch.
 | `.claude-plugin/plugin.json` | Plugin manifest |
 | `.claude-plugin/marketplace.json` | Marketplace manifest (lists this repo as its only plugin) |
 | `skills/application-explainer/` | The skill: `SKILL.md`, build `engine/`, `starter/` template, `scripts/`, `references/` |
-| `agents/` | Subagents the skill fans out to: `repo-researcher`, `structure-reviewer`, `section-verifier`, `glossary-drafter` |
+| `skills/topic-explainer/` | The topic skill: `SKILL.md`, `starter/` topic template, `references/` (reuses the engine and scripts above) |
+| `agents/` | Subagents the skills fan out to: `repo-researcher`, `structure-reviewer`, `section-verifier`, `glossary-drafter`, and for topics `tech-researcher` and `source-verifier` (web) |
 | `docs/` | [`HOW-IT-WORKS.md`](docs/HOW-IT-WORKS.md) workflow and agents; `demo/` live demo and its source; `images/` README screenshots (served by GitHub Pages) |
 | `evals/` | `claude plugin eval` suite: trigger, near-miss, and end-to-end cases on a small fixture app |
 | `tests/` | Unit tests for the scaffold, build, diagrams, and glossary scripts |
@@ -196,8 +262,9 @@ claude plugin eval . --tag trigger nearmiss --scaffold
 # End to end: builds a whole guide and runs QA (slow; grants the tools the build needs)
 claude plugin eval . --tag e2e --scaffold --runs 1 --allow-tools Bash Write Edit
 
-# Guardrails only: a planted secret is never copied, and screenshots wait for a synthetic-data confirmation
-claude plugin eval . --tag safety --scaffold --runs 1 --allow-tools Bash Write Edit
+# Guardrails only: a planted secret is never copied, screenshots wait for a synthetic-data confirmation, and
+# topic research never sends repo details to the web (that case needs web access)
+claude plugin eval . --tag safety --scaffold --runs 1 --allow-tools Bash Write Edit WebFetch
 ```
 
 Run the trigger and near-miss cases after any change to the skill's `description`, and the safety cases after any
@@ -206,7 +273,8 @@ change to its rules.
 ### Demo and screenshots
 
 The live demo and the README screenshots are built from [`docs/demo/source/`](docs/demo/source/) with the current
-engine. After changing the engine or the demo source, regenerate both and commit the results:
+engine. The Express deep dive's sections are the `express-*.html` files there, with the `express-flow` diagram in
+`diagrams.py` and its `TOPICS` entry in `guide_config.py`. After changing the engine or the demo source, regenerate both and commit the results:
 
 ```bash
 docs/demo/make-demo.sh                   # build, run QA, recapture docs/images/*.png

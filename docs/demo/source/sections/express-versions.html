@@ -1,0 +1,15 @@
+<!-- ============ VERSIONS ============ -->
+<section id="express-versions">
+  <h2>Versions &amp; what changed</h2>
+  <p class="sub">Shopfront allows any Express 4.x from 4.19.2, and with no lockfile a fresh install gets the newest 4.x, so nobody can tell from the repo which version a given environment runs. Express 5 is the current major. Checked 2026-10-13. Sources: <code>package.json:10</code> (no lockfile committed).</p>
+  <table>
+    <tr><th style="width:18%">Line</th><th style="width:18%">In Shopfront</th><th style="width:18%">Latest</th><th>What changed that matters here</th></tr>
+    <tr><td><b>express 4</b></td><td><code>^4.19.2</code>; a fresh install resolves to 4.22.3</td><td>4.22.3, 2026-09-14 (<a href="https://github.com/expressjs/express/releases/tag/v4.22.3">release</a>)</td><td>Security fixes after 4.19.2: <b>4.20.0</b> CVE-2024-43796, XSS via <code>res.redirect()</code> (<a href="https://github.com/expressjs/express/security/advisories/GHSA-qw6h-vgh9-j6wx">advisory</a>); <b>4.21.1</b> a <code>cookie</code> fix; <b>4.22.3</b> CVE-2026-4867 in path matching. Shopfront doesn't redirect, but it should still be on ≥ 4.22.3. 4.20.0 also changed some defaults (urlencoded depth, redirect body), none used here (<a href="https://raw.githubusercontent.com/expressjs/express/4.x/History.md">4.x history</a>).</td></tr>
+    <tr><td><b>express 5</b></td><td>—</td><td>5.3.0, 2026-10-09 (<a href="https://github.com/expressjs/express/releases/tag/v5.3.0">release</a>)</td><td>Node 18+. Rejected promises go to <code>next</code> automatically, which would fix Shopfront's crash-on-query-error. Stricter path syntax (named wildcards, no regex characters in strings), <code>req.query</code> read-only, several old methods removed (<a href="https://expressjs.com/en/guide/migrating-5.html">Migrating to 5</a>).</td></tr>
+  </table>
+  <h3 style="margin-top:24px">Upgrade path</h3>
+  <p>1. Commit a lockfile so the version is reproducible. 2. Move to the latest 4.x. 3. Read the <a href="https://expressjs.com/en/guide/migrating-5.html">migration guide</a>: Shopfront's routes use plain <code>:id</code> paths, so the path-syntax changes shouldn't bite. 4. Try the official codemod, then run the tests:</p>
+  <pre class="code" data-lang="bash" data-title="From the migration guide"><code>npx codemod@latest @expressjs/v5-migration-recipe
+npm install express@5 &amp;&amp; npm test</code></pre>
+  <p class="caption">Everywhere else, this guide describes Express 4, the version Shopfront runs.</p>
+</section>

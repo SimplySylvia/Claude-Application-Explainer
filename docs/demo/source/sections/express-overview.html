@@ -1,0 +1,36 @@
+<!-- ============ WHAT IS EXPRESS ============ -->
+<section id="express-overview">
+  <h2>What is Express?</h2>
+  <p class="sub">Express is a minimal web framework for Node.js: it routes HTTP requests to your functions and gives you helpers for reading requests and sending responses. Shopfront's whole API (<code>/api/…</code>) is one Express 4 app. Sources: <a href="https://expressjs.com/">expressjs.com</a>, <a href="https://expressjs.com/en/4x/api/application/">Application (4.x API)</a>, <code>server/index.js</code>.</p>
+  <div class="grid">
+    <div class="card" style="--accent: var(--c-client)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="book"></svg></span>In one paragraph</h3>
+      <ul>
+        <li>An Express <b>app</b> is a request handler for Node's HTTP server. You build it from a stack of <b>middleware</b> functions that run in order.</li>
+        <li>Each middleware gets the request and response, and either answers or calls <code>next()</code> to pass the request on (<a href="https://expressjs.com/en/4x/guide/using-middleware.html">Using middleware</a>).</li>
+        <li><b>Routers</b> group endpoints under a path prefix, so each resource gets its own file.</li>
+      </ul>
+    </div>
+    <div class="card" style="--accent: var(--c-run)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="puzzle"></svg></span>The problem it solves</h3>
+      <ul>
+        <li>Plain Node <code>http</code> hands you raw requests. Express adds URL routing with parameters, body parsing, and helpers like <code>res.status(201).json(…)</code>.</li>
+        <li>It stays unopinionated: no ORM, no project layout, so apps choose their own (Shopfront uses <code>pg</code> directly).</li>
+      </ul>
+    </div>
+    <div class="card" style="--accent: var(--c-edge)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="layers"></svg></span>Compared with</h3>
+      <ul>
+        <li><b>Node's http module</b>: what Express wraps; <code>app.listen()</code> creates the server for you (<a href="https://expressjs.com/en/4x/api/application/">docs</a>).</li>
+        <li><b>Express 5</b>: the current major. Same model, but async errors are handled for you and route-path syntax is stricter (<a href="https://expressjs.com/en/guide/migrating-5.html">Migrating to 5</a>). Shopfront is on 4.</li>
+      </ul>
+    </div>
+    <div class="card" style="--accent: var(--c-data)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="apps"></svg></span>How Shopfront uses it</h3>
+      <ul>
+        <li>One app with JSON parsing, three routers (products, orders, admin), one auth middleware, and Postgres behind it (<a href="#express-usage">usage map</a>).</li>
+        <li>The React client doesn't call it yet; tests do, through supertest. The repo doesn't record why Express was chosen.</li>
+      </ul>
+    </div>
+  </div>
+</section>

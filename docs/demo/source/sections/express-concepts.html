@@ -1,0 +1,92 @@
+<!-- ============ CORE CONCEPTS ============ -->
+<section id="express-concepts">
+  <h2>Core concepts</h2>
+  <p class="sub">The ideas you need before reading Shopfront's server code, then each one in code. Links and examples are for Express 4, the major version Shopfront's <code>^4.19.2</code> range installs (see <a href="#express-versions">Versions</a>).</p>
+  <table class="stack">
+    <colgroup><col style="width:18%"><col><col style="width:22%"><col style="width:18%"></colgroup>
+    <tr><th>Concept</th><th>What it means</th><th>In Shopfront</th><th>Official docs</th></tr>
+    <tr class="group" style="--accent: var(--c-run)"><td colspan="4"><span class="row-icon" data-icon="server"></span>Handling a request</td></tr>
+    <tr><td><b>Middleware</b></td><td>A function <code>(req, res, next)</code> that either ends the request (sends a response) or calls <code>next()</code>. Doing neither leaves the request hanging. They run in the order registered.</td><td><code>express.json()</code>, <code>requireStaff</code></td><td><a href="https://expressjs.com/en/4x/guide/using-middleware.html">Using middleware</a></td></tr>
+    <tr><td><b>app.use vs app.get/post</b></td><td><code>app.use(path, fn)</code> runs for any method and matches the path as a prefix; <code>get</code>/<code>post</code> match one method on that path.</td><td><code>server/index.js:7-10</code></td><td><a href="https://expressjs.com/en/4x/api/application/">Application</a></td></tr>
+    <tr><td><b>Router</b></td><td><code>express.Router()</code> is a mini-app with its own routes, mounted at a prefix with <code>app.use</code>.</td><td>One per resource in <code>server/routes/</code></td><td><a href="https://expressjs.com/en/4x/guide/routing.html">Routing</a></td></tr>
+    <tr><td><b>Route parameters</b></td><td><code>:id</code> in a path captures that segment into <code>req.params.id</code>, always a string. Query strings go to <code>req.query</code>.</td><td><code>/api/orders/:id</code></td><td><a href="https://expressjs.com/en/4x/guide/routing.html">Routing</a></td></tr>
+    <tr class="group" style="--accent: var(--c-client)"><td colspan="4"><span class="row-icon" data-icon="inbox"></span>Request &amp; response</td></tr>
+    <tr><td><b>express.json()</b></td><td>Parses JSON bodies (Content-Type <code>application/json</code>, up to 100kb) into <code>req.body</code>. Without a parser, <code>req.body</code> is <code>undefined</code>. Invalid JSON becomes a 400 error.</td><td><code>server/index.js:7</code></td><td><a href="https://expressjs.com/en/4x/api/express/">express.json</a></td></tr>
+    <tr><td><b>Responses</b></td><td><code>res.status(code)</code> chains with <code>res.json(body)</code>; <code>res.sendStatus(code)</code> sends just the status.</td><td>Every handler</td><td><a href="https://expressjs.com/en/4x/api/response/">Response</a></td></tr>
+    <tr class="group" style="--accent: var(--c-ext)"><td colspan="4"><span class="row-icon" data-icon="shield"></span>Errors &amp; testing</td></tr>
+    <tr><td><b>Error handling</b></td><td>Error middleware has four arguments, <code>(err, req, res, next)</code>, and goes last. In Express 4, errors from <code>async</code> handlers aren't passed on automatically: catch them and call <code>next(err)</code>.</td><td>Not used (see <a href="#express-conventions">gotchas</a>)</td><td><a href="https://expressjs.com/en/4x/guide/error-handling.html">Error handling</a></td></tr>
+    <tr><td><b>Testing with supertest</b></td><td>Pass the exported <code>app</code> to <code>request(app)</code> to send real HTTP requests without starting a server yourself.</td><td><code>test/orders.test.js</code></td><td><a href="https://github.com/ladjs/supertest">supertest</a></td></tr>
+    <tr><td><b>Calling it: fetch</b></td><td>Browsers call a JSON API with <code>fetch</code>. It only rejects on network errors, so check <code>response.ok</code> for 4xx/5xx.</td><td>Not used by the client yet</td><td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">MDN: Using Fetch</a></td></tr>
+  </table>
+
+  <h3 style="margin-top:24px">Concepts in code</h3>
+  <p>Short examples adapted from the <a href="https://expressjs.com/en/4x/guide/routing.html">Express 4 guides</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">MDN</a>, and the <a href="https://github.com/ladjs/supertest">supertest README</a>, using placeholder values. Compare each with the Shopfront file named under it.</p>
+
+  <p><b>Create an app, parse JSON, mount a router.</b> Shopfront does this in <code>server/index.js</code>.</p>
+  <pre class="code" data-lang="js" data-title="Example (Express 4 docs)"><code>const express = require('express');
+const app = express();
+app.use(express.json());                 // req.body for JSON requests
+
+const items = express.Router();
+app.use('/api/items', items);            // items' routes live under /api/items
+
+module.exports = app;                    // export for tests; listen elsewhere</code></pre>
+
+  <p><b>Routes with a parameter and JSON responses.</b> Compare <code>server/routes/orders.js</code>.</p>
+  <pre class="code" data-lang="js" data-title="Example (Express 4 docs)"><code>items.get('/:id', (req, res) =&gt; {
+  res.json({ id: req.params.id, q: req.query.q });   // params are strings
+});
+
+items.post('/', (req, res) =&gt; {
+  if (!req.body.name) return res.status(400).json({ error: 'name required' });
+  res.status(201).json({ name: req.body.name });
+});</code></pre>
+
+  <p><b>Middleware that allows or rejects.</b> Compare <code>server/auth.js</code>, which checks only that a header exists.</p>
+  <pre class="code" data-lang="js" data-title="Example (Express 4 docs)"><code>function requireKey(req, res, next) {
+  if (req.get('X-Example-Key') !== '&lt;expected-value&gt;') {
+    return res.sendStatus(403);          // stop here
+  }
+  next();                                // pass to the next handler
+}
+app.use('/api/private', requireKey, privateRouter);</code></pre>
+
+  <p><b>Async errors in Express 4.</b> What Shopfront's handlers are missing.</p>
+  <pre class="code" data-lang="js" data-title="Example (Express 4 docs)"><code>items.get('/:id/details', async (req, res, next) =&gt; {
+  try {
+    const item = await loadItem(req.params.id);  // your async lookup
+    res.json(item);
+  } catch (err) {
+    next(err);                           // Express 4 won't do this for you
+  }
+});
+
+app.use((err, req, res, next) =&gt; {     // four arguments, registered last
+  res.status(err.status || 500).json({ error: 'something went wrong' });
+});</code></pre>
+
+  <p><b>Make an API call from the browser.</b> How a Shopfront page would place an order.</p>
+  <pre class="code" data-lang="js" data-title="Example (MDN: Using Fetch)"><code>const res = await fetch('/api/orders', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },   // needed for express.json()
+  body: JSON.stringify({ items: [{ productId: 42, qty: 1 }] }),
+});
+if (!res.ok) throw new Error(`Order failed: ${res.status}`);  // fetch doesn't throw on 4xx/5xx
+const { id } = await res.json();</code></pre>
+
+  <p><b>Make an API call from the terminal.</b> Against the local server only.</p>
+  <pre class="code" data-lang="bash" data-title="Example (curl)"><code>curl http://localhost:4000/api/products/42
+curl -X POST http://localhost:4000/api/orders \
+  -H 'Content-Type: application/json' \
+  -d '{"items": [{"productId": 42, "qty": 1}]}'</code></pre>
+
+  <p><b>Test an endpoint without starting a server.</b> Shopfront's <code>test/orders.test.js</code> follows this pattern.</p>
+  <pre class="code" data-lang="js" data-title="Example (supertest README)"><code>const request = require('supertest');
+const app = require('../server');
+
+test('GET an item', async () =&gt; {
+  const res = await request(app).get('/api/items/42');
+  expect(res.status).toBe(200);
+  expect(res.body.id).toBe('42');
+});</code></pre>
+</section>

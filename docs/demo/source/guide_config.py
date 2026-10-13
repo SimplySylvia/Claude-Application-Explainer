@@ -33,6 +33,16 @@ PARTS = [
         ('localdev', 'Local development'),
         ('testing', 'Testing strategy'),
     ]),
+    ('express', 'Express deep dive', 'What Express is and how Shopfront uses it.', [
+        ('express-overview', 'What is Express?'),
+        ('express-concepts', 'Core concepts'),
+        ('express-usage', 'Where Shopfront uses it'),
+        ('express-walkthrough', 'Guided walkthrough'),
+        ('express-conventions', 'Patterns & gotchas'),
+        ('express-recipes', 'Common changes'),
+        ('express-versions', 'Versions & what changed'),
+        ('express-resources', 'Official docs & further reading'),
+    ]),
     ('reference', 'Reference', 'Quick lookups: commands and terms.', [
         ('cheatsheet', 'Cheat sheet'),
         ('glossary', 'Glossary'),
@@ -45,3 +55,7 @@ COLLAPSED_SUBSECTIONS = set()          # {('section-id', 'Exact h3 title'), ...}
 COLLAPSED_GROUP_SECTIONS = {'stack', 'features', 'glossary'}   # table group rows start collapsed in these sections
 OPEN_TABLE_GROUPS = set()              # group labels that stay open anyway
 COLLAPSED_TABLE_GROUPS = set()
+
+# Technology deep dives: {slug: {"name": ..., "docs_checked": "YYYY-MM-DD"}}. changed_since.py flags docs
+# checked more than 90 days ago; `changed_since.py <guide> --mark-docs <slug>` records a re-check.
+TOPICS = {'express': {'name': 'Express', 'docs_checked': '2026-10-13'}}

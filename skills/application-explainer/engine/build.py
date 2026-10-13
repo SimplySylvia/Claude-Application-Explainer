@@ -14,6 +14,7 @@ sys.path[:0] = [E, ROOT]
 import guide_config as cfg
 import layout
 import diagram as dg
+import highlight
 from diagram import esc
 from icons import ICONS
 import diagrams  # noqa: F401  (registers diagram builders)
@@ -34,6 +35,8 @@ def read(*parts):
 warnings = []
 # A <code> span that looks like a repo path or file name: has a slash (src/app, /api/x) or a file extension (Makefile excepted).
 CITED_PATH = re.compile(r'<code>[^<]*(/|\.[A-Za-z]{1,6}\b|Makefile|Dockerfile)[^<]*</code>')
+# A link to an outside page: topic guides cite official docs this way. Opened in a new tab, without a referrer.
+EXTERNAL_LINK = re.compile(r'<a href="(https?://[^"]+)"(?![^>]*\btarget=)')
 
 # ---------------------------------------------------------------- sections
 PARTS = [(pid, str(i + 1), title, blurb, items) for i, (pid, title, blurb, items) in enumerate(cfg.PARTS)]
@@ -43,9 +46,9 @@ for pid, num, title, blurb, items in PARTS:
         path = os.path.join(ROOT, 'sections', sid + '.html')
         src = read(path)
         assert f'<section id="{sid}">' in src, f'{path} must contain <section id="{sid}">'
-        sections[sid] = src.strip()
-        # Every claim should be traceable to the repo. Unfinished sections (TODOs) are caught by qa_check.py instead.
-        if 'TODO' not in src and 'Sources:' not in src and not CITED_PATH.search(src):
+        sections[sid] = EXTERNAL_LINK.sub(r'<a href="\1" target="_blank" rel="noopener noreferrer"', src.strip())
+        # Every claim should be traceable to the repo or a cited page. Unfinished sections (TODOs) are caught by qa_check.py.
+        if 'TODO' not in src and 'Sources:' not in src and not CITED_PATH.search(src) and not EXTERNAL_LINK.search(src):
             warnings.append(f'section {sid!r} cites no repo paths: add a "Sources:" line or paths in a Where/Code column')
 
 # ---------------------------------------------------------------- screenshots (optional)
@@ -116,6 +119,9 @@ def gallery_html():
 
 
 for sid in sections:
+    if re.search(r'<pre(?! class="code" data-lang=)', sections[sid]):
+        warnings.append(f'section {sid!r} has a <pre> without class="code" data-lang="…": it won\'t be highlighted')
+    sections[sid] = highlight.render_blocks(sections[sid], lambda w, sid=sid: warnings.append(f'section {sid!r}: {w}'))
     s = re.sub(r'<table[^>]*\sdata-screens[^>]*>.*?</table>', lambda m: add_screen_column(m.group(0)), sections[sid], flags=re.S)
     if '<!-- SCREEN GALLERY -->' in s:
         s = s.replace('<!-- SCREEN GALLERY -->', gallery_html() if HAS_SHOTS else '')
@@ -202,6 +208,8 @@ if HAS_SHOTS:
     payload = {k: {kk: v[kk] for kk in ('src', 'title', 'route', 'note')} for k, v in shot_data.items()}
     tail += '<script type="application/json" id="shots-data">' + json.dumps(payload) + '</script>\n<script>\n' + read(E, 'shots-viewer.js') + '</script>\n'
 tail += '<script>\n' + read(E, 'search.js') + '</script>\n<script>\n' + read(E, 'glossary.js') + '</script>\n'
+if 'class="code-copy"' in ''.join(pages):
+    tail += '<script>\n' + read(E, 'code.js') + '</script>\n'
 
 footer = getattr(cfg, 'FOOTER', '')
 if NO_SHOTS:

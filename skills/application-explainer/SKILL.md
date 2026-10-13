@@ -1,6 +1,6 @@
 ---
 name: application-explainer
-description: Builds a self-contained HTML "Product & Engineering Guide" for the application repo you're in — product overview, features, site map, architecture diagrams, tech stack, environments, local dev, testing, glossary with hover definitions, search, optional screenshots — with every claim verified against the code. Use when someone asks for an explainer, onboarding guide or docs, system or architecture overview, tech-stack breakdown, "explain this codebase/app", or a documentation site for a whole app or repo, and to update a guide it built earlier after the code changed. Not for single-file questions, README edits, or API reference docs.
+description: Builds a self-contained HTML "Product & Engineering Guide" for the application repo you're in — product overview, features, site map, architecture diagrams, tech stack, environments, local dev, testing, glossary with hover definitions, search, optional screenshots — with every claim verified against the code. Use when someone asks for an explainer, onboarding guide or docs, system or architecture overview, tech-stack breakdown, "explain this codebase/app", or a documentation site for a whole app or repo, and to update a guide it built earlier after the code changed. Not for single-file questions, README edits, API reference docs, or a guide to one technology and how the app uses it (that's topic-explainer).
 ---
 
 # Application explainer
@@ -96,7 +96,7 @@ When the code has moved on since a guide was built, update only what changed:
    ```bash
    python3 SKILL_DIR/scripts/changed_since.py GUIDE
    ```
-   It diffs the repo from `SOURCE_COMMIT` in `guide_config.py` and lists the **affected** sections (they cite a changed file or folder) and changed files that **no section cites**.
+   It diffs the repo from `SOURCE_COMMIT` in `guide_config.py` and lists the **affected** sections (they cite a changed file or folder) and changed files that **no section cites**. If the guide has technology deep dives (`TOPICS`), it also flags their docs as `DOCS STALE` after 90 days: refresh those with the topic-explainer skill's Updating steps.
 2. Tell the user what changed and which sections you plan to re-check. Don't rebuild sections nobody asked about.
 3. Run a `section-verifier` on each affected section, and a `repo-researcher` on any area with significant uncited changes (a new service, routes, jobs, or infra). Apply findings as in phase 4.
 4. To pick up engine fixes, re-copy `SKILL_DIR/engine/` over `GUIDE/build/`, keeping any custom `tokens.css` or `icons.py` registrations.
@@ -112,7 +112,7 @@ When the code has moved on since a guide was built, update only what changed:
 |---|---|
 | `engine/` | Build engine, copied into each guide as `build/`: `build.py`, `layout.py`, `diagram.py`, `icons.py` (+ `icons/`), `styles.css`, `tokens.css`, and the page scripts |
 | `starter/` | New-guide template: `guide_config.py`, `diagrams.py`, `shots.py`, `PROGRESS.md`, skeleton `sections/` |
-| `scripts/` | `new_guide.py` scaffold · `qa_check.py` headless Chrome checks · `extract_text.py` text + glossary candidates · `merge_glossary.py` · `changed_since.py` stale sections · `fetch_icons.py` |
+| `scripts/` | `new_guide.py` scaffold (also `--topic` / `--into` for topic-explainer) · `qa_check.py` headless Chrome checks · `extract_text.py` text + glossary candidates · `merge_glossary.py` · `changed_since.py` stale sections · `fetch_icons.py` |
 | `references/` | `workflow.md` phase details · `sections.md` catalog · `authoring.md` HTML/diagram/styling · `agent-prompts.md` · `screenshots.md` · `sharing.md` · `lessons.md` tooling gotchas |
 | `apps-script/Code.gs` | Optional: serve the guide from Google Drive to signed-in company accounts |
 | `PROMPT.md` | Kickoff prompt for agents that don't load skills |

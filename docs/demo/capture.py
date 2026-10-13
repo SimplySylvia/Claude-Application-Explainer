@@ -3,9 +3,11 @@
 
     python3 capture.py path/to/guide.html out_dir/
 
-Writes guide-engineering.png (light theme), guide-glossary.png, and guide-search.png (dark theme) at 1800px wide.
+Writes guide-engineering.png (light theme), guide-glossary.png and guide-search.png (dark theme), and three shots of
+the Express deep dive (topic explainer): guide-topic.png, guide-topic-code.png, and guide-topic-link.png, at 1800px wide.
 Each shot is a copy of the guide with a small script that sets up the view on load. Headless Chrome renders blank
-once a page has scrolled, so the script switches pages by clicking the header tab instead of using a URL hash.
+once a page has scrolled, so the script switches pages by clicking the header tab instead of using a URL hash, and
+FOCUS brings a section to the top by hiding what comes before it instead of scrolling.
 """
 import os, subprocess, sys, tempfile
 
@@ -15,12 +17,21 @@ from qa_check import chrome  # noqa: E402
 
 LIGHT = "if (document.documentElement.getAttribute('data-theme') !== 'light') document.getElementById('theme-toggle').click();"
 DARK = "if (document.documentElement.getAttribute('data-theme') === 'light') document.getElementById('theme-toggle').click();"
+# Hide everything before element `id` inside <main>, so it renders at the top of the viewport without scrolling.
+FOCUS = ("function focusOn(id) { var el = document.getElementById(id); var main = document.querySelector('main');"
+         " for (var n = el; n && n !== main; n = n.parentElement) for (var s = n.previousElementSibling; s; s = s.previousElementSibling)"
+         " s.style.display = 'none'; }")
 SHOTS = {  # name: (page, setup script)
     'engineering': ('engineering', LIGHT),
     'glossary': ('product', DARK + "document.querySelector('main .page:not([hidden]) a.gl-term')"
                                    ".dispatchEvent(new MouseEvent('mouseover', {bubbles: true}));"),
     'search': ('product', DARK + "var i = document.querySelector('.doc-search input'); i.focus(); i.value = 'order';"
                                  "i.dispatchEvent(new Event('input', {bubbles: true}));"),
+    'topic': ('express', LIGHT),
+    'topic-code': ('express', DARK + FOCUS + "focusOn('express-concepts--concepts-in-code');"),
+    'topic-link': ('engineering', LIGHT + FOCUS + "focusOn('stack');"
+                                  "document.querySelectorAll('#stack tr.group').forEach(function (r) {"
+                                  " if (/Backend/.test(r.textContent) && r.classList.contains('collapsed')) r.click(); });"),
 }
 
 
