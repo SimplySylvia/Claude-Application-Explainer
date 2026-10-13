@@ -9,7 +9,7 @@ class ScaffoldTest(TempDirCase):
         r = self.scaffold('Shop Front')
         self.assertEqual(r.returncode, 0, r.stderr)
         guide = os.path.join(self.tmp, 'shop-front-guide')
-        for p in ['guide_config.py', 'diagrams.py', 'shots.py', 'README.md', '.gitignore', '.git',
+        for p in ['guide_config.py', 'diagrams.py', 'shots.py', 'README.md', 'PROGRESS.md', '.gitignore', '.git',
                   'build/build.py', 'sections/overview.html', 'screenshots', 'qa']:
             self.assertTrue(os.path.exists(os.path.join(guide, p)), p)
 
@@ -20,6 +20,10 @@ class ScaffoldTest(TempDirCase):
         config = read(os.path.join(guide, 'guide_config.py'))
         self.assertIn("OUTPUT_NAME = 'shopfront-guide'", config)
         self.assertIn(commit, config)
+        full = run('git', '-C', self.app, 'rev-parse', 'HEAD').stdout.strip()
+        self.assertIn(f"SOURCE_COMMIT = '{full}'", config)
+        self.assertIn(f"SOURCE_REPO = '{os.path.realpath(self.app)}'", config.replace(self.app, os.path.realpath(self.app)))
+        self.assertIn('# Shopfront guide: progress', read(os.path.join(guide, 'PROGRESS.md')))
         for root, _, files in os.walk(guide):
             if os.sep + 'build' in root or os.sep + '.git' in root:
                 continue
@@ -72,6 +76,18 @@ class BuildTest(TempDirCase):
         terms = read(os.path.join(out, 'glossary-terms.txt')).splitlines()
         self.assertIn('requireStaff', terms)
         self.assertIn('===== #arch =====', read(os.path.join(out, 'guide-text.txt')))
+
+    def test_section_without_sources_warns(self):
+        self.scaffold()
+        guide = os.path.join(self.tmp, 'shopfront-guide')
+        shutil.copytree(os.path.join(ROOT, 'docs', 'demo', 'source'), guide, dirs_exist_ok=True)
+        write(os.path.join(guide, 'sections', 'cheatsheet.html'),
+              '<section id="cheatsheet">\n  <h2>Cheat sheet</h2>\n  <p class="sub">Run <code>npm test</code>.</p>\n</section>\n')
+        r = self.build(guide)
+        self.assertIn("section 'cheatsheet' cites no repo paths", r.stdout)
+        write(os.path.join(guide, 'sections', 'cheatsheet.html'),
+              '<section id="cheatsheet">\n  <h2>Cheat sheet</h2>\n  <p class="sub">From <code>package.json</code>.</p>\n</section>\n')
+        self.assertNotIn('WARNING', self.build(guide).stdout)
 
     def test_unplaced_diagram_warns(self):
         self.scaffold()
