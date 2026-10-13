@@ -215,7 +215,28 @@
       if (legend && legend.classList.contains('legend')) legend.appendChild(button);
       else diagram.insertBefore(button, diagram.firstChild);
       svg.addEventListener('click', function () { open(diagram); });
+      watchOverflow(diagram);
     });
+  }
+
+  // Diagrams keep a minimum width so labels stay readable, so narrow windows scroll them sideways. Overlay
+  // scrollbars hide that, so mark overflow: dg-overflow shows a hint, dg-more-right fades the cut-off edge.
+  function watchOverflow(diagram) {
+    var hint = document.createElement('p');
+    hint.className = 'dg-scroll-hint';
+    hint.textContent = 'This diagram is wider than the page: scroll it sideways, or click Expand to see all of it.';
+    diagram.parentNode.insertBefore(hint, diagram.nextSibling);
+    function update() {
+      var over = diagram.scrollWidth > diagram.clientWidth + 1;
+      diagram.classList.toggle('dg-overflow', over);
+      diagram.classList.toggle('dg-more-right', over && diagram.scrollLeft + diagram.clientWidth < diagram.scrollWidth - 1);
+    }
+    diagram.addEventListener('scroll', update, { passive: true });
+    // Diagrams on hidden pages measure 0 wide, so re-check when a page is shown, and on any resize.
+    document.addEventListener('guide:pagechange', update);
+    if (window.ResizeObserver) new ResizeObserver(update).observe(diagram);
+    window.addEventListener('resize', update);
+    update();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

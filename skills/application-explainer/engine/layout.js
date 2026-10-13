@@ -100,6 +100,7 @@
       if (a.getAttribute('data-page') === pid) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
     document.querySelectorAll('.tree-part').forEach(function (li) { li.classList.toggle('current', li.getAttribute('data-part') === pid); });
+    document.dispatchEvent(new CustomEvent('guide:pagechange', { detail: { page: pid } }));
   }
   function initPages() {
     pages = Array.prototype.slice.call(document.querySelectorAll('main .page'));

@@ -387,7 +387,7 @@ td.shot-none { font-size: 12px; color: var(--color-text-light); }
 
 @media print {
   h2.sec-title, h3.subsec-title { position: static !important; box-shadow: none !important; }
-  .sidebar, #sidebar-open, #theme-toggle, .dg-expand { display: none !important; }
+  .sidebar, #sidebar-open, #theme-toggle, .dg-expand, .dg-scroll-hint { display: none !important; }
   .sec.collapsed > .sec-body, .subsec.collapsed > .subsec-body { display: block !important; }
   tr.row-hidden { display: table-row !important; }
   body.sidebar-open main { margin-left: auto; }

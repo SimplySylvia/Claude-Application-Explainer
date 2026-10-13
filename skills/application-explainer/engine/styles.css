@@ -139,6 +139,10 @@ h3 { font-size: var(--font-size-body-lg); line-height: var(--line-height-body-lg
 .diagram { background: var(--color-bg-light); border: 1px solid var(--color-border-light); border-radius: var(--border-radius-lg);
   padding: var(--space-lg); overflow-x: auto; box-shadow: var(--shadow-lv1); }
 .diagram svg.dg { display: block; width: 100%; min-width: 980px; height: auto; }
+.diagram.dg-more-right { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 64px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 64px), transparent); }
+.dg-scroll-hint { display: none; color: var(--color-text-light); font-size: var(--font-size-body-sm); margin: var(--space-xs) 0 0; }
+.diagram.dg-overflow + .dg-scroll-hint { display: block; }
 .caption { color: var(--color-text-light); font-size: var(--font-size-body-sm); margin-top: var(--space-sm); }
 
 .legend { display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; margin: 0 0 var(--space-md); }
