@@ -1,0 +1,22 @@
+<!-- ============ LOCAL DEVELOPMENT ============ -->
+<section id="localdev">
+  <h2>Local development</h2>
+  <p class="sub">How to get Shopfront running locally and the day-to-day loop. Every command here was checked against the repo's scripts.</p>
+
+  <h3>1 · Set up your machine</h3>
+  <table>
+    <tr><th style="width:30%">Step</th><th>Command / notes</th></tr>
+    <tr><td><b>Install Node 20</b></td><td>Matches <code>FROM node:20-slim</code> in the <code>Dockerfile</code></td></tr>
+    <tr><td><b>Install dependencies</b></td><td><code>npm install</code></td></tr>
+    <tr><td><b>Point at a database</b></td><td>Set <code>DATABASE_URL</code> to a local PostgreSQL with <code>products</code> and <code>orders</code> tables. There are no migrations or seeds in the repo.</td></tr>
+  </table>
+
+  <h3 style="margin-top:24px">2 · Daily loop</h3>
+  <table>
+    <tr><th style="width:30%">Task</th><th>Command</th></tr>
+    <tr><td><b>Start the app</b></td><td><code>npm run dev</code> (API on :4000, client on :5173)</td></tr>
+    <tr><td><b>Turn on the admin screen</b></td><td><code>VITE_FLAG_NEW_ADMIN=true npm run dev</code></td></tr>
+    <tr><td><b>Lint</b></td><td><code>npm run lint</code></td></tr>
+    <tr><td><b>Test</b></td><td><code>npm test</code></td></tr>
+  </table>
+</section>

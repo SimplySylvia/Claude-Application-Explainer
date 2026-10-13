@@ -1,0 +1,21 @@
+<!-- ============ GLOSSARY ============ -->
+<section id="glossary">
+  <h2>Glossary</h2>
+  <p class="sub">Across the guide, the first mention of a term in each section is underlined: hover it for the definition, or click to jump here.</p>
+
+  <h3>Terms by area</h3>
+  <table class="stack">
+    <colgroup><col style="width:20%"><col><col style="width:30%"></colgroup>
+    <tr><th>Term</th><th>Meaning (as used in Shopfront)</th><th>Where it shows up (repo path)</th></tr>
+    <tr class="group" style="--accent: var(--c-run)"><td colspan="3"><span class="row-icon" data-icon="book"></span>Domain</td></tr>
+    <tr><td><b>Shopper</b></td><td>A customer browsing the storefront and placing orders.</td><td><code>client/src/pages/</code></td></tr>
+    <tr><td><b>Staff</b></td><td>Acme employees who manage the catalog; identified by the <code>x-staff-role</code> header.</td><td><code>server/auth.js</code></td></tr>
+    <tr><td><b>Cart</b></td><td>The <code>items</code> array posted to create an order. Must be non-empty.</td><td><code>server/routes/orders.js</code></td></tr>
+    <tr class="group" style="--accent: var(--c-edge)"><td colspan="3"><span class="row-icon" data-icon="code"></span>Code &amp; config</td></tr>
+    <tr><td><b>requireStaff</b></td><td>Express middleware that returns 403 unless the staff header is present. Guards <code>/api/admin</code>.</td><td><code>server/auth.js</code></td></tr>
+    <tr><td><b>createOrder</b></td><td>Handler for <code>POST /api/orders</code>: validates the cart, inserts the row, returns the id.</td><td><code>server/routes/orders.js</code></td></tr>
+    <tr><td><b>newAdmin</b></td><td>Feature flag that adds the <code>/admin</code> route. Set with <code>VITE_FLAG_NEW_ADMIN</code> at build time.</td><td><code>client/src/flags.js</code></td></tr>
+    <tr><td><b>DATABASE_URL</b></td><td>PostgreSQL connection string read by the pool.</td><td><code>server/db.js</code></td></tr>
+    <tr><td><b>SSO proxy (single sign-on)</b></td><td>Company proxy in front of the app that, per a code comment, identifies staff.</td><td><code>server/auth.js</code></td></tr>
+  </table>
+</section>

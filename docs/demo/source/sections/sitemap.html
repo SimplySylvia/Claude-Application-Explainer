@@ -1,0 +1,33 @@
+<!-- ============ SITE MAP ============ -->
+<section id="sitemap">
+  <h2>Site map &amp; navigation</h2>
+  <p class="sub">Every route in the app and how you reach it. Sources: <code>client/src/routes.jsx</code>, <code>server/index.js</code>.</p>
+
+  <h3>How to get around</h3>
+  <table>
+    <tr><th style="width:22%">Route</th><th style="width:34%">Opens</th><th>Shown when</th></tr>
+    <tr><td><code>/</code></td><td>Home</td><td>Always</td></tr>
+    <tr><td><code>/products</code></td><td>Product catalog</td><td>Always</td></tr>
+    <tr><td><code>/orders/:id</code></td><td>Order status (linked or typed by id; there's no nav menu)</td><td>Always</td></tr>
+    <tr><td><code>/admin</code></td><td>Admin catalog editor</td><td>Only when <code>VITE_FLAG_NEW_ADMIN=true</code> at build time; otherwise the route doesn't exist</td></tr>
+  </table>
+
+  <h3 style="margin-top:24px">Route tree</h3>
+  <div class="sitemap">
+    <details open><summary><code>/</code> <span>Home</span></summary>
+      <ul>
+        <li><code>/products</code> <span>product catalog</span></li>
+        <li><code>/orders/:id</code> <span>one order</span></li>
+        <li><code>/admin</code> <span>staff catalog editor · <span class="pill p-purple">newAdmin</span></span></li>
+      </ul>
+    </details>
+    <details open><summary><code>/api</code> <span>Express API (<code>server/index.js</code>)</span></summary>
+      <ul>
+        <li><code>GET /api/products</code> · <code>GET /api/products/:id</code></li>
+        <li><code>POST /api/orders</code> · <code>GET /api/orders/:id</code></li>
+        <li><code>POST /api/admin/products</code> <span>staff only (<code>requireStaff</code>)</span></li>
+      </ul>
+    </details>
+  </div>
+<!-- SCREEN GALLERY -->
+</section>

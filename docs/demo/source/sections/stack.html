@@ -1,0 +1,25 @@
+<!-- ============ TECH STACK ============ -->
+<section id="stack">
+  <h2>Tech stack</h2>
+  <p class="sub">What Shopfront is built with, by layer. Versions come from <code>package.json</code> (ranges, no lockfile), the <code>Dockerfile</code>, and <code>.github/workflows/ci.yml</code>.</p>
+  <table class="stack">
+    <colgroup><col style="width:22%"><col><col style="width:22%"></colgroup>
+    <tr><th>Technology</th><th>What it does here</th><th>Where</th></tr>
+    <tr class="group" style="--accent: var(--c-client)"><td colspan="3"><span class="row-icon" data-icon="monitor"></span>Frontend</td></tr>
+    <tr><td><b>React</b> <span class="chip">^18.3.1</span></td><td>UI for every page</td><td><code>client/src/pages/</code></td></tr>
+    <tr><td><b>React Router</b> <span class="chip">^6.23.0</span></td><td>Client routes via <code>createBrowserRouter</code></td><td><code>client/src/routes.jsx</code></td></tr>
+    <tr><td><b>Vite</b> <span class="chip">^5.2.0</span></td><td>Dev server (:5173) and production build; injects <code>VITE_*</code> flags</td><td><code>client/</code></td></tr>
+    <tr class="group" style="--accent: var(--c-run)"><td colspan="3"><span class="row-icon" data-icon="server"></span>Backend</td></tr>
+    <tr><td><b>Node.js</b> <span class="chip">20</span></td><td>Runtime in the production image</td><td><code>Dockerfile</code></td></tr>
+    <tr><td><b>Express</b> <span class="chip">^4.19.2</span></td><td>HTTP API and routing</td><td><code>server/</code></td></tr>
+    <tr class="group" style="--accent: var(--c-data)"><td colspan="3"><span class="row-icon" data-icon="db"></span>Data &amp; storage</td></tr>
+    <tr><td><b>PostgreSQL</b></td><td>Products and orders tables</td><td><code>server/routes/</code></td></tr>
+    <tr><td><b>node-postgres (pg)</b> <span class="chip">^8.11.0</span></td><td>Connection pool from <code>DATABASE_URL</code></td><td><code>server/db.js</code></td></tr>
+    <tr class="group" style="--accent: var(--c-ci)"><td colspan="3"><span class="row-icon" data-icon="terminal"></span>Tooling &amp; CI</td></tr>
+    <tr><td><b>Jest</b> <span class="chip">^29.7.0</span> + <b>Supertest</b> <span class="chip">^7.0.0</span></td><td>API tests against the Express app in memory</td><td><code>test/</code></td></tr>
+    <tr><td><b>ESLint</b> <span class="chip">^9.0.0</span></td><td>Linting, run in CI</td><td><code>package.json</code></td></tr>
+    <tr><td><b>concurrently</b> <span class="chip">^8.2.0</span></td><td>Runs API and client together in <code>npm run dev</code></td><td><code>package.json</code></td></tr>
+    <tr><td><b>GitHub Actions</b></td><td>Lint, test, and deploy pipeline</td><td><code>.github/workflows/ci.yml</code></td></tr>
+    <tr><td><b>Docker</b></td><td>Production image: installs, builds the client, starts the API</td><td><code>Dockerfile</code></td></tr>
+  </table>
+</section>

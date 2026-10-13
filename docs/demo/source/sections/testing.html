@@ -1,0 +1,11 @@
+<!-- ============ TESTING ============ -->
+<section id="testing">
+  <h2>Testing strategy</h2>
+  <p class="sub">Which kind of test to write, where it goes, and how to run it. Sources: <code>test/</code>, <code>package.json</code>, <code>.github/workflows/ci.yml</code>.</p>
+  <table>
+    <tr><th style="width:18%">Layer</th><th style="width:20%">Tool</th><th>Good for</th><th style="width:26%">Run one</th></tr>
+    <tr><td><b>API</b></td><td>Jest + Supertest</td><td>Request validation and responses. Imports the Express app without starting a server (<code>test/orders.test.js</code>).</td><td><code>npx jest test/orders.test.js</code></td></tr>
+    <tr><td><b>Client</b></td><td>None yet</td><td>No component or end-to-end tests exist.</td><td>—</td></tr>
+  </table>
+  <p class="caption">CI runs lint and the full Jest suite on every push.</p>
+</section>

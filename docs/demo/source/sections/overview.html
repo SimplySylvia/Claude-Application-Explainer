@@ -1,0 +1,30 @@
+<!-- ============ OVERVIEW ============ -->
+<section id="overview">
+  <h2>What is Shopfront?</h2>
+  <p class="sub">Shopfront is the storefront for Acme's online shop. Shoppers browse products and track orders; staff use the admin screens to manage the catalog. Sources: <code>README.md</code>, <code>client/src/routes.jsx</code>, <code>server/index.js</code>.</p>
+  <div class="grid">
+    <div class="card" style="--accent: var(--c-client)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="users"></svg></span>Who uses it</h3>
+      <ul>
+        <li><b>Shoppers</b>: browse the catalog, place orders, and look up an order by id</li>
+        <li><b>Staff</b>: add products through the admin catalog editor (behind the <span class="pill p-purple">newAdmin</span> flag)</li>
+      </ul>
+    </div>
+    <div class="card" style="--accent: var(--c-run)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="dash"></svg></span>What it does</h3>
+      <ul>
+        <li>Lists products and product details from PostgreSQL</li>
+        <li>Creates orders from a cart and rejects empty carts</li>
+        <li>Lets staff create products through <code>/api/admin</code></li>
+      </ul>
+    </div>
+    <div class="card" style="--accent: var(--c-edge)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="globe"></svg></span>Where it runs</h3>
+      <ul>
+        <li><b>Web client</b>: a React single-page app built with Vite (<code>client/</code>)</li>
+        <li><b>API</b>: one Express server on port 4000, shipped as a Docker image (<code>Dockerfile</code>)</li>
+        <li><b>Database</b>: PostgreSQL, reached through <code>DATABASE_URL</code></li>
+      </ul>
+    </div>
+  </div>
+</section>

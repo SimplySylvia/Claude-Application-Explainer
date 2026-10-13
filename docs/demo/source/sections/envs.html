@@ -1,0 +1,21 @@
+<!-- ============ ENVIRONMENTS ============ -->
+<section id="envs">
+  <h2>Environments &amp; deployments</h2>
+  <p class="sub">Where Shopfront runs and how a change gets to production. Sources: <code>.github/workflows/ci.yml</code>, <code>Dockerfile</code>.</p>
+
+  <h3>Environments</h3>
+  <table>
+    <tr><th style="width:16%">Environment</th><th style="width:28%">URL / project</th><th>Data and who uses it</th></tr>
+    <tr><td><b>Local</b></td><td><code>localhost:5173</code> (client), <code>localhost:4000</code> (API)</td><td>Your own PostgreSQL via <code>DATABASE_URL</code></td></tr>
+    <tr><td><b>Staging</b></td><td>Not in the repo</td><td>The deploy step mentions a staging registry; the URL and data aren't defined in code</td></tr>
+    <tr><td><b>Production</b></td><td>Not in the repo</td><td>Promoted from staging by tag, according to the deploy step</td></tr>
+  </table>
+
+  <h3 style="margin-top:24px">How a change ships</h3>
+  <table>
+    <tr><th style="width:6%">#</th><th style="width:26%">Step</th><th>What happens and what can stop it</th></tr>
+    <tr><td>1</td><td><b>Push any branch</b></td><td>The <code>test</code> job runs <code>npm ci</code>, <code>npm run lint</code>, and <code>npm test</code>. A failure blocks deploy.</td></tr>
+    <tr><td>2</td><td><b>Merge to <code>main</code></b></td><td>The <code>deploy</code> job runs only on <code>refs/heads/main</code> and only after <code>test</code> passes.</td></tr>
+    <tr><td>3</td><td><b>Build and push the image</b></td><td>Placeholder: today the step only <code>echo</code>s “docker build + push to the staging registry, then promote to production by tag”. The real deploy happens outside this repo.</td></tr>
+  </table>
+</section>

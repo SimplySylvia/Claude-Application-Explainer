@@ -1,0 +1,16 @@
+<!-- ============ FEATURES ============ -->
+<section id="features">
+  <h2>Features</h2>
+  <p class="sub">What people can do in Shopfront, by area. <span class="pill p-purple">flag</span> marks features behind a feature flag. Routes match the <a href="#sitemap">Site map</a>.</p>
+  <table class="stack">
+    <colgroup><col style="width:15%"><col><col style="width:22%"><col style="width:22%"><col style="width:11%"></colgroup>
+    <tr><th>Feature</th><th>What it is</th><th>Route</th><th>Code</th><th>Rollout</th></tr>
+    <tr class="group" style="--accent: var(--c-client)"><td colspan="5"><span class="row-icon" data-icon="person"></span>Shopping</td></tr>
+    <tr><td><b>Home</b></td><td>Landing page of the storefront.</td><td><code>/</code></td><td><code>client/src/pages/Home.jsx</code></td><td>—</td></tr>
+    <tr><td><b>Product catalog</b></td><td>Lists every product; the API also serves one product by id.</td><td><code>/products</code> · <code>GET /api/products[/:id]</code></td><td><code>client/src/pages/Products.jsx</code>, <code>server/routes/products.js</code></td><td>—</td></tr>
+    <tr><td><b>Place an order</b></td><td>Validates the cart, stores the order, and returns its id. An empty cart gets a 400.</td><td><code>POST /api/orders</code></td><td><code>server/routes/orders.js</code> (<code>createOrder</code>)</td><td>—</td></tr>
+    <tr><td><b>Order status</b></td><td>Shows one order by id.</td><td><code>/orders/:id</code> · <code>GET /api/orders/:id</code></td><td><code>client/src/pages/Order.jsx</code>, <code>server/routes/orders.js</code></td><td>—</td></tr>
+    <tr class="group" style="--accent: var(--c-edge)"><td colspan="5"><span class="row-icon" data-icon="admin"></span>Staff</td></tr>
+    <tr><td><b>Admin catalog editor</b></td><td>Staff screen for managing products. The create endpoint currently echoes the request body back and doesn't write to the database.</td><td><code>/admin</code> · <code>POST /api/admin/products</code></td><td><code>client/src/pages/Admin.jsx</code>, <code>server/routes/products.js</code></td><td><span class="pill p-purple">newAdmin</span></td></tr>
+  </table>
+</section>
