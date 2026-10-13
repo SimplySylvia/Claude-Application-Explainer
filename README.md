@@ -10,9 +10,13 @@ against the code.**
   <a href=".claude-plugin/plugin.json"><img src="https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FSimplySylvia%2FClaude-Application-Explainer%2Fmain%2F.claude-plugin%2Fplugin.json&query=%24.version&label=version&color=1f6feb" alt="Version"></a>
   <a href="#requirements"><img src="https://img.shields.io/badge/python-3.9%2B-3776AB?logo=python&logoColor=white" alt="Python 3.9+"></a>
   <a href="#what-it-generates"><img src="https://img.shields.io/badge/output-single_HTML_file-E34F26?logo=html5&logoColor=white" alt="Output: one HTML file"></a>
+  <a href="https://github.com/SimplySylvia/Claude-Application-Explainer/actions/workflows/ci.yml"><img src="https://github.com/SimplySylvia/Claude-Application-Explainer/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="#development"><img src="https://img.shields.io/badge/evals-claude_plugin_eval-6E56CF" alt="Evals"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/SimplySylvia/Claude-Application-Explainer" alt="License: MIT"></a>
   <a href="https://github.com/SimplySylvia/Claude-Application-Explainer/commits/main"><img src="https://img.shields.io/github/last-commit/SimplySylvia/Claude-Application-Explainer" alt="Last commit"></a>
 </p>
+
+**[▶ Open the live demo guide](https://simplysylvia.github.io/Claude-Application-Explainer/demo/)**
 
 [Quick start](#quick-start) · [How it works](#how-it-works) · [What it generates](#what-it-generates) ·
 [Example](#example) · [Development](#development)
@@ -125,8 +129,9 @@ Before Claude hands the guide over, `qa_check.py` must pass on both HTML files w
 
 ### Example
 
-These screenshots come from a guide for **Shopfront**, the small fictional app used by the evals
-(`evals/_fixture/make-app.sh`). A real app produces more sections and longer tables.
+**[Open the live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/)**: a complete guide for **Shopfront**, the small fictional app used by the evals
+(`evals/_fixture/make-app.sh`). A real app produces more sections and longer tables. The screenshots below are
+from the same guide.
 
 <table>
   <tr>
@@ -157,12 +162,26 @@ pass is there to catch.
 | `.claude-plugin/marketplace.json` | Marketplace manifest (lists this repo as its only plugin) |
 | `skills/application-explainer/` | The skill: `SKILL.md`, build `engine/`, `starter/` template, `scripts/`, `references/` |
 | `agents/` | Subagents the skill fans out to: `repo-researcher`, `structure-reviewer`, `section-verifier`, `glossary-drafter` |
-| `docs/` | [`HOW-IT-WORKS.md`](docs/HOW-IT-WORKS.md) workflow and agents; `images/` README screenshots |
+| `docs/` | [`HOW-IT-WORKS.md`](docs/HOW-IT-WORKS.md) workflow and agents; `demo/` live demo and its source; `images/` README screenshots (served by GitHub Pages) |
 | `evals/` | `claude plugin eval` suite: trigger, near-miss, and end-to-end cases on a small fixture app |
+| `tests/` | Unit tests for the scaffold, build, diagrams, and glossary scripts |
+| `.github/` | CI workflow, issue templates, and the pull request template |
+| [`CHANGELOG.md`](CHANGELOG.md) · [`LICENSE`](LICENSE) | Release notes · MIT license |
 
 ## Development
 
-### Testing the skill
+### Unit tests
+
+Fast checks on the engine and scripts (standard library only, about two seconds):
+
+```bash
+python3 -m unittest discover -s tests -t tests
+```
+
+CI runs these on every push and pull request, along with the demo build and QA. On pull requests, it also checks
+that changes to `skills/` or `agents/` bump the version.
+
+### Evals
 
 The suite in `evals/` runs against a small fictional app that `evals/_fixture/make-app.sh` creates.
 
@@ -176,7 +195,25 @@ claude plugin eval . --tag e2e --scaffold --runs 1 --allow-tools Bash Write Edit
 
 Run the trigger and near-miss cases after any change to the skill's `description`.
 
+### Demo and screenshots
+
+The live demo and the README screenshots are built from [`docs/demo/source/`](docs/demo/source/) with the current
+engine. After changing the engine or the demo source, regenerate both and commit the results:
+
+```bash
+docs/demo/make-demo.sh                   # build, run QA, recapture docs/images/*.png
+docs/demo/make-demo.sh --no-screenshots  # build and QA only
+```
+
+CI fails if `docs/demo/index.html` is out of date.
+
 ### Releasing
 
-Bump `version` in `.claude-plugin/plugin.json` when you change the skill. Users pick it up with
-`/plugin marketplace update`, and the version badge above updates automatically.
+Bump `version` in `.claude-plugin/plugin.json` when you change the skill or agents, and move the `Unreleased`
+notes in [`CHANGELOG.md`](CHANGELOG.md) under the new version. Users pick it up with `/plugin marketplace update`,
+and the version badge above updates automatically.
+
+## License
+
+[MIT](LICENSE). The guides you generate document your own internal systems, so keep them internal (see
+[`references/sharing.md`](skills/application-explainer/references/sharing.md)).
