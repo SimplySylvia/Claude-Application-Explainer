@@ -32,6 +32,8 @@ def read(*parts):
 
 
 warnings = []
+# A <code> span that looks like a repo path or file name: has a slash (src/app, /api/x) or a file extension (Makefile excepted).
+CITED_PATH = re.compile(r'<code>[^<]*(/|\.[A-Za-z]{1,6}\b|Makefile|Dockerfile)[^<]*</code>')
 
 # ---------------------------------------------------------------- sections
 PARTS = [(pid, str(i + 1), title, blurb, items) for i, (pid, title, blurb, items) in enumerate(cfg.PARTS)]
@@ -42,6 +44,9 @@ for pid, num, title, blurb, items in PARTS:
         src = read(path)
         assert f'<section id="{sid}">' in src, f'{path} must contain <section id="{sid}">'
         sections[sid] = src.strip()
+        # Every claim should be traceable to the repo. Unfinished sections (TODOs) are caught by qa_check.py instead.
+        if 'TODO' not in src and 'Sources:' not in src and not CITED_PATH.search(src):
+            warnings.append(f'section {sid!r} cites no repo paths: add a "Sources:" line or paths in a Where/Code column')
 
 # ---------------------------------------------------------------- screenshots (optional)
 shot_data = {}

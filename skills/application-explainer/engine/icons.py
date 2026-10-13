@@ -16,7 +16,8 @@ ICON_FILES = dict(
 )
 ICONS = {}
 for _key, _name in ICON_FILES.items():
-    _src = open(os.path.join(HERE, 'icons', _name + '.js')).read()
+    with open(os.path.join(HERE, 'icons', _name + '.js'), encoding='utf-8') as _f:
+        _src = _f.read()
     _ds = re.findall(r'd: "([^"]+)"', _src)
     assert _ds, _name
     ICONS[_key] = ''.join(f'<path d="{d}"/>' for d in _ds)
