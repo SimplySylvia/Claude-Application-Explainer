@@ -352,6 +352,10 @@ h3 { font-size: var(--font-size-body-lg); line-height: var(--line-height-body-lg
 .diagram { background: var(--color-bg-light); border: 1px solid var(--color-border-light); border-radius: var(--border-radius-lg);
   padding: var(--space-lg); overflow-x: auto; box-shadow: var(--shadow-lv1); }
 .diagram svg.dg { display: block; width: 100%; min-width: 980px; height: auto; }
+.diagram.dg-more-right { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 64px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 64px), transparent); }
+.dg-scroll-hint { display: none; color: var(--color-text-light); font-size: var(--font-size-body-sm); margin: var(--space-xs) 0 0; }
+.diagram.dg-overflow + .dg-scroll-hint { display: block; }
 .caption { color: var(--color-text-light); font-size: var(--font-size-body-sm); margin-top: var(--space-sm); }
 
 .legend { display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; margin: 0 0 var(--space-md); }
@@ -668,7 +672,7 @@ td.shot-none { font-size: 12px; color: var(--color-text-light); }
 
 @media print {
   h2.sec-title, h3.subsec-title { position: static !important; box-shadow: none !important; }
-  .sidebar, #sidebar-open, #theme-toggle, .dg-expand { display: none !important; }
+  .sidebar, #sidebar-open, #theme-toggle, .dg-expand, .dg-scroll-hint { display: none !important; }
   .sec.collapsed > .sec-body, .subsec.collapsed > .subsec-body { display: block !important; }
   tr.row-hidden { display: table-row !important; }
   body.sidebar-open main { margin-left: auto; }
@@ -1064,6 +1068,7 @@ td.shot-none { font-size: 12px; color: var(--color-text-light); }
       if (a.getAttribute('data-page') === pid) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
     document.querySelectorAll('.tree-part').forEach(function (li) { li.classList.toggle('current', li.getAttribute('data-part') === pid); });
+    document.dispatchEvent(new CustomEvent('guide:pagechange', { detail: { page: pid } }));
   }
   function initPages() {
     pages = Array.prototype.slice.call(document.querySelectorAll('main .page'));
@@ -1533,7 +1538,28 @@ td.shot-none { font-size: 12px; color: var(--color-text-light); }
       if (legend && legend.classList.contains('legend')) legend.appendChild(button);
       else diagram.insertBefore(button, diagram.firstChild);
       svg.addEventListener('click', function () { open(diagram); });
+      watchOverflow(diagram);
     });
+  }
+
+  // Diagrams keep a minimum width so labels stay readable, so narrow windows scroll them sideways. Overlay
+  // scrollbars hide that, so mark overflow: dg-overflow shows a hint, dg-more-right fades the cut-off edge.
+  function watchOverflow(diagram) {
+    var hint = document.createElement('p');
+    hint.className = 'dg-scroll-hint';
+    hint.textContent = 'This diagram is wider than the page: scroll it sideways, or click Expand to see all of it.';
+    diagram.parentNode.insertBefore(hint, diagram.nextSibling);
+    function update() {
+      var over = diagram.scrollWidth > diagram.clientWidth + 1;
+      diagram.classList.toggle('dg-overflow', over);
+      diagram.classList.toggle('dg-more-right', over && diagram.scrollLeft + diagram.clientWidth < diagram.scrollWidth - 1);
+    }
+    diagram.addEventListener('scroll', update, { passive: true });
+    // Diagrams on hidden pages measure 0 wide, so re-check when a page is shown, and on any resize.
+    document.addEventListener('guide:pagechange', update);
+    if (window.ResizeObserver) new ResizeObserver(update).observe(diagram);
+    window.addEventListener('resize', update);
+    update();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

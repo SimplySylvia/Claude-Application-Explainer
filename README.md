@@ -54,6 +54,9 @@ Then open Claude Code in the app repo you want documented and ask, for example:
 >
 > Use the application-explainer skill on this app.
 
+Later, when the code has changed, ask Claude to update the guide. It checks which sections cite files that changed
+since the guide was built and re-verifies only those.
+
 Claude confirms the scope with you, then works through the phases below.
 
 <details>
@@ -104,6 +107,7 @@ Claude writes to a **guide folder** outside the app repo (default: a sibling `<a
 ├── shots.py, screenshots/            # optional screenshot gallery
 ├── build/                            # build engine copied from the skill (python3 build/build.py)
 ├── qa/                               # qa_check.py output and glossary drafts (git-ignored)
+├── PROGRESS.md                       # phase checklist, scope, decisions, open questions (survives across sessions)
 └── README.md                         # how to rebuild, and how the guide is shared internally
 ```
 
@@ -191,9 +195,13 @@ claude plugin eval . --tag trigger nearmiss --scaffold
 
 # End to end: builds a whole guide and runs QA (slow; grants the tools the build needs)
 claude plugin eval . --tag e2e --scaffold --runs 1 --allow-tools Bash Write Edit
+
+# Guardrails only: a planted secret is never copied, and screenshots wait for a synthetic-data confirmation
+claude plugin eval . --tag safety --scaffold --runs 1 --allow-tools Bash Write Edit
 ```
 
-Run the trigger and near-miss cases after any change to the skill's `description`.
+Run the trigger and near-miss cases after any change to the skill's `description`, and the safety cases after any
+change to its rules.
 
 ### Demo and screenshots
 

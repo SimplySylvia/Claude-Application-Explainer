@@ -61,7 +61,25 @@ flowchart TD
     class r1,r2,r3,sr,sv,gd agent
 ```
 
-After every phase, Claude builds the guide, commits it to the guide's own git repo, and gives you a short update.
+After every phase, Claude builds the guide, updates `PROGRESS.md`, commits it to the guide's own git repo, and gives
+you a short update. Each phase has **Done when** criteria in [`SKILL.md`](../skills/application-explainer/SKILL.md)
+that must hold before Claude ticks it off.
+
+`PROGRESS.md` in the guide folder holds the checklist, your scope answers, decisions (such as review findings
+Claude rejected, and why), open questions, and repo problems to report. If a session ends or its context gets
+summarized, the next one reads it and picks up where the last left off.
+
+## Updating a guide
+
+Guides record the commit they were built from (`SOURCE_COMMIT` in `guide_config.py`). When you ask Claude to
+update one:
+
+1. `changed_since.py` diffs the repo from that commit and lists the sections that cite a changed file or folder,
+   plus changed files no section cites.
+2. Claude tells you what changed, then re-verifies only those sections with `section-verifier` agents, adding
+   `repo-researcher` runs for significant new areas.
+3. It rebuilds, runs QA, records the new commit with `changed_since.py --mark`, and re-shares through the same
+   channel as before.
 
 ## Who does what
 
