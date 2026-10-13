@@ -1,0 +1,67 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: Tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.9', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Validate plugin manifests
+        run: |
+          python -m json.tool .claude-plugin/plugin.json > /dev/null
+          python -m json.tool .claude-plugin/marketplace.json > /dev/null
+      - name: Unit tests
+        run: python -m unittest discover -s tests -t tests -v
+
+  demo:
+    name: Demo guide builds, passes QA, and is up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      # Ubuntu 24.04 blocks the unprivileged user namespaces Chrome's sandbox needs.
+      - name: Allow Chrome's sandbox
+        run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+      - name: Build demo and run qa_check.py
+        run: docs/demo/make-demo.sh --no-screenshots
+      - name: Check docs/demo/index.html is committed up to date
+        run: |
+          git diff --exit-code docs/demo/index.html || {
+            echo "::error::docs/demo/index.html is stale. Run docs/demo/make-demo.sh and commit the result."
+            exit 1
+          }
+
+  version:
+    name: Version bumped when the skill changes
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compare plugin.json version with the base branch
+        run: |
+          base=origin/${{ github.base_ref }}
+          if git diff --quiet "$base"...HEAD -- skills/ agents/; then
+            echo "skills/ and agents/ unchanged; no bump needed."
+            exit 0
+          fi
+          old=$(git show "$base":.claude-plugin/plugin.json | python -c 'import json,sys; print(json.load(sys.stdin)["version"])')
+          new=$(python -c 'import json; print(json.load(open(".claude-plugin/plugin.json"))["version"])')
+          if [ "$old" = "$new" ]; then
+            echo "::error file=.claude-plugin/plugin.json::skills/ or agents/ changed but version is still $old. Bump it and add a CHANGELOG entry."
+            exit 1
+          fi
+          echo "Version $old -> $new"

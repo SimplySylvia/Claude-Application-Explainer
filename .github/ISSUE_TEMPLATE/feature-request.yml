@@ -1,0 +1,17 @@
+name: Feature request
+description: A new section, guide feature, or change to how the skill works
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The reader or the situation this would help with.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like the skill or guide to do?
+    validations:
+      required: true
