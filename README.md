@@ -16,7 +16,7 @@ against the code.**
   <a href="https://github.com/SimplySylvia/Claude-Application-Explainer/commits/main"><img src="https://img.shields.io/github/last-commit/SimplySylvia/Claude-Application-Explainer" alt="Last commit"></a>
 </p>
 
-**[▶ Open the live demo guide](https://simplysylvia.github.io/Claude-Application-Explainer/demo/)**
+<a href="https://simplysylvia.github.io/Claude-Application-Explainer/demo/"><img src="https://img.shields.io/badge/%E2%96%B6%20Open%20the%20live%20demo-1f6feb?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Open the live demo" height="40"></a>
 
 [Quick start](#quick-start) · [How it works](#how-it-works) · [What it generates](#what-it-generates) ·
 [Example](#example) · [Development](#development)
