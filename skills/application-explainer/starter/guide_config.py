@@ -12,6 +12,12 @@ TOKENS_CSS = None
 # Embedded fonts: [(family, weight, path-relative-to-this-folder), ...]. Fonts must be referenced by the tokens' font-family.
 FONTS = []
 
+# Where the guide's facts come from. scripts/changed_since.py diffs SOURCE_REPO from SOURCE_COMMIT to find sections
+# that may be stale; `changed_since.py <guide> --mark` records the new commit after an update. A relative
+# SOURCE_REPO is resolved from this folder.
+SOURCE_REPO = '__REPO_PATH__'
+SOURCE_COMMIT = '__COMMIT_FULL__'
+
 FOOTER = 'Generated from the <code>__REPO_NAME__</code> repository on __DATE__ (branch <code>__BRANCH__</code> @ __COMMIT__). Internal use only.'
 
 # Parts become pages (tabs in the header). Each item is (section id, sidebar label); the file is sections/<id>.html.

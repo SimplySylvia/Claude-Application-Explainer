@@ -10,4 +10,4 @@ Read its `SKILL.md` first and follow it: its rules apply to the whole task, and 
 
 The most important rules: treat this repository as read-only, put the guide in its own folder outside it, verify every claim against the code, never reproduce secrets or personal data, keep the guide internal, and ask me before capturing screenshots, changing account settings, granting OAuth permissions, or deploying anything.
 
-Start by confirming scope with me (app name, audience, guide location, screenshots), then follow the checklist.
+Start by confirming scope with me (app name, audience, guide location, screenshots), then follow the checklist. If a guide folder with a `PROGRESS.md` already exists, read it first and continue from there.

@@ -1,6 +1,8 @@
 # Workflow details, phase by phase
 
-The phase numbers match the checklist in `SKILL.md`. Each phase ends with a build (`python3 GUIDE/build/build.py`), a commit of the guide folder, and a short update to the user.
+The phase numbers match the checklist in `SKILL.md`, which also gives each phase's **Done when** criteria. Each phase ends with a build (`python3 GUIDE/build/build.py`), an update to `GUIDE/PROGRESS.md`, a commit of the guide folder, and a short update to the user.
+
+`GUIDE/PROGRESS.md` is the guide's memory across sessions: the ticked checklist, the scope answers, decisions (outline approved, sections dropped, review findings rejected and why), open questions, and repo problems to report. A resumed session reads it first.
 
 ## 0 · Scope (ask the user)
 
@@ -17,7 +19,7 @@ Confirm before doing any work:
 python3 SKILL_DIR/scripts/new_guide.py --repo /path/to/repo --app "Name" [--dest /path/to/name-guide]
 ```
 
-It copies the engine to `GUIDE/build/`, the starter sections to `GUIDE/sections/`, fills in the app name, repo, branch, and commit, and runs `git init`.
+It copies the engine to `GUIDE/build/`, the starter sections to `GUIDE/sections/`, fills in the app name, repo, branch, and commit (also recorded as `SOURCE_REPO` and `SOURCE_COMMIT` in `guide_config.py` for later updates), writes `PROGRESS.md`, and runs `git init`. Record the phase 0 answers under Scope in `PROGRESS.md`.
 
 ## 2 · Discover
 
@@ -27,7 +29,7 @@ Map the repo before writing anything:
 - Map the top-level layout and any monorepo or project config. Find the router, the API layer (REST, GraphQL, RPC), the models or schema, IaC, CI workflows, and test configs.
 - List the user-facing surfaces (web, mobile, extensions, CLIs) and the deployable services.
 
-For big repos, run `repo-researcher` agents in parallel, one per area (`agent-prompts.md` §1). They return findings with paths and write nothing.
+If the repo has more than about 1,000 tracked files (`git -C <repo> ls-files | wc -l`) or more than 3 deployable apps or services, run `repo-researcher` agents in parallel, one per area (`agent-prompts.md` §1). They return findings with paths and write nothing. Smaller repos are faster to research yourself.
 
 Pick the sections from `sections.md` that fit this app and drop the ones that don't apply. Write `PARTS` in `guide_config.py` in narrative order: Product → Engineering → Operations → Working process → Reference. Show the user the section list before writing.
 
@@ -68,4 +70,4 @@ Share internally only (`sharing.md`). Record how it was shared (link, file ID, a
 
 ## Updating a guide later
 
-Re-run discovery for whatever changed, edit the sections, rebuild, run QA, and re-upload. To pick up engine fixes, re-copy `SKILL_DIR/engine/` over `GUIDE/build/`, keeping any custom `tokens.css` or `icons.py` registrations.
+Follow "Updating an existing guide" in `SKILL.md`: `scripts/changed_since.py GUIDE` lists the sections that cite files changed since `SOURCE_COMMIT`, plus changed files no section cites. Re-verify those, rebuild, run QA, then `changed_since.py GUIDE --mark` to record the new commit. Guides scaffolded before `SOURCE_COMMIT` existed can add `SOURCE_REPO` and `SOURCE_COMMIT` to `guide_config.py` by hand (the commit in the footer is where they were built from).

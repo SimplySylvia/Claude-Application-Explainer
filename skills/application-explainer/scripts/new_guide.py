@@ -3,8 +3,8 @@
 
     python3 new_guide.py --repo /path/to/app-repo --app "Acme" [--dest ~/acme-guide]
 
-Creates <dest>/ with build/ (the engine), sections/, diagrams.py, shots.py, guide_config.py, screenshots/,
-and initializes a git repo there. The target application repo is only read (for its name, branch, and commit).
+Creates <dest>/ with build/ (the engine), sections/, diagrams.py, shots.py, guide_config.py, PROGRESS.md,
+screenshots/, and initializes a git repo there. The target application repo is only read (for its name, branch, and commit).
 """
 import argparse, datetime, os, re, shutil, subprocess, sys
 
@@ -41,7 +41,8 @@ def main():
     values = {
         '__APP__': a.app, '__SLUG__': slug, '__REPO_NAME__': os.path.basename(repo),
         '__DATE__': datetime.date.today().isoformat(), '__BRANCH__': git(repo, 'rev-parse', '--abbrev-ref', 'HEAD'),
-        '__COMMIT__': git(repo, 'rev-parse', '--short', 'HEAD'),
+        '__COMMIT__': git(repo, 'rev-parse', '--short', 'HEAD'), '__COMMIT_FULL__': git(repo, 'rev-parse', 'HEAD'),
+        '__REPO_PATH__': repo.replace('\\', '\\\\').replace("'", "\\'"),  # lands inside a Python string literal
     }
     for root, _, files in os.walk(dest):
         if os.sep + 'build' in root or os.sep + '.git' in root:
@@ -59,7 +60,8 @@ def main():
         f'# {a.app} — Product & Engineering Guide\n\n'
         f'Internal guide to the `{values["__REPO_NAME__"]}` repository, built with the application-explainer skill.\n\n'
         f'```bash\npython3 build/build.py   # writes {slug}-guide.html (and -no-screenshots.html when screenshots exist)\n```\n\n'
-        '- `guide_config.py`: title, brand, parts/pages, collapse defaults\n'
+        '- `PROGRESS.md`: phase checklist, scope, decisions, and open questions (read it first when resuming)\n'
+        '- `guide_config.py`: title, brand, parts/pages, collapse defaults, source repo and commit\n'
         '- `sections/<id>.html`: one file per section\n'
         '- `diagrams.py`: SVG diagrams (`@diagram(name)`), placed with `<div class="diagram" data-diagram="name"></div>`\n'
         '- `shots.py` + `screenshots/`: optional screenshots\n'
