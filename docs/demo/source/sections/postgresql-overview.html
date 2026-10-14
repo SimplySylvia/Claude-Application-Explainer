@@ -1,0 +1,35 @@
+<!-- ============ WHAT IS POSTGRESQL ============ -->
+<section id="postgresql-overview">
+  <h2>What is PostgreSQL?</h2>
+  <p class="sub">PostgreSQL is the relational database that stores Shopfront's products and orders. The API talks to it through <b>node-postgres</b> (the <code>pg</code> package): the low-level Node.js driver that keeps a pool of connections, sends your SQL with its values, and turns result rows into JavaScript objects. Sources: <a href="https://node-postgres.com/">node-postgres</a>, <a href="https://www.postgresql.org/support/versioning/">PostgreSQL versioning</a>, <code>server/db.js</code>.</p>
+  <div class="grid">
+    <div class="card" style="--accent: var(--c-data)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="db"></svg></span>In one paragraph</h3>
+      <ul>
+        <li>PostgreSQL stores data in <b>tables</b> you query with SQL. It runs as its own server; the API connects to it over the network.</li>
+        <li><b>node-postgres</b> keeps a <b>pool</b> of open connections, so each query doesn't pay for a new one (<a href="https://node-postgres.com/apis/pool">Pool</a>).</li>
+        <li>You write the SQL yourself. Values go in separately as <code>$1</code>, <code>$2</code>… (<a href="https://node-postgres.com/features/queries">Queries</a>).</li>
+      </ul>
+    </div>
+    <div class="card" style="--accent: var(--c-run)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="puzzle"></svg></span>The problem it solves</h3>
+      <ul>
+        <li>Durable, consistent storage: rows survive restarts, and many API requests can read and write at once.</li>
+        <li>node-postgres handles the connection protocol, pooling, and type conversion (<code>json</code> columns become objects, timestamps become <code>Date</code>s).</li>
+      </ul>
+    </div>
+    <div class="card" style="--accent: var(--c-edge)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="layers"></svg></span>Compared with</h3>
+      <ul>
+        <li><b>Query builders and ORMs</b> such as Knex sit on top of <code>pg</code> and write the SQL for you (<a href="https://knexjs.org/guide/">Knex</a>). Shopfront uses the driver directly: four hand-written queries.</li>
+      </ul>
+    </div>
+    <div class="card" style="--accent: var(--c-client)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="apps"></svg></span>How Shopfront uses it</h3>
+      <ul>
+        <li>One shared pool from <code>DATABASE_URL</code>, two tables, four queries, all parameterized (<a href="#postgresql-usage">usage map</a>).</li>
+        <li>No schema, migrations, or seeds in the repo, and no tests that touch the database.</li>
+      </ul>
+    </div>
+  </div>
+</section>

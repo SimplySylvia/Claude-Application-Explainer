@@ -3,8 +3,9 @@
 
     python3 capture.py path/to/guide.html out_dir/
 
-Writes guide-engineering.png (light theme), guide-glossary.png and guide-search.png (dark theme), and three shots of
-the Topics page's Express deep dive (topic explainer): guide-topic.png, guide-topic-code.png, and guide-topic-link.png, at 1800px wide.
+Writes guide-engineering.png (light theme), guide-glossary.png and guide-search.png (dark theme), and four shots of
+the Topics page (topic explainer): guide-topic.png and guide-topic-code.png (Express), guide-topics.png (a second
+topic, PostgreSQL, with both in the sidebar), and guide-topic-link.png, at 1800px wide.
 Each shot is a copy of the guide with a small script that sets up the view on load. Headless Chrome renders blank
 once a page has scrolled, so the script switches pages by clicking the header tab instead of using a URL hash, and
 FOCUS brings a section to the top by hiding what comes before it instead of scrolling.
@@ -28,6 +29,9 @@ SHOTS = {  # name: (page, setup script)
     'search': ('product', DARK + "var i = document.querySelector('.doc-search input'); i.focus(); i.value = 'order';"
                                  "i.dispatchEvent(new Event('input', {bubbles: true}));"),
     'topic': ('topics', LIGHT),
+    'topics': ('topics', LIGHT + FOCUS + "focusOn('topic-postgresql');"
+                         "document.querySelectorAll('.tree-part').forEach(function (p) {"
+                         " if (p.getAttribute('data-part') !== 'topics') p.querySelector('.tree-part-toggle').click(); });"),
     'topic-code': ('topics', DARK + FOCUS + "focusOn('express-concepts--concepts-in-code');"),
     'topic-link': ('engineering', LIGHT + FOCUS + "focusOn('stack');"
                                   "document.querySelectorAll('#stack tr.group').forEach(function (r) {"

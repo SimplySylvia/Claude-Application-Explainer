@@ -44,6 +44,16 @@ PARTS = [
             ('express-versions', 'Versions & what changed'),
             ('express-resources', 'Official docs & further reading'),
         ]),
+        ('postgresql', 'PostgreSQL', 'What PostgreSQL is and how Shopfront uses it.', [
+            ('postgresql-overview', 'What is PostgreSQL?'),
+            ('postgresql-concepts', 'Core concepts'),
+            ('postgresql-usage', 'Where Shopfront uses it'),
+            ('postgresql-walkthrough', 'Guided walkthrough'),
+            ('postgresql-conventions', 'Patterns & gotchas'),
+            ('postgresql-recipes', 'Common changes'),
+            ('postgresql-versions', 'Versions & what changed'),
+            ('postgresql-resources', 'Official docs & further reading'),
+        ]),
     ]),
     ('reference', 'Reference', 'Quick lookups: commands and terms.', [
         ('cheatsheet', 'Cheat sheet'),
@@ -60,4 +70,4 @@ COLLAPSED_TABLE_GROUPS = set()
 
 # Technology deep dives: {slug: {"name": ..., "docs_checked": "YYYY-MM-DD"}}. changed_since.py flags docs
 # checked more than 90 days ago; `changed_since.py <guide> --mark-docs <slug>` records a re-check.
-TOPICS = {'express': {'name': 'Express', 'docs_checked': '2026-10-13'}}
+TOPICS = {'express': {'name': 'Express', 'docs_checked': '2026-10-13'}, 'postgresql': {'name': 'PostgreSQL', 'docs_checked': '2026-10-13'}}

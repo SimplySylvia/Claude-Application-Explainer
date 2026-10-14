@@ -12,7 +12,7 @@ def __TFN__flow():
     # One real flow through __TOPIC__ in __APP__, numbered to match the steps in the guided walkthrough.
     d = Diagram('__T__flow', 1200, 300)
     d.zone(16, 20, 280, 260, 'CALLER')
-    d.zone(316, 20, 560, 260, '__TOPIC__ IN __APP__')
+    d.zone(316, 20, 560, 260, 'APP CODE')
     d.zone(896, 20, 288, 260, 'DOWNSTREAM')
     a = d.node('a', 32, 110, 248, 'client', 'monitor', 'Entry point', ['TODO: file or component'], num=1)
     b = d.node('b', 336, 110, 240, 'run', 'server', 'TODO: layer', ['TODO: file'], num=2)

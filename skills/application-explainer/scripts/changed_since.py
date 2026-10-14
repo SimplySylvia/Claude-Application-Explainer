@@ -92,11 +92,13 @@ def main():
     if not args or args[0].startswith('-'):
         sys.exit(__doc__)
     guide = os.path.abspath(args[0])
-    path, src, repo, since = config(guide)
     today = datetime.date.today()
-    if '--mark-docs' in args:
-        mark_docs(path, src, [x for x in args[args.index('--mark-docs') + 1:] if not x.startswith('-')], today)
+    if '--mark-docs' in args:   # only touches TOPICS, so it works without SOURCE_REPO / SOURCE_COMMIT
+        path = os.path.join(guide, 'guide_config.py')
+        mark_docs(path, open(path, encoding='utf-8').read(),
+                  [x for x in args[args.index('--mark-docs') + 1:] if not x.startswith('-')], today)
         return
+    path, src, repo, since = config(guide)
     head = git(repo, 'rev-parse', 'HEAD')
 
     if '--mark' in args:

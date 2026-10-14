@@ -1,0 +1,11 @@
+<!-- ============ VERSIONS ============ -->
+<section id="postgresql-versions">
+  <h2>Versions &amp; what changed</h2>
+  <p class="sub">Shopfront allows any <code>pg</code> 8.x from 8.11.0; with no lockfile, a fresh install gets the newest 8.x. The repo doesn't say which PostgreSQL server version it targets. Checked 2026-10-13. Sources: <code>package.json:10</code> (no lockfile committed).</p>
+  <table>
+    <tr><th style="width:20%">Package</th><th style="width:18%">In Shopfront</th><th style="width:18%">Latest</th><th>What changed that matters here</th></tr>
+    <tr><td><b>pg</b> (node-postgres)</td><td><code>^8.11.0</code>; a fresh install resolves to 8.23.1</td><td>8.23.1, 2026-09-30 (<a href="https://registry.npmjs.org/pg">npm</a>)</td><td>No breaking changes or security fixes are labeled in 8.12–8.23 (<a href="https://raw.githubusercontent.com/brianc/node-postgres/master/CHANGELOG.md">changelog</a>). Additions Shopfront could use: per-query timeouts (8.13), a minimum pool size (8.16). The docs site only covers the latest release.</td></tr>
+    <tr><td><b>PostgreSQL</b> (server)</td><td>Not pinned in the repo</td><td>18, first released 2025-09-25</td><td>Each major version is supported for 5 years; 14 through 18 are supported now, and 14 reaches end of life on 2026-11-12 (<a href="https://www.postgresql.org/support/versioning/">versioning policy</a>). Check what your environments run.</td></tr>
+  </table>
+  <p class="caption">Pin both: commit a lockfile for <code>pg</code>, and record the server version the app is tested against.</p>
+</section>

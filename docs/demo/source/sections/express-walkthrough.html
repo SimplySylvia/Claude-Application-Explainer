@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) =&gt; res.json((await db.query('select * fro
 }</code></pre>
 
   <h3 style="margin-top:24px">5 · The database</h3>
-  <p><code>db.query</code> runs on a shared <code>pg</code> pool. Values go in as <code>$1</code> parameters, never pasted into the SQL string. Where the flow stops today: the repo has no schema or migrations for the <code>orders</code> table, and the handler has no <code>try/catch</code>, so a database error crashes the server process instead of returning a 500 (see <a href="#express-conventions">Patterns &amp; gotchas</a>).</p>
+  <p><code>db.query</code> runs on a shared <code>pg</code> pool. Values go in as <code>$1</code> parameters, never pasted into the SQL string. Where the flow stops today: the repo has no schema or migrations for the <code>orders</code> table, and the handler has no <code>try/catch</code>, so a database error crashes the server process instead of returning a 500 (see <a href="#express-conventions">Patterns &amp; gotchas</a>). The <a href="#postgresql-walkthrough">PostgreSQL walkthrough</a> picks up from here.</p>
   <pre class="code" data-lang="js" data-title="server/db.js"><code>const { Pool } = require('pg');
 module.exports = new Pool({ connectionString: process.env.DATABASE_URL });</code></pre>
 

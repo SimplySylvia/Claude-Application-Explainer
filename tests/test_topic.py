@@ -59,6 +59,9 @@ class SeparateTopicGuideTest(TopicCase):
         write(cfg, re.sub(r"'docs_checked': '[^']*'", f"'docs_checked': '{old}'", read(cfg)))
         self.assertIn('120 days ago', self.changed(self.guide).stdout)
 
+        write(cfg, re.sub(r"^SOURCE_REPO = .*$", "SOURCE_REPO = ''", read(cfg), flags=re.M))
+        self.assertEqual(self.changed(self.guide, '--mark-docs', 'react-router').returncode, 0)   # no repo needed
+
         r = self.changed(self.guide, '--mark-docs', 'nope')
         self.assertNotEqual(r.returncode, 0)
         self.assertIn('unknown: nope', r.stderr)

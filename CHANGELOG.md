@@ -3,6 +3,20 @@
 All notable changes to this plugin. Versions match `version` in `.claude-plugin/plugin.json`; update an installed
 copy with `/plugin marketplace update`.
 
+## 1.5.1 (2026-10-13)
+
+### Skill
+
+- `changed_since.py --mark-docs` no longer needs `SOURCE_REPO`/`SOURCE_COMMIT`: recording a docs check only touches
+  `TOPICS`.
+- The topic starter's flow diagram labels its middle zone `APP CODE` instead of a mixed-case "<Topic> IN <App>".
+
+### Repo
+
+- The demo has a second deep dive, **PostgreSQL** (node-postgres), on the same Topics page, added with
+  `new_guide.py --into` and researched by `tech-researcher`. The main guide's Tech stack and Architecture sections
+  and the Express walkthrough link to it. New screenshot `guide-topics.png` shows both topics in the sidebar.
+
 ## 1.5.0 (2026-10-13)
 
 ### Skill

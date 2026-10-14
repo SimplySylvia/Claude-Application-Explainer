@@ -119,8 +119,8 @@ When the repo already has a guide, Claude asks where the topic should live. A **
 topic group: a "Topic · Express" banner on the page and a labeled group in the sidebar, holding its
 `sections/<topic>-*.html`. Every later deep dive joins the same page, and each is recorded in the guide's `TOPICS`
 registry, so updates and sharing happen once. The
-[live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/) has an Express deep dive on its
-Topics page, linked from its Tech stack and Architecture sections.
+[live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/) has two deep dives, Express and
+PostgreSQL, on its Topics page, linked from its Tech stack and Architecture sections and to each other.
 
 ## Choosing glossary terms
 

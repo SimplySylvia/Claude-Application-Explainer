@@ -1,0 +1,26 @@
+<!-- ============ PATTERNS & GOTCHAS ============ -->
+<section id="postgresql-conventions">
+  <h2>Patterns &amp; gotchas</h2>
+  <p class="sub">Shopfront's database code gets the most important thing right: every value is parameterized. The gotchas are about what happens when something goes wrong. Sources: <code>server/db.js</code>, <code>server/routes/</code>.</p>
+  <div class="grid">
+    <div class="card" style="--accent: var(--c-run)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="check"></svg></span>Conventions here</h3>
+      <ul>
+        <li><b>One shared pool</b>, required as <code>db</code> from <code>server/db.js</code>, the single module the node-postgres <a href="https://node-postgres.com/guides/project-structure">project-structure guide</a> recommends.</li>
+        <li><b>Always parameterized</b>: <code>$1</code> with a values array in all 4 queries, never string concatenation.</li>
+        <li><b>JSON is stringified on purpose</b>: <code>JSON.stringify(req.body.items)</code> (<code>server/routes/orders.js:6</code>). Passing the array itself would send a Postgres array, not JSON.</li>
+        <li><b>Ids come back with RETURNING</b> instead of a second query.</li>
+      </ul>
+    </div>
+    <div class="card" style="--accent: var(--c-ext)">
+      <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="shield"></svg></span>Gotchas</h3>
+      <ul>
+        <li><b>No pool error listener.</b> If the database drops an idle connection, node-postgres emits an <code>error</code> on the pool; with no <code>pool.on('error')</code> in <code>server/db.js</code>, that can crash the process (<a href="https://node-postgres.com/apis/pool">Pool</a>).</li>
+        <li><b>Query errors crash the server too</b>: handlers <code>await db.query</code> with no <code>try/catch</code>, and Express 4 doesn't catch rejected promises (<a href="#express-conventions">Express gotchas</a>).</li>
+        <li><b>A missing DATABASE_URL fails quietly.</b> In current node-postgres releases, an undefined connection string falls back to <code>PG*</code> variables and localhost, so a misconfigured server starts fine and only fails on its first query.</li>
+        <li><b>No schema in the repo.</b> Column types, constraints, and indexes exist only in whatever database you point at. If <code>id</code> is a <code>bigint</code>, it comes back as a string (<code>"42"</code>, not <code>42</code>).</li>
+        <li><b>No connection timeout.</b> The pool's default is to wait forever for a free connection, so a leak or a stuck database makes requests hang rather than fail.</li>
+      </ul>
+    </div>
+  </div>
+</section>

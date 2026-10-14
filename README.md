@@ -178,7 +178,7 @@ last checked, and updates flag docs older than 90 days.
 ### Example
 
 **[Open the live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/)**: a complete guide for **Shopfront**, the small fictional app used by the evals
-(`evals/_fixture/make-app.sh`), with an **Express deep dive** built by the topic explainer on its Topics page. A real app
+(`evals/_fixture/make-app.sh`), with two deep dives built by the topic explainer on its Topics page: **Express** and **PostgreSQL**. A real app
 produces more sections and longer tables. The screenshots below are from the same guide.
 
 <table>
@@ -192,7 +192,7 @@ produces more sections and longer tables. The screenshots below are from the sam
   </tr>
 </table>
 
-The Express deep dive, added with the topic explainer:
+The Topics page, added with the topic explainer:
 
 <table>
   <tr>
@@ -206,11 +206,14 @@ The Express deep dive, added with the topic explainer:
     the app pins (dark theme).</td>
   </tr>
   <tr>
-    <td colspan="2"><img src="docs/images/guide-topic-link.png" alt="Tech stack table: the Express row links to the Express deep dive"></td>
+    <td width="50%"><img src="docs/images/guide-topics.png" alt="Topics page: the PostgreSQL topic banner, with Express and PostgreSQL as separate groups in the sidebar"></td>
+    <td width="50%"><img src="docs/images/guide-topic-link.png" alt="Tech stack table: the Express row links to the Express deep dive"></td>
   </tr>
   <tr>
-    <td colspan="2"><b>Linked from the main guide:</b> the Tech stack row for Express (and the Architecture summary)
-    point readers to the deep dive.</td>
+    <td><b>More topics, one page:</b> a second deep dive (PostgreSQL) gets its own banner and sidebar group on the
+    same Topics page.</td>
+    <td><b>Linked from the main guide:</b> the Tech stack rows (and the Architecture summary) point readers to each
+    deep dive, and the two deep dives link to each other.</td>
   </tr>
 </table>
 
@@ -275,8 +278,8 @@ change to its rules.
 ### Demo and screenshots
 
 The live demo and the README screenshots are built from [`docs/demo/source/`](docs/demo/source/) with the current
-engine. The Express deep dive's sections are the `express-*.html` files there, with the `express-flow` diagram in
-`diagrams.py` and its `TOPICS` entry in `guide_config.py`. After changing the engine or the demo source, regenerate both and commit the results:
+engine. The deep dives' sections are the `express-*.html` and `postgresql-*.html` files there, with their flow
+diagrams in `diagrams.py` and their `TOPICS` entries and Topics part in `guide_config.py`. After changing the engine or the demo source, regenerate both and commit the results:
 
 ```bash
 docs/demo/make-demo.sh                   # build, run QA, recapture docs/images/*.png

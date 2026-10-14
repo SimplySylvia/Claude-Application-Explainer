@@ -1,0 +1,31 @@
+<!-- ============ COMMON CHANGES ============ -->
+<section id="postgresql-recipes">
+  <h2>Common changes</h2>
+  <p class="sub">Database changes you're likely to make in Shopfront. The repo has no schema, so start by creating one locally. Sources: <code>server/db.js</code>, <code>server/routes/</code>.</p>
+  <table>
+    <tr><th style="width:22%">Task</th><th>Steps</th><th style="width:26%">Where</th></tr>
+    <tr><td><b>Run a local database</b></td><td>Start PostgreSQL in Docker, create the two tables (below), and set <code>DATABASE_URL</code> before <code>npm run dev</code>.</td><td><code>server/db.js</code></td></tr>
+    <tr><td><b>Add a query</b></td><td>Call <code>db.query(sql, values)</code> with <code>$1</code> placeholders; check <code>rows.length</code> for "not found"; wrap it in <code>try/catch</code> and call <code>next(err)</code>.</td><td><code>server/routes/</code></td></tr>
+    <tr><td><b>Write two things at once</b></td><td>Use a transaction on one client from <code>db.connect()</code>, and release it in <code>finally</code> (<a href="#postgresql-concepts">example</a>).</td><td><code>server/routes/orders.js</code></td></tr>
+    <tr><td><b>Make failures visible</b></td><td>Add <code>pool.on('error', …)</code> in <code>server/db.js</code>, and fail fast at startup if <code>DATABASE_URL</code> is missing.</td><td><code>server/db.js</code></td></tr>
+  </table>
+
+  <h3 style="margin-top:24px">A local schema that matches the code</h3>
+  <p>These tables are inferred from the queries (<code>id</code> is generated, <code>items</code> receives JSON). They aren't from the repo: check them against your real database before relying on them.</p>
+  <pre class="code" data-lang="sql" data-title="Example (inferred from server/routes/)"><code>CREATE TABLE products (
+  id   serial PRIMARY KEY,
+  name text NOT NULL
+);
+CREATE TABLE orders (
+  id    serial PRIMARY KEY,
+  items jsonb NOT NULL
+);</code></pre>
+
+  <h3 style="margin-top:24px">Making failures visible, in code</h3>
+  <pre class="code" data-lang="js" data-title="server/db.js (example change)"><code>const { Pool } = require('pg');
+if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not set');
+const pool = new Pool({ connectionString: process.env.DATABASE_URL, connectionTimeoutMillis: 5000 });
+pool.on('error', (err) =&gt; console.error('postgres idle client error', err));
+module.exports = pool;</code></pre>
+  <p class="caption"><code>serial</code> ids keep <code>id</code> a JavaScript number; <code>bigserial</code> would return strings. The 5-second timeout is illustrative: pick one that fits your traffic.</p>
+</section>

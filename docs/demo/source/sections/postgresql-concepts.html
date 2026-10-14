@@ -1,0 +1,78 @@
+<!-- ============ CORE CONCEPTS ============ -->
+<section id="postgresql-concepts">
+  <h2>Core concepts</h2>
+  <p class="sub">The ideas you need before reading Shopfront's database code, then each one in code. node-postgres publishes docs for its current release only; everything here also works on the 8.11 line Shopfront allows (see <a href="#postgresql-versions">Versions</a>).</p>
+  <table class="stack">
+    <colgroup><col style="width:18%"><col><col style="width:22%"><col style="width:18%"></colgroup>
+    <tr><th>Concept</th><th>What it means</th><th>In Shopfront</th><th>Official docs</th></tr>
+    <tr class="group" style="--accent: var(--c-edge)"><td colspan="4"><span class="row-icon" data-icon="layers"></span>Connections</td></tr>
+    <tr><td><b>Pool</b></td><td>A set of reusable connections: up to 10 by default, idle ones closed after 10 seconds. With no connection timeout set, a request for a connection waits as long as it takes.</td><td><code>server/db.js:2</code></td><td><a href="https://node-postgres.com/apis/pool">Pool</a></td></tr>
+    <tr><td><b>pool.query</b></td><td>Borrows a connection, runs one statement, and returns the connection for you. Fine for single statements, never for transactions.</td><td>All 4 queries</td><td><a href="https://node-postgres.com/apis/pool">Pool</a></td></tr>
+    <tr><td><b>Client</b></td><td>One connection, checked out with <code>pool.connect()</code> and always returned with <code>client.release()</code>. Needed for transactions.</td><td>Not used</td><td><a href="https://node-postgres.com/features/transactions">Transactions</a></td></tr>
+    <tr><td><b>Connection string</b></td><td><code>postgres://user:password@host:port/database</code>. In current releases, settings it leaves out come from the standard <code>PG*</code> environment variables, then defaults (localhost:5432).</td><td><code>DATABASE_URL</code></td><td><a href="https://node-postgres.com/features/connecting">Connecting</a></td></tr>
+    <tr class="group" style="--accent: var(--c-data)"><td colspan="4"><span class="row-icon" data-icon="db"></span>Queries &amp; results</td></tr>
+    <tr><td><b>Parameterized query</b></td><td>SQL with <code>$1</code>, <code>$2</code>… placeholders and a separate values array. PostgreSQL never reads the values as SQL, which is what prevents SQL injection.</td><td>Every query</td><td><a href="https://node-postgres.com/features/queries">Queries</a></td></tr>
+    <tr><td><b>Value conversion</b></td><td><code>null</code>/<code>undefined</code> → NULL, <code>Date</code> → UTC timestamp, <b>arrays → Postgres arrays</b>, other objects → <code>JSON.stringify</code>.</td><td><code>JSON.stringify(items)</code> at <code>server/routes/orders.js:6</code></td><td><a href="https://node-postgres.com/features/queries">Queries</a></td></tr>
+    <tr><td><b>Result</b></td><td><code>rows</code> (array of objects keyed by column), plus <code>rowCount</code>, <code>fields</code>, <code>command</code>. An empty SELECT gives <code>rows = []</code>.</td><td><code>rows</code> only</td><td><a href="https://node-postgres.com/apis/result">Result</a></td></tr>
+    <tr><td><b>RETURNING</b></td><td>Makes an INSERT or UPDATE send back columns of the rows it changed, such as a generated id, in the same round trip.</td><td><code>returning id</code></td><td><a href="https://node-postgres.com/features/queries">Queries</a></td></tr>
+    <tr class="group" style="--accent: var(--c-ext)"><td colspan="4"><span class="row-icon" data-icon="shield"></span>Types &amp; errors</td></tr>
+    <tr><td><b>Type parsing</b></td><td>Columns become JS values: <code>json</code>/<code>jsonb</code> → objects, timestamps → <code>Date</code>, but <code>bigint</code> and <code>numeric</code> → <b>strings</b> (a JS number can't hold every 64-bit value).</td><td>Column types unknown (no schema)</td><td><a href="https://node-postgres.com/features/types">Data types</a></td></tr>
+    <tr><td><b>SQLSTATE</b></td><td>The five-character code on every database error (<code>err.code</code>): <code>23505</code> duplicate key, <code>42P01</code> missing table, <code>22P02</code> bad input. Check it, not the message.</td><td>Not used</td><td><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">Error codes</a></td></tr>
+  </table>
+
+  <h3 style="margin-top:24px">Concepts in code</h3>
+  <p>Short examples adapted from the <a href="https://node-postgres.com/">node-postgres docs</a> and the <a href="https://hub.docker.com/_/postgres">official Docker image</a>, with placeholder values. Compare each with the Shopfront file named under it.</p>
+
+  <p><b>Create a pool and run a query.</b> Shopfront's <code>server/db.js</code> is the first line; it doesn't add the error listener.</p>
+  <pre class="code" data-lang="js" data-title="Example (node-postgres docs)"><code>const { Pool } = require('pg');
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+pool.on('error', (err) =&gt; console.error('idle client error', err));   // otherwise an idle-connection error can crash the process
+
+const { rows } = await pool.query('SELECT now() AS now');
+console.log(rows[0].now);   // a Date</code></pre>
+
+  <p><b>Select one row by id, and handle "not found".</b> Compare <code>server/routes/orders.js:10</code>, which returns <code>rows[0]</code> even when it's <code>undefined</code>.</p>
+  <pre class="code" data-lang="js" data-title="Example (node-postgres docs)"><code>const { rows } = await pool.query('SELECT id, name FROM items WHERE id = $1', [itemId]);
+if (rows.length === 0) return null;   // check rows.length, not rowCount
+return rows[0];</code></pre>
+
+  <p><b>Insert and get the new id back.</b> Compare <code>createOrder</code> in <code>server/routes/orders.js:6</code>.</p>
+  <pre class="code" data-lang="js" data-title="Example (node-postgres docs)"><code>const text = 'INSERT INTO items(name, attrs) VALUES($1, $2) RETURNING id';
+const values = ['example', { color: 'blue' }];   // a plain object is sent as JSON
+const { rows } = await pool.query(text, values);
+const newId = rows[0].id;                        // a string if the column is bigint/bigserial</code></pre>
+
+  <p><b>Run a transaction.</b> Not in Shopfront yet: an order plus stock changes would need one.</p>
+  <pre class="code" data-lang="js" data-title="Example (node-postgres docs)"><code>const client = await pool.connect();
+try {
+  await client.query('BEGIN');
+  await client.query('UPDATE accounts SET balance = balance - $1 WHERE id = $2', [amount, fromId]);
+  await client.query('UPDATE accounts SET balance = balance + $1 WHERE id = $2', [amount, toId]);
+  await client.query('COMMIT');
+} catch (err) {
+  await client.query('ROLLBACK');
+  throw err;
+} finally {
+  client.release();                      // always give the connection back
+}</code></pre>
+
+  <p><b>Turn a database error into a response</b> (Express 4). What Shopfront's handlers are missing.</p>
+  <pre class="code" data-lang="js" data-title="Example (node-postgres + Express 4 docs)"><code>app.post('/items', async (req, res, next) =&gt; {
+  try {
+    const { rows } = await pool.query('INSERT INTO items(name) VALUES($1) RETURNING id', [req.body.name]);
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    if (err.code === '23505') return res.status(409).json({ error: 'duplicate' });   // SQLSTATE: unique violation
+    next(err);
+  }
+});</code></pre>
+
+  <p><b>Start a local database and create a table.</b> Bind to <code>127.0.0.1</code> so it isn't reachable from your network.</p>
+  <pre class="code" data-lang="bash" data-title="Example (Docker official image)"><code>docker run --name pg-local -e POSTGRES_PASSWORD=&lt;local-password&gt; -p 127.0.0.1:5432:5432 -d postgres
+docker exec -it pg-local psql -U postgres</code></pre>
+  <pre class="code" data-lang="sql" data-title="Example (PostgreSQL tutorial)"><code>CREATE TABLE items (
+  id    bigserial PRIMARY KEY,
+  name  text NOT NULL UNIQUE,
+  attrs jsonb
+);</code></pre>
+</section>
