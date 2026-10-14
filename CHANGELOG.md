@@ -3,6 +3,25 @@
 All notable changes to this plugin. Versions match `version` in `.claude-plugin/plugin.json`; update an installed
 copy with `/plugin marketplace update`.
 
+## 1.6.1 (2026-10-14)
+
+### Skill
+
+- Header: a guide with many pages and a hub no longer lets the **Guides** button cover its page tabs. When the tabs
+  don't fit, the breadcrumb hides and the search box narrows first, then the other tabs show only their numbers,
+  and as a last resort the tabs scroll with the current one kept in view. Below 1600px wide, the Guides button and
+  "All guides" link show only their icon.
+- Hub builds honor `SOURCE_DATE_EPOCH`, so a committed hub (like the demo) doesn't change on every rebuild.
+- Fixed "1 sections" on hub tiles.
+
+### Repo
+
+- The live demo is now a **hub**: the Shopfront guide (with the Express deep dive) and a separate **PostgreSQL**
+  topic guide, split out of the former second deep dive. `docs/demo/source-postgresql/` and `docs/demo/source-hub/`
+  are the new sources; `make-demo.sh` builds all three, and CI checks all of `docs/demo/`.
+- New screenshots `hub.png`, `hub-search.png`, `hub-table.png` and `guide-menu.png` in the README; the rest were
+  recaptured, and `guide-topics.png` is gone with the second deep dive.
+
 ## 1.6.0 (2026-10-14)
 
 ### Skill

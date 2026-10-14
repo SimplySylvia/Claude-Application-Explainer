@@ -91,14 +91,31 @@
   // ---------------------------------------------------------------- pages (one part visible at a time)
   var pages = [];
   var currentPage = null;
+  // Too many tabs for the header: hide the breadcrumb and narrow the search box first, then show only the current
+  // tab's label, and as a last resort scroll the current tab into view.
+  function fitTabs() {
+    var bar = document.querySelector('.page-tabs'), a = bar && bar.querySelector('a[aria-current]');
+    if (!bar) return;
+    var head = bar.closest('header'), over = function () { return bar.scrollWidth > bar.clientWidth + 1; };
+    head.classList.remove('tabs-tight');
+    bar.classList.remove('compact');
+    if (over()) head.classList.add('tabs-tight');
+    if (over()) bar.classList.add('compact');
+    if (a && (a.offsetLeft < bar.scrollLeft || a.offsetLeft + a.offsetWidth > bar.scrollLeft + bar.clientWidth)) bar.scrollLeft = a.offsetLeft - 8;
+  }
+  window.addEventListener('resize', fitTabs);
+  document.fonts && document.fonts.ready.then(fitTabs);
+
   function showPage(page) {
     if (!page || page === currentPage) return;
     currentPage = page;
     pages.forEach(function (p) { p.hidden = p !== page; });
     var pid = page.getAttribute('data-page');
     document.querySelectorAll('.page-tabs a').forEach(function (a) {
-      if (a.getAttribute('data-page') === pid) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+      if (a.getAttribute('data-page') !== pid) { a.removeAttribute('aria-current'); return; }
+      a.setAttribute('aria-current', 'page');
     });
+    fitTabs();
     document.querySelectorAll('.tree-part').forEach(function (li) { li.classList.toggle('current', li.getAttribute('data-part') === pid); });
     document.dispatchEvent(new CustomEvent('guide:pagechange', { detail: { page: pid } }));
   }

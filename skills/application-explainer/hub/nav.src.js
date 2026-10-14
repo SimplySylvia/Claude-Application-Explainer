@@ -57,7 +57,7 @@
       return '<li><a href="' + new URL(g.href, hubBase).href + '"' + (g === here ? ' aria-current="page"' : '') + '><span class="gnav-dot" style="background:' + g.color + '"></span>' + plain(g.title) + '</a></li>';
     };
     wrap.innerHTML =
-      '<button type="button" class="gnav-btn" aria-expanded="false" aria-controls="gnav-menu">' + link.querySelector('svg').outerHTML + 'Guides' +
+      '<button type="button" class="gnav-btn" aria-expanded="false" aria-controls="gnav-menu" aria-label="Guides">' + link.querySelector('svg').outerHTML + '<span class="gnav-btn-text">Guides</span>' +
       '<svg class="chev-d" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.12 9.29 12 13.17l3.88-3.88a.996.996 0 1 1 1.41 1.41l-4.59 4.59a.996.996 0 0 1-1.41 0L6.7 10.7a.996.996 0 0 1 0-1.41c.39-.38 1.03-.39 1.42 0"/></svg></button>' +
       '<nav class="gnav-menu" id="gnav-menu" aria-label="' + plain(MANIFEST.title) + '" hidden>' +
       '<ul><li><a class="gnav-home" href="' + hubUrl + '">All guides &amp; search</a></li></ul><hr>' +

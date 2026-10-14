@@ -51,8 +51,15 @@ def parts_literal(path):
     sys.exit(f'{path} has no PARTS literal')
 
 
+# SOURCE_DATE_EPOCH (the reproducible-builds convention) pins every date, so a committed hub doesn't change by rebuilding.
+EPOCH = os.environ.get('SOURCE_DATE_EPOCH')
+TODAY = datetime.datetime.fromtimestamp(int(EPOCH), datetime.timezone.utc).date() if EPOCH else datetime.date.today()
+
+
 def built_on(path):
-    return datetime.date.fromtimestamp(os.path.getmtime(path)).isoformat() if os.path.exists(path) else None
+    if not os.path.exists(path):
+        return None
+    return TODAY.isoformat() if EPOCH else datetime.date.fromtimestamp(os.path.getmtime(path)).isoformat()
 
 
 def kind_of(g):
@@ -670,7 +677,7 @@ page = f"""<!doctype html>
 {topic_table}
 </div>
 </main>
-<footer>{getattr(cfg, 'FOOTER', None) or f'Built {datetime.date.today().isoformat()} from {plural(len(guides), "guide")} for the <code>{esc(REPO_NAME)}</code> repository. Internal use only.'}</footer>
+<footer>{getattr(cfg, 'FOOTER', None) or f'Built {TODAY.isoformat()} from {plural(len(guides), "guide")} for the <code>{esc(REPO_NAME)}</code> repository. Internal use only.'}</footer>
 </body></html>
 """
 open(os.path.join(ROOT, 'index.html'), 'w', encoding='utf-8').write(page)

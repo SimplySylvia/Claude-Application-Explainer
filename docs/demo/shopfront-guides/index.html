@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shopfront guides</title>
+<style>
+/* Default design tokens: a neutral palette with light and dark themes.
+   Replace with the target app's tokens; keep the same variable names or map them. */
+
+:root {
+  /* ---------- typography ---------- */
+  --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, helvetica, arial, sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-emphasis: 600;
+  --font-size-heading-lg: 28px;
+  --line-height-heading-lg: 36px;
+  --letter-spacing-heading-lg: -0.01em;
+  --font-size-heading-md: 24px;
+  --line-height-heading-md: 32px;
+  --letter-spacing-heading-md: -0.0075em;
+  --font-size-heading-sm: 20px;
+  --font-size-body-lg: 18px;
+  --line-height-body-lg: 24px;
+  --font-size-body-md: 16px;
+  --font-size-body-sm: 14px;
+  --line-height-prose: 1.5;
+  @media screen and (width > 768px) {
+    --font-size-body-md: 15px;
+    --font-size-body-sm: 13px;
+  }
+
+  /* ---------- spacing, radius, motion, layers ---------- */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 40px;
+  --space-4xl: 48px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
+  --border-radius-full: 999px;
+  --bezier-in: cubic-bezier(0, 0.5, 0.2, 1);
+  --focus-glow: 0 0 0 2px var(--color-focus-glow);
+  --focus-glow-error: 0 0 0 2px var(--color-focus-glow-error);
+  --z-dropdown: 9;
+  --z-fullpage: 11;
+  --z-modal: 99;
+
+  /* ---------- palette (shade 20 = lightest tint, 80 = darkest) ---------- */
+  color-scheme: light;
+  --hex-white: #fff;
+  --hex-gray-10: #f8f9fa;
+  --hex-gray-20: #f1f3f5;
+  --hex-gray-30: #e5e7eb;
+  --hex-gray-40: #d1d5db;
+  --hex-gray-50: #9ca3af;
+  --hex-gray-60: #6b7280;
+  --hex-gray-70: #4b5563;
+  --hex-gray-80: #374151;
+  --hex-gray-90: #1f2937;
+  --hex-gray-95: #161b22;
+  --hex-gray-100: #0f1318;
+  --hex-red-20: #fee2e2;   --hex-red-30: #fecaca;   --hex-red-40: #ef4444;   --hex-red-50: #dc2626;
+  --hex-red-60: #b91c1c;   --hex-red-70: #7f1d1d;   --hex-red-80: #450a0a;
+  --hex-orange-20: #ffedd5; --hex-orange-30: #fed7aa; --hex-orange-40: #f97316; --hex-orange-50: #c2410c;
+  --hex-orange-60: #9a3412; --hex-orange-70: #7c2d12; --hex-orange-80: #431407;
+  --hex-yellow-20: #fef9c3; --hex-yellow-30: #fef08a; --hex-yellow-40: #eab308; --hex-yellow-50: #a16207;
+  --hex-yellow-60: #854d0e; --hex-yellow-70: #713f12; --hex-yellow-80: #422006;
+  --hex-green-20: #dcfce7; --hex-green-30: #bbf7d0; --hex-green-40: #22c55e; --hex-green-50: #15803d;
+  --hex-green-60: #166534; --hex-green-70: #14532d; --hex-green-80: #052e16;
+  --hex-teal-20: #ccfbf1;  --hex-teal-30: #99f6e4;  --hex-teal-40: #14b8a6;  --hex-teal-50: #0f766e;
+  --hex-teal-60: #115e59;  --hex-teal-70: #134e4a;  --hex-teal-80: #042f2e;
+  --hex-blue-20: #dbeafe;  --hex-blue-30: #bfdbfe;  --hex-blue-40: #3b82f6;  --hex-blue-50: #2563eb;
+  --hex-blue-60: #1d4ed8;  --hex-blue-70: #1e3a8a;  --hex-blue-80: #172554;
+  --hex-purple-20: #ede9fe; --hex-purple-30: #ddd6fe; --hex-purple-40: #8b5cf6; --hex-purple-50: #6d28d9;
+  --hex-purple-60: #5b21b6; --hex-purple-70: #4c1d95; --hex-purple-80: #2e1065;
+  --hex-pink-20: #fce7f3;  --hex-pink-30: #fbcfe8;  --hex-pink-40: #ec4899;  --hex-pink-50: #be185d;
+  --hex-pink-60: #9d174d;  --hex-pink-70: #831843;  --hex-pink-80: #500724;
+
+  /* ---------- semantic colors: light ---------- */
+  --color-bg-light: var(--hex-white);
+  --color-bg: var(--hex-gray-10);
+  --color-red-bg: var(--hex-red-20);       --color-red-bg-alt: var(--hex-red-30);       --color-red: var(--hex-red-50);
+  --color-red-fg-alt: var(--hex-red-60);   --color-red-fg: var(--hex-red-70);
+  --color-orange-bg: var(--hex-orange-20); --color-orange-bg-alt: var(--hex-orange-30); --color-orange: var(--hex-orange-50);
+  --color-orange-fg-alt: var(--hex-orange-60); --color-orange-fg: var(--hex-orange-70);
+  --color-yellow-bg: var(--hex-yellow-20); --color-yellow-bg-alt: var(--hex-yellow-30); --color-yellow: var(--hex-yellow-50);
+  --color-yellow-fg-alt: var(--hex-yellow-60); --color-yellow-fg: var(--hex-yellow-70);
+  --color-green-bg: var(--hex-green-20);   --color-green-bg-alt: var(--hex-green-30);   --color-green: var(--hex-green-50);
+  --color-green-fg-alt: var(--hex-green-60); --color-green-fg: var(--hex-green-70);
+  --color-teal-bg: var(--hex-teal-20);     --color-teal-bg-alt: var(--hex-teal-30);     --color-teal: var(--hex-teal-50);
+  --color-teal-fg-alt: var(--hex-teal-60); --color-teal-fg: var(--hex-teal-70);
+  --color-blue-bg: var(--hex-blue-20);     --color-blue-bg-alt: var(--hex-blue-30);     --color-blue: var(--hex-blue-50);
+  --color-blue-fg-alt: var(--hex-blue-60); --color-blue-fg: var(--hex-blue-70);
+  --color-purple-bg: var(--hex-purple-20); --color-purple-bg-alt: var(--hex-purple-30); --color-purple: var(--hex-purple-50);
+  --color-purple-fg-alt: var(--hex-purple-60); --color-purple-fg: var(--hex-purple-70);
+  --color-pink-bg: var(--hex-pink-20);     --color-pink-bg-alt: var(--hex-pink-30);     --color-pink: var(--hex-pink-50);
+  --color-pink-fg-alt: var(--hex-pink-60); --color-pink-fg: var(--hex-pink-70);
+  --color-gray-bg: var(--hex-gray-20);     --color-gray-bg-alt: var(--hex-gray-30);     --color-gray: var(--hex-gray-60);
+  --color-gray-fg-alt: var(--hex-gray-70); --color-gray-fg: var(--hex-gray-80);
+  --color-gray-bg-transparent: hsl(220 9% 46% / 12%);
+
+  --color-text: var(--hex-gray-100);
+  --color-text-light: var(--hex-gray-60);
+  --color-text-danger: var(--hex-red-50);
+  --color-link: var(--hex-blue-50);
+  --color-icon: var(--hex-gray-60);
+  --color-icon-hover: var(--hex-gray-80);
+  --color-icon-light: var(--hex-gray-40);
+  --color-border: hsl(220 13% 13% / 15%);
+  --color-border-light: hsl(220 13% 13% / 8%);
+  --color-input-bg: var(--hex-white);
+  --color-input-border: var(--color-border);
+  --color-input-border-focus: var(--hex-blue-50);
+  --color-focus-glow: hsl(221 83% 53% / 45%);
+  --color-focus-glow-error: var(--hex-red-30);
+  --color-button-default: var(--hex-white);
+  --color-button-default-hover: var(--hex-gray-20);
+  --color-button-default-active: var(--hex-gray-30);
+  --color-button-default-border: var(--color-border);
+  --color-button-primary: var(--hex-blue-50);
+  --color-button-primary-hover: var(--hex-blue-60);
+  --color-button-primary-text: var(--hex-white);
+  --color-button-icon: transparent;
+  --color-button-icon-hover: hsl(220 13% 13% / 8%);
+  --color-nav-item-active-bg: var(--hex-blue-20);
+  --color-nav-item-active-text: var(--hex-blue-60);
+  --color-nav-item-inactive-text: var(--hex-gray-90);
+  --color-nav-item-inactive-text-hover: var(--hex-blue-50);
+  --color-tag-default: var(--color-gray-bg-transparent);
+  --color-tag-default-hover: var(--hex-gray-30);
+  --color-menu-item-hover: var(--hex-gray-20);
+  --color-toast-bg: var(--hex-gray-90);
+  --color-toast-text: var(--hex-white);
+
+  --shadow-lv1: 0 1px 3px hsl(220 13% 13% / 10%);
+  --shadow-lv2: 0 4px 8px hsl(220 13% 13% / 10%);
+  --shadow-lv3: 0 8px 16px hsl(220 13% 13% / 12%);
+  --shadow-lv4: 0 16px 32px hsl(220 13% 13% / 14%);
+}
+[data-theme='light'] {
+  color-scheme: light;
+}
+[data-theme='dark'] {
+  /* ---------- semantic colors: dark ---------- */
+  color-scheme: dark;
+  --color-bg-light: var(--hex-gray-95);
+  --color-bg: var(--hex-gray-100);
+  --color-red-bg: var(--hex-red-80);       --color-red-bg-alt: var(--hex-red-70);       --color-red: var(--hex-red-40);
+  --color-red-fg-alt: var(--hex-red-30);   --color-red-fg: var(--hex-red-20);
+  --color-orange-bg: var(--hex-orange-80); --color-orange-bg-alt: var(--hex-orange-70); --color-orange: var(--hex-orange-40);
+  --color-orange-fg-alt: var(--hex-orange-30); --color-orange-fg: var(--hex-orange-20);
+  --color-yellow-bg: var(--hex-yellow-80); --color-yellow-bg-alt: var(--hex-yellow-70); --color-yellow: var(--hex-yellow-40);
+  --color-yellow-fg-alt: var(--hex-yellow-30); --color-yellow-fg: var(--hex-yellow-20);
+  --color-green-bg: var(--hex-green-80);   --color-green-bg-alt: var(--hex-green-70);   --color-green: var(--hex-green-40);
+  --color-green-fg-alt: var(--hex-green-30); --color-green-fg: var(--hex-green-20);
+  --color-teal-bg: var(--hex-teal-80);     --color-teal-bg-alt: var(--hex-teal-70);     --color-teal: var(--hex-teal-40);
+  --color-teal-fg-alt: var(--hex-teal-30); --color-teal-fg: var(--hex-teal-20);
+  --color-blue-bg: var(--hex-blue-80);     --color-blue-bg-alt: var(--hex-blue-70);     --color-blue: var(--hex-blue-40);
+  --color-blue-fg-alt: var(--hex-blue-30); --color-blue-fg: var(--hex-blue-20);
+  --color-purple-bg: var(--hex-purple-80); --color-purple-bg-alt: var(--hex-purple-70); --color-purple: var(--hex-purple-40);
+  --color-purple-fg-alt: var(--hex-purple-30); --color-purple-fg: var(--hex-purple-20);
+  --color-pink-bg: var(--hex-pink-80);     --color-pink-bg-alt: var(--hex-pink-70);     --color-pink: var(--hex-pink-40);
+  --color-pink-fg-alt: var(--hex-pink-30); --color-pink-fg: var(--hex-pink-20);
+  --color-gray-bg: var(--hex-gray-90);     --color-gray-bg-alt: var(--hex-gray-80);     --color-gray: var(--hex-gray-50);
+  --color-gray-fg-alt: var(--hex-gray-40); --color-gray-fg: var(--hex-gray-30);
+  --color-gray-bg-transparent: hsl(220 14% 80% / 12%);
+
+  --color-text: var(--hex-gray-20);
+  --color-text-light: var(--hex-gray-50);
+  --color-text-danger: var(--hex-red-40);
+  --color-link: var(--hex-blue-40);
+  --color-icon: var(--hex-gray-50);
+  --color-icon-hover: var(--hex-gray-30);
+  --color-icon-light: var(--hex-gray-70);
+  --color-border: hsl(0 0% 100% / 13%);
+  --color-border-light: hsl(0 0% 100% / 7%);
+  --color-input-bg: var(--hex-gray-100);
+  --color-input-border: var(--color-border);
+  --color-input-border-focus: var(--hex-blue-40);
+  --color-focus-glow: hsl(217 91% 60% / 70%);
+  --color-focus-glow-error: var(--hex-red-70);
+  --color-button-default: var(--hex-gray-90);
+  --color-button-default-hover: var(--hex-gray-80);
+  --color-button-default-active: var(--hex-gray-70);
+  --color-button-default-border: var(--color-border);
+  --color-button-primary: var(--hex-blue-50);
+  --color-button-primary-hover: var(--hex-blue-40);
+  --color-button-primary-text: var(--hex-white);
+  --color-button-icon: transparent;
+  --color-button-icon-hover: hsl(0 0% 100% / 8%);
+  --color-nav-item-active-bg: var(--hex-blue-80);
+  --color-nav-item-active-text: var(--hex-blue-30);
+  --color-nav-item-inactive-text: var(--hex-gray-20);
+  --color-nav-item-inactive-text-hover: var(--hex-blue-30);
+  --color-tag-default: var(--color-gray-bg-transparent);
+  --color-tag-default-hover: var(--hex-gray-80);
+  --color-menu-item-hover: hsl(0 0% 100% / 6%);
+  --color-toast-bg: var(--hex-gray-20);
+  --color-toast-text: var(--hex-gray-100);
+
+  --shadow-lv1: 0 1px 3px hsl(0 0% 0% / 40%);
+  --shadow-lv2: 0 4px 8px hsl(0 0% 0% / 40%), 0 2px 4px hsl(0 0% 0% / 30%);
+  --shadow-lv3: 0 8px 16px hsl(0 0% 0% / 40%), 0 4px 8px hsl(0 0% 0% / 30%);
+  --shadow-lv4: 0 16px 32px hsl(0 0% 0% / 45%), 0 8px 16px hsl(0 0% 0% / 30%);
+}
+
+:root { --hub-brand: #1f6feb; }
+
+html { color-scheme: light; } html[data-theme='dark'] { color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-family); font-size: 15px; line-height: 1.55; }
+a { color: var(--color-link); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--hub-brand); outline-offset: 2px; border-radius: 6px; }
+code { font-size: 0.85em; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: 12px; top: -48px; z-index: 20; padding: 8px 14px; border-radius: 8px; background: var(--hub-brand); color: #fff; }
+.skip:focus { top: 12px; }
+
+.topbar { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 12px; padding: 10px 24px;
+  background: var(--color-bg-light); border-bottom: 1px solid var(--color-border-light); }
+.logo { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--hub-brand); }
+.logo svg { width: 20px; height: 20px; fill: #fff; }
+.brand { font-weight: var(--font-weight-emphasis); font-size: 17px; }
+.spacer { flex: 1; }
+#theme-toggle { font: inherit; font-size: 14px; font-weight: var(--font-weight-emphasis); cursor: pointer; padding: 6px 14px; border-radius: 999px;
+  border: 1px solid var(--color-button-default-border); background: var(--color-button-default); color: var(--color-text); }
+
+main { max-width: 1120px; margin: 0 auto; padding: 0 24px 64px; }
+.hero { padding: 48px 0 24px; text-align: center; }
+.hero h1 { margin: 0 0 8px; font-size: 32px; line-height: 1.2; font-weight: var(--font-weight-emphasis); }
+.hero .lede { margin: 0 auto 24px; max-width: 620px; color: var(--color-text-light); font-size: 16px; }
+.search { position: relative; max-width: 640px; margin: 0 auto; }
+.search svg { position: absolute; left: 16px; top: 50%; width: 20px; height: 20px; transform: translateY(-50%); fill: var(--color-text-light); pointer-events: none; }
+.search input { width: 100%; font: inherit; font-size: 16px; padding: 14px 52px 14px 46px; border-radius: 12px; border: 1px solid var(--color-border);
+  background: var(--color-bg-light); color: var(--color-text); box-shadow: var(--shadow-lv1); }
+.search input::placeholder { color: var(--color-text-light); }
+.search kbd { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font: inherit; font-size: 12px; padding: 1px 7px;
+  border: 1px solid var(--color-border); border-radius: 6px; color: var(--color-text-light); }
+.quick { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px; margin: 18px 0 0; padding: 0; list-style: none; }
+.quick-label { color: var(--color-text-light); font-size: 14px; margin-right: 2px; }
+.quick a { display: inline-block; padding: 5px 14px; border-radius: 999px; font-size: 14px; font-weight: var(--font-weight-emphasis); text-decoration: none;
+  background: var(--color-blue-bg); color: var(--color-blue-fg); }
+.quick a:hover { text-decoration: underline; }
+
+.results { max-width: 640px; margin: 12px auto 0; padding: 6px; list-style: none; text-align: left; border: 1px solid var(--color-border-light);
+  border-radius: 12px; background: var(--color-bg-light); box-shadow: var(--shadow-lv2); }
+.results ul { list-style: none; margin: 0; padding: 0; }
+.r-group + .r-group { margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--color-border-light); }
+.r-label { padding: 6px 14px 4px; font-size: 12px; font-weight: var(--font-weight-emphasis); text-transform: uppercase; letter-spacing: .04em; color: var(--color-text-light); }
+.r-count { margin-left: 4px; padding: 0 6px; border-radius: 999px; background: var(--color-bg); font-variant-numeric: tabular-nums; }
+.results [role="option"] { display: block; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+.results [role="option"][aria-selected="true"] { background: var(--color-menu-item-hover); box-shadow: inset 3px 0 0 var(--hub-brand); }
+.results .r-title { display: block; font-weight: var(--font-weight-emphasis); }
+.results .r-ctx { display: block; font-size: 13px; color: var(--color-text-light); }
+.r-kind { display: inline-block; margin-right: 6px; padding: 0 6px; border-radius: 4px; font-size: 11px; font-weight: var(--font-weight-emphasis);
+  background: var(--color-bg); color: var(--color-text-light); }
+.r-more { padding: 4px 14px 6px; font-size: 13px; color: var(--color-text-light); }
+.results mark { background: none; color: var(--color-link); text-decoration: underline; text-decoration-thickness: 2px; }
+.continue { margin-top: 8px; }
+.cont-head { display: flex; align-items: baseline; gap: 12px; }
+.cont-head h2 { margin-top: 24px; }
+.link-btn { font: inherit; font-size: 13px; color: var(--color-text-light); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+.link-btn:hover { color: var(--color-text); }
+#continue-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)); gap: 12px; margin: 12px 0 0; padding: 0; list-style: none; }
+.cont { display: flex; flex-direction: column; gap: 2px; height: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--color-border-light);
+  background: var(--color-bg-light); color: var(--color-text); text-decoration: none; }
+.cont:hover { border-color: var(--hub-brand); }
+.cont.first { border-left: 4px solid var(--hub-brand); }
+.cont-guide { font-size: 12px; color: var(--color-text-light); }
+.cont-where { font-weight: var(--font-weight-emphasis); }
+.cont-when { font-size: 12px; color: var(--color-text-light); }
+.results .none { padding: 14px; color: var(--color-text-light); }
+
+h2 { font-size: 20px; margin: 40px 0 4px; }
+h2 .count { font-size: 15px; font-weight: var(--font-weight-regular); color: var(--color-text-light); }
+.section-intro { margin: 0 0 16px; color: var(--color-text-light); }
+.card { display: flex; flex-direction: column; background: var(--color-bg-light); border: 1px solid var(--color-border-light); border-radius: 14px;
+  padding: 22px 24px; box-shadow: var(--shadow-lv1); }
+.card h3 { margin: 0; font-size: 19px; line-height: 1.3; }
+.card h3 a { color: var(--color-text); text-decoration: none; } .card h3 a:hover { text-decoration: underline; }
+.blurb { margin: 6px 0 0; color: var(--color-text-light); }
+.meta { margin: 8px 0 0; font-size: 13px; color: var(--color-text-light); }
+.btn { display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 8px 16px; border-radius: 999px; font-weight: var(--font-weight-emphasis);
+  font-size: 14px; text-decoration: none; color: var(--color-text); border: 1px solid var(--color-button-default-border); background: var(--color-button-default); }
+.btn:hover { background: var(--color-menu-item-hover); }
+.btn.primary { background: var(--hub-brand); border-color: var(--hub-brand); color: #fff; }
+.btn.primary:hover { filter: brightness(1.1); }
+.num { display: inline-grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 50%; font-size: 12px;
+  font-weight: var(--font-weight-emphasis); background: var(--color-blue-bg); color: var(--color-blue-fg); }
+
+.featured { border-top: 4px solid var(--hub-brand); }
+.card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.card-head h3 { font-size: 22px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 20px 0 0; padding: 0; list-style: none; }
+.tile { display: flex; gap: 10px; height: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--color-border-light);
+  background: var(--color-bg); color: var(--color-text); text-decoration: none; }
+.tile:hover { border-color: var(--hub-brand); }
+.tile-body { display: flex; flex-direction: column; gap: 4px; }
+.tile-title { font-weight: var(--font-weight-emphasis); }
+.tile-blurb { font-size: 13px; color: var(--color-text-light); }
+.tile-count { margin-top: auto; font-size: 12px; color: var(--color-link); font-weight: var(--font-weight-emphasis); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; padding: 0; list-style: none; }
+.chips li { padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: var(--font-weight-emphasis); background: var(--color-blue-bg); color: var(--color-blue-fg); }
+.chips { margin: 0; }
+.table-tools { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; }
+#tf { font: inherit; font-size: 14px; width: 260px; max-width: 100%; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--color-border);
+  background: var(--color-bg-light); color: var(--color-text); }
+.table-wrap { overflow-x: auto; border: 1px solid var(--color-border-light); border-radius: 12px; background: var(--color-bg-light); box-shadow: var(--shadow-lv1); }
+table.guides { width: 100%; border-collapse: collapse; font-size: 14px; }
+.guides thead th { text-align: left; font-size: 12px; font-weight: var(--font-weight-emphasis); text-transform: uppercase; letter-spacing: .04em;
+  color: var(--color-text-light); padding: 10px 12px; border-bottom: 1px solid var(--color-border-light); white-space: nowrap; }
+.guides thead button { font: inherit; text-transform: inherit; letter-spacing: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+.guides thead button::after { content: ' ↕'; opacity: .45; }
+.guides th[aria-sort="ascending"] button::after { content: ' ↑'; opacity: 1; }
+.guides th[aria-sort="descending"] button::after { content: ' ↓'; opacity: 1; }
+.guides thead button:hover { color: var(--color-text); }
+.guides tbody + tbody .row > * { border-top: 1px solid var(--color-border-light); }
+.guides .row > * { padding: 10px 12px; vertical-align: top; text-align: left; font-weight: inherit; }
+.guides .row { cursor: pointer; }
+.guides .row:hover { background: var(--color-menu-item-hover); }
+.c-toggle { width: 36px; padding-right: 0 !important; }
+.c-name { min-width: 220px; }
+.c-name a { display: block; font-weight: var(--font-weight-emphasis); font-size: 15px; color: var(--color-text); text-decoration: none; }
+.c-name a:hover { text-decoration: underline; }
+.c-blurb { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; margin-top: 2px; font-size: 13px; color: var(--color-text-light); }
+.c-num, .c-date { white-space: nowrap; color: var(--color-text-light); }
+.c-num { text-align: right !important; font-variant-numeric: tabular-nums; }
+.inline-pages { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 0; padding: 0; list-style: none; }
+.inline-pages li { white-space: nowrap; }
+.inline-pages a { text-decoration: none; } .inline-pages a:hover { text-decoration: underline; }
+.expand { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--color-border-light);
+  background: var(--color-bg); color: var(--color-text-light); cursor: pointer; }
+.expand svg { width: 18px; height: 18px; fill: currentcolor; transition: transform .15s; }
+.expand[aria-expanded="true"] svg { transform: rotate(90deg); }
+.expand:hover { color: var(--color-text); border-color: var(--color-border); }
+.preview td { padding: 0 12px 14px; }
+.preview .toc-cols { margin-top: 0; padding: 12px 14px; border-radius: 10px; background: var(--color-bg); }
+.quick .more { background: none; color: var(--color-link); }
+@media (max-width: 860px) { .guides .c-topics { display: none; } }
+@media (max-width: 640px) { .guides .c-pages, .guides .c-date { display: none; } .c-name { min-width: 0; } .c-blurb { -webkit-line-clamp: 2; } }
+.toc { margin-top: 14px; }
+.toc summary { cursor: pointer; width: max-content; font-size: 14px; font-weight: var(--font-weight-emphasis); color: var(--color-link); padding: 2px 0; }
+.toc-cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: 16px 24px; margin-top: 12px; }
+.toc-page { display: flex; align-items: center; gap: 8px; font-weight: var(--font-weight-emphasis); color: var(--color-text); text-decoration: none; }
+.toc-cols ul { margin: 6px 0 0; padding: 0 0 0 30px; list-style: none; }
+.toc-cols li { margin: 3px 0; font-size: 14px; }
+.toc-cols li a { text-decoration: none; } .toc-cols li a:hover { text-decoration: underline; }
+.toc-cols li.grp { margin-top: 8px; font-size: 12px; font-weight: var(--font-weight-emphasis); text-transform: uppercase; letter-spacing: .04em; color: var(--color-text-light); }
+.toc-cols li.in-grp { padding-left: 12px; }
+
+footer { color: var(--color-text-light); font-size: 13px; text-align: center; padding: 24px; border-top: 1px solid var(--color-border-light); }
+@media (max-width: 640px) {
+  .card-head { flex-direction: column; } .hero { padding-top: 32px; } .hero h1 { font-size: 26px; }
+  .search kbd { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+
+/* ---------- each guide's color (--h, its BRAND_COLOR) as a small marker only; surfaces and shadows come from depth.css ---------- */
+.topbar { background: color-mix(in srgb, var(--color-bg-light) 80%, transparent); backdrop-filter: blur(12px); }
+.search input { border-color: transparent; box-shadow: var(--shadow-lv2), 0 0 0 1px var(--color-border-light); }
+.search input:focus { box-shadow: var(--shadow-lv2), 0 0 0 2px var(--hub-brand); outline: none; }
+.quick a { background: var(--color-bg-light); color: var(--color-text); box-shadow: var(--shadow-lv1), 0 0 0 1px var(--color-border-light); }
+.quick a::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 2px; background: var(--h); }
+.quick a:hover { text-decoration: none; box-shadow: var(--shadow-lv1), 0 0 0 1px var(--color-border); }
+.quick .more { background: none; box-shadow: none; } .quick .more::before { content: none; }
+.c-name a::before, .r-label::before, .cont-guide::before {
+  content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 2px; background: var(--h, var(--hub-brand)); }
+
+.card { border-color: var(--color-border-light); box-shadow: var(--shadow-lv2); }
+.featured { border-top: 3px solid var(--hub-brand); }
+.tile { border-color: var(--color-border-light); background: var(--color-bg-light); box-shadow: var(--shadow-lv1); transition: transform .15s, box-shadow .15s; }
+.tile:hover { transform: translateY(-1px); border-color: var(--color-border); box-shadow: var(--shadow-lv2); }
+.tile .num { background: var(--h-bg); color: var(--h-fg); }
+
+.table-wrap { border-color: var(--color-border-light); box-shadow: var(--shadow-lv2); }
+.guides thead th { background: var(--surface-2); }
+.guides .row > :first-child { box-shadow: inset 3px 0 0 var(--h); }
+.c-name a::before { vertical-align: 1px; }
+#tf { border-color: transparent; box-shadow: var(--shadow-lv1), 0 0 0 1px var(--color-border-light); }
+
+.results { border-color: var(--color-border-light); box-shadow: var(--shadow-lv3); }
+
+.cont { border-color: var(--color-border-light); border-left: 3px solid var(--h); box-shadow: var(--shadow-lv1); transition: transform .15s, box-shadow .15s; }
+.cont.first { border-left-color: var(--h); }
+.cont:hover { transform: translateY(-1px); border-color: var(--color-border); border-left-color: var(--h); box-shadow: var(--shadow-lv2); }
+footer { background: var(--color-bg-light); }
+@media (prefers-reduced-motion: reduce) { .tile:hover, .cont:hover { transform: none; } }
+
+/* Surfaces and shadows shared by guides and their hub (new_hub.py copies this file into the hub). It overrides the
+   token surfaces, so set DEPTH_CSS = False in guide_config.py to keep a custom TOKENS_CSS's own backgrounds.
+   Color stays in small markers: --guide-brand on the logo, part badges and topic rules. */
+:root {
+  --color-bg: #eef1f8; --color-bg-light: #ffffff; --surface-2: #f6f8fc; --color-border-light: rgba(23, 33, 66, .09);
+  --shadow-lv1: 0 1px 2px rgba(16, 24, 48, .05), 0 2px 6px rgba(16, 24, 48, .06);
+  --shadow-lv2: 0 2px 4px rgba(16, 24, 48, .05), 0 10px 24px -6px rgba(16, 24, 48, .14);
+  --shadow-lv3: 0 4px 8px rgba(16, 24, 48, .06), 0 24px 48px -12px rgba(16, 24, 48, .24);
+}
+[data-theme='dark'] {
+  --color-bg: #0c1020; --color-bg-light: #141a2e; --surface-2: #1a2139; --color-border-light: rgba(255, 255, 255, .08);
+  --color-menu-item-hover: rgba(255, 255, 255, .06);
+  --shadow-lv1: 0 1px 2px rgba(0, 0, 0, .4), 0 2px 8px rgba(0, 0, 0, .25);
+  --shadow-lv2: 0 2px 4px rgba(0, 0, 0, .4), 0 12px 28px -6px rgba(0, 0, 0, .55);
+  --shadow-lv3: 0 4px 8px rgba(0, 0, 0, .45), 0 28px 56px -12px rgba(0, 0, 0, .7);
+}
+
+/* Guide pages. svg.dg also uses .card for diagram nodes, so only HTML cards are targeted. */
+header.topbar { background: color-mix(in srgb, var(--color-bg-light) 80%, transparent); backdrop-filter: blur(12px);
+  border-bottom-color: var(--color-border-light); }
+.sidebar { border-color: var(--color-border-light); box-shadow: var(--shadow-lv2); }
+div.card, .diagram, .code-block, .pager a { border-color: var(--color-border-light); box-shadow: var(--shadow-lv1); }
+main table { border-color: var(--color-border-light); box-shadow: var(--shadow-lv1); }
+main th { background: var(--surface-2); }
+div.card, .pager a { transition: box-shadow .15s, transform .15s, border-color .15s; }
+.pager a:hover { border-color: var(--color-border); box-shadow: var(--shadow-lv2); }
+.doc-search-results, .gnav-menu { border-color: var(--color-border-light); box-shadow: var(--shadow-lv3); }
+.part-num { box-shadow: 0 4px 10px -4px var(--guide-brand, var(--color-button-primary)); }
+[data-theme='dark'] .topic-kicker { color: color-mix(in srgb, var(--guide-brand) 55%, white); }
+@media (prefers-reduced-motion: reduce) { .pager a:hover { transform: none; } }
+</style>
+<script>
+(function () {
+  var root = document.documentElement, KEY = 'shopfront-guides-theme', stored = null;
+  try { stored = localStorage.getItem(KEY); } catch (e) { /* storage unavailable */ }
+  root.setAttribute('data-theme', stored || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+  document.addEventListener('DOMContentLoaded', function () {
+    var btn = document.getElementById('theme-toggle');
+    var label = function () {
+      var dark = root.getAttribute('data-theme') === 'dark';
+      btn.textContent = dark ? '☀ Light' : '☾ Dark';
+      btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    };
+    label();
+    btn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem(KEY, next); } catch (e) { /* storage unavailable */ }
+      label();
+    });
+
+    var INDEX = JSON.parse(document.getElementById('search-index').textContent);
+    var RECENT_KEY = 'shopfront-guides-recent', PER_GUIDE = 6;
+    var HUE = JSON.parse(document.getElementById('guide-colors').textContent);
+    var hueStyle = function (c) {
+      return c ? ' style="--h: ' + c + '; --h-bg: color-mix(in srgb, ' + c + ' 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, ' + c + ' 75%, var(--color-text))"' : '';
+    };
+    var input = document.getElementById('q'), list = document.getElementById('results'),
+        status = document.getElementById('status'), browse = document.getElementById('browse'), quick = document.getElementById('quick');
+    var plain = function (s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
+    function highlight(s, words) {
+      var low = s.toLowerCase(), marks = [];
+      words.forEach(function (w) { var i = low.indexOf(w); if (i >= 0) marks.push([i, i + w.length]); });
+      marks.sort(function (a, b) { return a[0] - b[0]; });
+      var out = '', at = 0;
+      marks.forEach(function (m) { if (m[0] >= at) { out += plain(s.slice(at, m[0])) + '<mark>' + plain(s.slice(m[0], m[1])) + '</mark>'; at = m[1]; } });
+      return out + plain(s.slice(at));
+    }
+    function recent() { try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch (e) { return []; } }
+    function ago(t) {
+      var m = Math.round((Date.now() - t) / 60000);
+      return m < 1 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' d ago';
+    }
+    function where(e) { return e.trail.length ? e.trail[e.trail.length - 1] : 'Start of guide'; }
+
+    var options = [], active = -1, n = 0;
+    function option(href, title, ctx) {
+      return '<li role="option" id="ro-' + (n++) + '" data-href="' + plain(href) + '" aria-selected="false"><span class="r-title">' + title +
+        '</span><span class="r-ctx">' + ctx + '</span></li>';
+    }
+    function group(label, items, extra, hue) {
+      var id = 'rg-' + (n++);
+      return '<li role="presentation" class="r-group"' + hueStyle(hue) + '><div class="r-label" id="' + id + '">' + label + '</div>' +
+        '<ul role="group" aria-labelledby="' + id + '">' + items.join('') + '</ul>' + (extra || '') + '</li>';
+    }
+    function show(html, msg) {
+      list.innerHTML = html;
+      list.hidden = false;
+      input.setAttribute('aria-expanded', 'true');
+      options = Array.prototype.slice.call(list.querySelectorAll('[role="option"]'));
+      select(-1);
+      status.textContent = msg;
+    }
+    function close() {
+      list.hidden = true;
+      list.innerHTML = '';
+      options = [];
+      input.setAttribute('aria-expanded', 'false');
+      input.removeAttribute('aria-activedescendant');
+    }
+    function select(i) {
+      active = i;
+      options.forEach(function (o, j) { o.setAttribute('aria-selected', j === i ? 'true' : 'false'); });
+      if (i < 0) { input.removeAttribute('aria-activedescendant'); return; }
+      input.setAttribute('aria-activedescendant', options[i].id);
+      options[i].scrollIntoView({ block: 'nearest' });
+    }
+    function showRecent() {
+      var r = recent();
+      if (!r.length) { close(); return; }
+      n = 0;
+      show(group('Recently read', r.map(function (e) {
+        return option(e.href, plain(where(e)), plain(e.title) + ' · ' + ago(e.t)).replace('<li ', '<li' + hueStyle(HUE[e.g]) + ' ');
+      })), r.length + ' recently read pages. Use up and down arrows to choose.');
+    }
+    function run() {
+      var raw = input.value.trim(), q = raw.toLowerCase();
+      browse.hidden = quick.hidden = !!q;
+      if (!q) { if (document.activeElement === input) showRecent(); else close(); return; }
+      var words = q.split(/\s+/), hits = [];
+      INDEX.forEach(function (e) {
+        var t = e.t.toLowerCase(), all = (e.t + ' ' + e.g + ' ' + e.c).toLowerCase();
+        if (!words.every(function (w) { return all.indexOf(w) >= 0; })) return;
+        var rank = t.indexOf(q) === 0 ? 0 : t.indexOf(q) >= 0 ? 1 : words.every(function (w) { return t.indexOf(w) >= 0; }) ? 2 : 3;
+        hits.push({ s: rank * 2 + (e.k === 'Heading' ? 1 : 0), e: e });
+      });
+      n = 0;
+      if (!hits.length) { show('<li role="presentation" class="none">Nothing matches “' + plain(raw) + '”. Try a shorter word.</li>', 'No results.'); return; }
+      hits.sort(function (a, b) { return a.s - b.s; });
+      var byGuide = {}, order = [], hueOf = {};
+      hits.forEach(function (h) { if (!byGuide[h.e.g]) { byGuide[h.e.g] = []; order.push(h.e.g); hueOf[h.e.g] = HUE[h.e.u]; } byGuide[h.e.g].push(h); });
+      show(order.map(function (g) {
+        var all = byGuide[g], items = all.slice(0, PER_GUIDE).map(function (h) {
+          return option(h.e.h, highlight(h.e.t, words), '<span class="r-kind">' + h.e.k + '</span>' + plain(h.e.c));
+        });
+        var more = all.length > PER_GUIDE ? '<div class="r-more">+' + (all.length - PER_GUIDE) + ' more in this guide. Add a word to narrow it down.</div>' : '';
+        return group(plain(g) + ' <span class="r-count">' + all.length + '</span>', items, more, hueOf[g]);
+      }).join(''), hits.length + (hits.length === 1 ? ' result' : ' results') + ' in ' + order.length + (order.length === 1 ? ' guide.' : ' guides.') + ' Use up and down arrows to choose, Enter to open.');
+    }
+    function go(o) { if (o) location.href = o.dataset.href; }
+    input.addEventListener('input', run);
+    input.addEventListener('focus', function () { if (!input.value.trim()) showRecent(); });
+    input.addEventListener('blur', function () { if (!input.value.trim()) close(); });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown') { e.preventDefault(); if (list.hidden) run(); select(Math.min(active + 1, options.length - 1)); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); select(Math.max(active - 1, -1)); }
+      else if (e.key === 'Enter') { e.preventDefault(); go(options[active >= 0 ? active : 0]); }
+      else if (e.key === 'Escape') { e.preventDefault(); if (input.value) { input.value = ''; run(); } else close(); }
+    });
+    list.addEventListener('mousedown', function (e) { e.preventDefault(); });
+    list.addEventListener('click', function (e) { go(e.target.closest('[role="option"]')); });
+    list.addEventListener('mousemove', function (e) { var o = e.target.closest('[role="option"]'); if (o && options.indexOf(o) !== active) select(options.indexOf(o)); });
+
+    var cont = document.getElementById('continue'), contList = document.getElementById('continue-list');
+    function renderContinue() {
+      var r = recent().slice(0, 4);
+      cont.hidden = !r.length;
+      contList.innerHTML = r.map(function (e, i) {
+        return '<li' + hueStyle(HUE[e.g]) + '><a class="cont' + (i ? '' : ' first') + '" href="' + plain(e.href) + '"><span class="cont-guide">' + plain(e.title) + '</span>' +
+          '<span class="cont-where">' + plain(where(e)) + '</span><span class="cont-when">' + ago(e.t) + '</span></a></li>';
+      }).join('');
+    }
+    document.getElementById('continue-clear').addEventListener('click', function () {
+      try { localStorage.removeItem(RECENT_KEY); } catch (e) { /* storage unavailable */ }
+      renderContinue();
+      input.focus();
+    });
+    renderContinue();
+    addEventListener('pageshow', renderContinue);
+
+    var asked = new URLSearchParams(location.search).get('q');
+    if (asked) { input.value = asked; input.focus(); run(); }
+
+    var table = document.getElementById('guides'), groups = table ? Array.prototype.slice.call(table.tBodies) : [];
+    if (table) {
+    table.addEventListener('click', function (e) {
+      var row = e.target.closest('.row');
+      if (!row || (e.target.closest('a') && !e.target.closest('.expand'))) return;
+      var b = row.querySelector('.expand');
+      var open = b.getAttribute('aria-expanded') !== 'true';
+      b.setAttribute('aria-expanded', open);
+      document.getElementById(b.getAttribute('aria-controls')).hidden = !open;
+    });
+    var tf = document.getElementById('tf'), tfCount = document.getElementById('tf-count');
+    function filterRows() {
+      var words = tf.value.trim().toLowerCase().split(/\s+/).filter(Boolean), shown = 0;
+      groups.forEach(function (g) {
+        var hit = words.every(function (w) { return g.dataset.words.indexOf(w) >= 0; });
+        g.hidden = !hit; if (hit) shown++;
+      });
+      tfCount.textContent = words.length ? shown + ' of ' + groups.length + ' guides' : groups.length + ' guides';
+      document.getElementById('tf-empty').hidden = shown > 0;
+    }
+    tf.addEventListener('input', filterRows);
+    tf.addEventListener('keydown', function (e) { if (e.key === 'Escape') { tf.value = ''; filterRows(); } });
+    filterRows();
+    table.querySelectorAll('thead button[data-sort]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var th = b.parentElement, key = b.dataset.sort, cur = th.getAttribute('aria-sort');
+        var dir = cur === 'ascending' ? 'descending' : cur === 'descending' ? 'ascending' : key === 'name' ? 'ascending' : 'descending';
+        table.querySelectorAll('thead th[aria-sort]').forEach(function (x) { x.setAttribute('aria-sort', 'none'); });
+        th.setAttribute('aria-sort', dir);
+        var val = function (g) { return key === 'sections' ? +g.dataset.sections : g.dataset[key]; };
+        groups.sort(function (a, c) { var x = val(a), y = val(c), r = x < y ? -1 : x > y ? 1 : 0; return dir === 'ascending' ? r : -r; })
+          .forEach(function (g) { table.appendChild(g); });
+      });
+    });
+    }
+    document.addEventListener('keydown', function (e) {
+      var typing = /INPUT|TEXTAREA/.test(document.activeElement.tagName);
+      if ((e.key === '/' && !typing) || (e.key === 'k' && (e.metaKey || e.ctrlKey))) { e.preventDefault(); input.focus(); input.select(); }
+    });
+  });
+})();
+</script>
+<script type="application/json" id="guide-colors">{"shopfront-guide": "#1f6feb", "shopfront-postgresql-guide": "#49786d"}</script>
+<script type="application/json" id="search-index">[{"t": "Shopfront Guide", "k": "Guide", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "What Shopfront is, how it is built and shipped, and how engineers work in the repo, with an Express deep dive.", "h": "../shopfront-guide/shopfront-guide.html"}, {"t": "Product", "k": "Page", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "", "h": "../shopfront-guide/shopfront-guide.html#part-product"}, {"t": "What is Shopfront?", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Product", "h": "../shopfront-guide/shopfront-guide.html#overview"}, {"t": "Features", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Product", "h": "../shopfront-guide/shopfront-guide.html#features"}, {"t": "Site map & navigation", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Product", "h": "../shopfront-guide/shopfront-guide.html#sitemap"}, {"t": "Engineering", "k": "Page", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "", "h": "../shopfront-guide/shopfront-guide.html#part-engineering"}, {"t": "Architecture", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Engineering", "h": "../shopfront-guide/shopfront-guide.html#arch"}, {"t": "Tech stack", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Engineering", "h": "../shopfront-guide/shopfront-guide.html#stack"}, {"t": "Operations", "k": "Page", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "", "h": "../shopfront-guide/shopfront-guide.html#part-operations"}, {"t": "Environments & deployments", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Operations", "h": "../shopfront-guide/shopfront-guide.html#envs"}, {"t": "Working process", "k": "Page", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "", "h": "../shopfront-guide/shopfront-guide.html#part-process"}, {"t": "Local development", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Working process", "h": "../shopfront-guide/shopfront-guide.html#localdev"}, {"t": "Testing strategy", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Working process", "h": "../shopfront-guide/shopfront-guide.html#testing"}, {"t": "Topics", "k": "Page", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "", "h": "../shopfront-guide/shopfront-guide.html#part-topics"}, {"t": "Express", "k": "Topic", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics", "h": "../shopfront-guide/shopfront-guide.html#topic-express"}, {"t": "What is Express?", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Express", "h": "../shopfront-guide/shopfront-guide.html#express-overview"}, {"t": "Core concepts", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Express", "h": "../shopfront-guide/shopfront-guide.html#express-concepts"}, {"t": "Where Shopfront uses it", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Express", "h": "../shopfront-guide/shopfront-guide.html#express-usage"}, {"t": "Guided walkthrough", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Express", "h": "../shopfront-guide/shopfront-guide.html#express-walkthrough"}, {"t": "Patterns & gotchas", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Express", "h": "../shopfront-guide/shopfront-guide.html#express-conventions"}, {"t": "Common changes", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Express", "h": "../shopfront-guide/shopfront-guide.html#express-recipes"}, {"t": "Versions & what changed", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Express", "h": "../shopfront-guide/shopfront-guide.html#express-versions"}, {"t": "Official docs & further reading", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Express", "h": "../shopfront-guide/shopfront-guide.html#express-resources"}, {"t": "Reference", "k": "Page", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "", "h": "../shopfront-guide/shopfront-guide.html#part-reference"}, {"t": "Cheat sheet", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Reference", "h": "../shopfront-guide/shopfront-guide.html#cheatsheet"}, {"t": "Glossary", "k": "Section", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Reference", "h": "../shopfront-guide/shopfront-guide.html#glossary"}, {"t": "How to get around", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Product \u203a Site map & navigation", "h": "../shopfront-guide/shopfront-guide.html#sitemap--how-to-get-around"}, {"t": "Route tree", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Product \u203a Site map & navigation", "h": "../shopfront-guide/shopfront-guide.html#sitemap--route-tree"}, {"t": "Environments", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Operations \u203a Environments & deployments", "h": "../shopfront-guide/shopfront-guide.html#envs--environments"}, {"t": "How a change ships", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Operations \u203a Environments & deployments", "h": "../shopfront-guide/shopfront-guide.html#envs--how-a-change-ships"}, {"t": "1 \u00b7 Set up your machine", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Working process \u203a Local development", "h": "../shopfront-guide/shopfront-guide.html#localdev--1-set-up-your-machine"}, {"t": "Quick start", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Working process \u203a Local development", "h": "../shopfront-guide/shopfront-guide.html#localdev--quick-start"}, {"t": "2 \u00b7 Daily loop", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Working process \u203a Local development", "h": "../shopfront-guide/shopfront-guide.html#localdev--2-daily-loop"}, {"t": "What a test looks like", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Working process \u203a Testing strategy", "h": "../shopfront-guide/shopfront-guide.html#testing--what-a-test-looks-like"}, {"t": "Concepts in code", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Core concepts", "h": "../shopfront-guide/shopfront-guide.html#express-concepts--concepts-in-code"}, {"t": "Endpoints", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Where Shopfront uses it", "h": "../shopfront-guide/shopfront-guide.html#express-usage--endpoints"}, {"t": "Building blocks", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Where Shopfront uses it", "h": "../shopfront-guide/shopfront-guide.html#express-usage--building-blocks"}, {"t": "1 \u00b7 A client sends the request", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Guided walkthrough", "h": "../shopfront-guide/shopfront-guide.html#express-walkthrough--1-a-client-sends-the-request"}, {"t": "2 \u00b7 Middleware parses the body", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Guided walkthrough", "h": "../shopfront-guide/shopfront-guide.html#express-walkthrough--2-middleware-parses-the-body"}, {"t": "3 \u00b7 The router matches the path", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Guided walkthrough", "h": "../shopfront-guide/shopfront-guide.html#express-walkthrough--3-the-router-matches-the-path"}, {"t": "4 \u00b7 The handler validates and responds", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Guided walkthrough", "h": "../shopfront-guide/shopfront-guide.html#express-walkthrough--4-the-handler-validates-and-responds"}, {"t": "5 \u00b7 The database", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Guided walkthrough", "h": "../shopfront-guide/shopfront-guide.html#express-walkthrough--5-the-database"}, {"t": "Try it yourself", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Guided walkthrough", "h": "../shopfront-guide/shopfront-guide.html#express-walkthrough--try-it-yourself"}, {"t": "Adding an endpoint, in code", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Common changes", "h": "../shopfront-guide/shopfront-guide.html#express-recipes--adding-an-endpoint-in-code"}, {"t": "Upgrade path", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Topics \u203a Versions & what changed", "h": "../shopfront-guide/shopfront-guide.html#express-versions--upgrade-path"}, {"t": "Copy-paste", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Reference \u203a Cheat sheet", "h": "../shopfront-guide/shopfront-guide.html#cheatsheet--copy-paste"}, {"t": "Terms by area", "k": "Heading", "g": "Shopfront Guide", "u": "shopfront-guide", "c": "Reference \u203a Glossary", "h": "../shopfront-guide/shopfront-guide.html#glossary--terms-by-area"}, {"t": "PostgreSQL in Shopfront", "k": "Guide", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "The database behind products and orders: pooled, parameterized queries from Express handlers.", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html"}, {"t": "The concept", "k": "Page", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#part-concept"}, {"t": "What is PostgreSQL?", "k": "Section", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "The concept", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-overview"}, {"t": "Core concepts", "k": "Section", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "The concept", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-concepts"}, {"t": "In Shopfront", "k": "Page", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#part-in-app"}, {"t": "Where Shopfront uses it", "k": "Section", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-usage"}, {"t": "Guided walkthrough", "k": "Section", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-walkthrough"}, {"t": "Patterns & gotchas", "k": "Section", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-conventions"}, {"t": "Common changes", "k": "Section", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-recipes"}, {"t": "Reference", "k": "Page", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#part-reference"}, {"t": "Versions & what changed", "k": "Section", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "Reference", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-versions"}, {"t": "Official docs & further reading", "k": "Section", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "Reference", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-resources"}, {"t": "Glossary", "k": "Section", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "Reference", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#glossary"}, {"t": "Concepts in code", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "The concept \u203a Core concepts", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-concepts--concepts-in-code"}, {"t": "Every query", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Where Shopfront uses it", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-usage--every-query"}, {"t": "Building blocks", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Where Shopfront uses it", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-usage--building-blocks"}, {"t": "1 \u00b7 The handler calls db.query", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Guided walkthrough", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-walkthrough--1-the-handler-calls-db-query"}, {"t": "2 \u00b7 The pool", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Guided walkthrough", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-walkthrough--2-the-pool"}, {"t": "3 \u00b7 A connection sends the query", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Guided walkthrough", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-walkthrough--3-a-connection-sends-the-query"}, {"t": "4 \u00b7 PostgreSQL runs the insert", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Guided walkthrough", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-walkthrough--4-postgresql-runs-the-insert"}, {"t": "5 \u00b7 The result", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Guided walkthrough", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-walkthrough--5-the-result"}, {"t": "Try it yourself", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Guided walkthrough", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-walkthrough--try-it-yourself"}, {"t": "A local schema that matches the code", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Common changes", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-recipes--a-local-schema-that-matches-the-code"}, {"t": "Making failures visible, in code", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "In Shopfront \u203a Common changes", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-recipes--making-failures-visible-in-code"}, {"t": "Terms by area", "k": "Heading", "g": "PostgreSQL in Shopfront", "u": "shopfront-postgresql-guide", "c": "Reference \u203a Glossary", "h": "../shopfront-postgresql-guide/shopfront-postgresql-guide.html#glossary--terms-by-area"}]</script></head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg></div><span class="brand">Shopfront guides</span><span class="spacer"></span>
+<button id="theme-toggle" type="button">☾ Dark</button></header>
+<main id="main">
+<section class="hero" aria-labelledby="hero-title">
+<h1 id="hero-title">Learn the Shopfront codebase</h1>
+<p class="lede">2 guides and 27 sections in one place. Start with the big picture, then go deep on one technology.</p>
+<div class="search" role="search"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l4.25 4.25a1 1 0 0 0 1.42-1.42zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9"/></svg>
+<label class="sr-only" for="q">Search every guide</label>
+<input id="q" type="search" placeholder="Search all guides, sections and headings" autocomplete="off" role="combobox" aria-expanded="false" aria-autocomplete="list" aria-controls="results" aria-describedby="status">
+<kbd aria-hidden="true">/</kbd></div>
+<p id="status" class="sr-only" aria-live="polite"></p>
+<ul id="results" class="results" role="listbox" hidden aria-label="Search results"></ul>
+<ul class="quick" id="quick" aria-label="Jump to a topic"><li class="quick-label" aria-hidden="true">Jump to:</li><li style="--h: #1f6feb; --h-bg: color-mix(in srgb, #1f6feb 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, #1f6feb 75%, var(--color-text))"><a href="../shopfront-guide/shopfront-guide.html#topic-express" title="Deep dive in Shopfront Guide">Express</a></li><li style="--h: #49786d; --h-bg: color-mix(in srgb, #49786d 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, #49786d 75%, var(--color-text))"><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html" title="PostgreSQL in Shopfront">PostgreSQL</a></li></ul>
+</section>
+<div id="browse">
+<section id="continue" class="continue" hidden aria-labelledby="h-cont"><div class="cont-head"><h2 id="h-cont">Continue reading</h2><button type="button" id="continue-clear" class="link-btn">Clear history</button></div><ul id="continue-list"></ul></section>
+<section aria-labelledby="h-start"><h2 id="h-start">Start here</h2>
+<p class="section-intro">The whole app, end to end. New to Shopfront? Read this first.</p>
+<article class="card featured" aria-labelledby="g-shopfront-guide"><div class="card-head"><div><h3 id="g-shopfront-guide">Shopfront Guide</h3><p class="blurb">What Shopfront is, how it is built and shipped, and how engineers work in the repo, with an Express deep dive.</p><p class="meta">Updated 2026-10-14</p></div><a class="btn primary" href="../shopfront-guide/shopfront-guide.html">Open guide <span aria-hidden="true">→</span></a></div><ol class="tiles"><li style="--h: #0064fa; --h-bg: color-mix(in srgb, #0064fa 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, #0064fa 75%, var(--color-text))"><a class="tile" href="../shopfront-guide/shopfront-guide.html#part-product"><span class="num">1</span><span class="tile-body"><span class="tile-title">Product</span><span class="tile-blurb">What the app is, who uses it, and what it does.</span><span class="tile-count">3 sections</span></span></a></li><li style="--h: #905d9a; --h-bg: color-mix(in srgb, #905d9a 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, #905d9a 75%, var(--color-text))"><a class="tile" href="../shopfront-guide/shopfront-guide.html#part-engineering"><span class="num">2</span><span class="tile-body"><span class="tile-title">Engineering</span><span class="tile-blurb">How it is built: architecture, stack, data, and code layout.</span><span class="tile-count">2 sections</span></span></a></li><li style="--h: #49786d; --h-bg: color-mix(in srgb, #49786d 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, #49786d 75%, var(--color-text))"><a class="tile" href="../shopfront-guide/shopfront-guide.html#part-operations"><span class="num">3</span><span class="tile-body"><span class="tile-title">Operations</span><span class="tile-blurb">Where it runs, how changes ship, and how we watch it.</span><span class="tile-count">1 section</span></span></a></li><li style="--h: #ad5900; --h-bg: color-mix(in srgb, #ad5900 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, #ad5900 75%, var(--color-text))"><a class="tile" href="../shopfront-guide/shopfront-guide.html#part-process"><span class="num">4</span><span class="tile-body"><span class="tile-title">Working process</span><span class="tile-blurb">How engineers work in the repo, from setup to a merged PR.</span><span class="tile-count">2 sections</span></span></a></li><li style="--h: #a9527c; --h-bg: color-mix(in srgb, #a9527c 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, #a9527c 75%, var(--color-text))"><a class="tile" href="../shopfront-guide/shopfront-guide.html#part-topics"><span class="num">5</span><span class="tile-body"><span class="tile-title">Topics</span><span class="tile-blurb">Deep dives into the technologies Shopfront is built on.</span><span class="tile-count">8 sections</span></span></a></li><li style="--h: #437e00; --h-bg: color-mix(in srgb, #437e00 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, #437e00 75%, var(--color-text))"><a class="tile" href="../shopfront-guide/shopfront-guide.html#part-reference"><span class="num">6</span><span class="tile-body"><span class="tile-title">Reference</span><span class="tile-blurb">Quick lookups: commands and terms.</span><span class="tile-count">2 sections</span></span></a></li></ol><details class="toc"><summary>All 18 sections</summary><div class="toc-cols"><div class="toc-col"><a class="toc-page" href="../shopfront-guide/shopfront-guide.html#part-product"><span class="num">1</span>Product</a><ul><li><a href="../shopfront-guide/shopfront-guide.html#overview">What is Shopfront?</a></li><li><a href="../shopfront-guide/shopfront-guide.html#features">Features</a></li><li><a href="../shopfront-guide/shopfront-guide.html#sitemap">Site map &amp; navigation</a></li></ul></div><div class="toc-col"><a class="toc-page" href="../shopfront-guide/shopfront-guide.html#part-engineering"><span class="num">2</span>Engineering</a><ul><li><a href="../shopfront-guide/shopfront-guide.html#arch">Architecture</a></li><li><a href="../shopfront-guide/shopfront-guide.html#stack">Tech stack</a></li></ul></div><div class="toc-col"><a class="toc-page" href="../shopfront-guide/shopfront-guide.html#part-operations"><span class="num">3</span>Operations</a><ul><li><a href="../shopfront-guide/shopfront-guide.html#envs">Environments &amp; deployments</a></li></ul></div><div class="toc-col"><a class="toc-page" href="../shopfront-guide/shopfront-guide.html#part-process"><span class="num">4</span>Working process</a><ul><li><a href="../shopfront-guide/shopfront-guide.html#localdev">Local development</a></li><li><a href="../shopfront-guide/shopfront-guide.html#testing">Testing strategy</a></li></ul></div><div class="toc-col"><a class="toc-page" href="../shopfront-guide/shopfront-guide.html#part-topics"><span class="num">5</span>Topics</a><ul><li class="grp">Topic: Express</li><li class="in-grp"><a href="../shopfront-guide/shopfront-guide.html#express-overview">What is Express?</a></li><li class="in-grp"><a href="../shopfront-guide/shopfront-guide.html#express-concepts">Core concepts</a></li><li class="in-grp"><a href="../shopfront-guide/shopfront-guide.html#express-usage">Where Shopfront uses it</a></li><li class="in-grp"><a href="../shopfront-guide/shopfront-guide.html#express-walkthrough">Guided walkthrough</a></li><li class="in-grp"><a href="../shopfront-guide/shopfront-guide.html#express-conventions">Patterns &amp; gotchas</a></li><li class="in-grp"><a href="../shopfront-guide/shopfront-guide.html#express-recipes">Common changes</a></li><li class="in-grp"><a href="../shopfront-guide/shopfront-guide.html#express-versions">Versions &amp; what changed</a></li><li class="in-grp"><a href="../shopfront-guide/shopfront-guide.html#express-resources">Official docs &amp; further reading</a></li></ul></div><div class="toc-col"><a class="toc-page" href="../shopfront-guide/shopfront-guide.html#part-reference"><span class="num">6</span>Reference</a><ul><li><a href="../shopfront-guide/shopfront-guide.html#cheatsheet">Cheat sheet</a></li><li><a href="../shopfront-guide/shopfront-guide.html#glossary">Glossary</a></li></ul></div></div></details></article></section>
+<section aria-labelledby="h-topics"><h2 id="h-topics">Topic guides <span class="count">(1)</span></h2>
+<p class="section-intro">One technology each, and exactly how Shopfront uses it. Select a row to preview its sections.</p>
+<div class="table-tools"><label class="sr-only" for="tf">Filter topic guides</label>
+<input id="tf" type="search" placeholder="Filter topic guides" autocomplete="off">
+<span id="tf-count" class="meta" aria-live="polite"></span></div>
+<div class="table-wrap"><table class="guides" id="guides">
+<thead><tr><th scope="col" class="c-toggle"><span class="sr-only">Preview</span></th>
+<th scope="col" aria-sort="ascending"><button type="button" data-sort="name">Guide</button></th>
+<th scope="col" class="c-topics">Topics</th><th scope="col" class="c-pages">Pages</th>
+<th scope="col" class="c-num" aria-sort="none"><button type="button" data-sort="sections">Sections</button></th>
+<th scope="col" class="c-date" aria-sort="none"><button type="button" data-sort="updated">Updated</button></th></tr></thead>
+<tbody class="row-group" style="--h: #49786d; --h-bg: color-mix(in srgb, #49786d 16%, var(--color-bg-light)); --h-fg: color-mix(in srgb, #49786d 75%, var(--color-text))" data-words="postgresql in shopfront the database behind products and orders: pooled, parameterized queries from express handlers. postgresql" data-name="postgresql in shopfront" data-sections="9" data-updated="2026-10-14"><tr class="row"><td class="c-toggle"><button type="button" class="expand" aria-expanded="false" aria-controls="pv-0" aria-label="Preview sections of PostgreSQL in Shopfront" title="Preview sections"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.29 6.71a1 1 0 0 0 0 1.41L13.17 12l-3.88 3.88a1 1 0 1 0 1.41 1.41l4.59-4.59a1 1 0 0 0 0-1.41L10.7 6.7a1 1 0 0 0-1.41.01"/></svg></button></td><th scope="row" class="c-name"><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html">PostgreSQL in Shopfront</a><span class="c-blurb" title="The database behind products and orders: pooled, parameterized queries from Express handlers.">The database behind products and orders: pooled, parameterized queries from Express handlers.</span></th><td class="c-topics"><ul class="chips"><li>PostgreSQL</li></ul></td><td class="c-pages"><ul class="inline-pages"><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#part-concept">The concept</a></li><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#part-in-app">In Shopfront</a></li><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#part-reference">Reference</a></li></ul></td><td class="c-num">9</td><td class="c-date" title="Updated 2026-10-14">2026-10-14</td></tr><tr class="preview" id="pv-0" hidden><td></td><td colspan="5"><div class="toc-cols"><div class="toc-col"><a class="toc-page" href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#part-concept"><span class="num">1</span>The concept</a><ul><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-overview">What is PostgreSQL?</a></li><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-concepts">Core concepts</a></li></ul></div><div class="toc-col"><a class="toc-page" href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#part-in-app"><span class="num">2</span>In Shopfront</a><ul><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-usage">Where Shopfront uses it</a></li><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-walkthrough">Guided walkthrough</a></li><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-conventions">Patterns &amp; gotchas</a></li><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-recipes">Common changes</a></li></ul></div><div class="toc-col"><a class="toc-page" href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#part-reference"><span class="num">3</span>Reference</a><ul><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-versions">Versions &amp; what changed</a></li><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-resources">Official docs &amp; further reading</a></li><li><a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#glossary">Glossary</a></li></ul></div></div></td></tr></tbody>
+</table></div>
+<p id="tf-empty" class="meta" hidden>No topic guide matches that filter.</p></section>
+</div>
+</main>
+<footer>Demo hub for <b>Shopfront</b>, a fictional app generated by <code>evals/_fixture/make-app.sh</code>. Built with the application-explainer skill.</footer>
+</body></html>

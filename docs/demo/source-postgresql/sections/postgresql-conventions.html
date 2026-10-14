@@ -16,7 +16,7 @@
       <h3 class="card-title"><span class="card-icon"><svg viewBox="0 0 24 24" data-card-icon="shield"></svg></span>Gotchas</h3>
       <ul>
         <li><b>No pool error listener.</b> If the database drops an idle connection, node-postgres emits an <code>error</code> on the pool; with no <code>pool.on('error')</code> in <code>server/db.js</code>, that can crash the process (<a href="https://node-postgres.com/apis/pool">Pool</a>).</li>
-        <li><b>Query errors crash the server too</b>: handlers <code>await db.query</code> with no <code>try/catch</code>, and Express 4 doesn't catch rejected promises (<a href="#express-conventions">Express gotchas</a>).</li>
+        <li><b>Query errors crash the server too</b>: handlers <code>await db.query</code> with no <code>try/catch</code>, and Express 4 doesn't catch rejected promises (<a href="../shopfront-guide/shopfront-guide.html#express-conventions">Express gotchas</a>).</li>
         <li><b>A missing DATABASE_URL fails quietly.</b> In current node-postgres releases, an undefined connection string falls back to <code>PG*</code> variables and localhost, so a misconfigured server starts fine and only fails on its first query.</li>
         <li><b>No schema in the repo.</b> Column types, constraints, and indexes exist only in whatever database you point at. If <code>id</code> is a <code>bigint</code>, it comes back as a string (<code>"42"</code>, not <code>42</code>).</li>
         <li><b>No connection timeout.</b> The pool's default is to wait forever for a free connection, so a leak or a stuck database makes requests hang rather than fail.</li>

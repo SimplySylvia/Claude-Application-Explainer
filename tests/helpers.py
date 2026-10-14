@@ -35,5 +35,5 @@ class TempDirCase(unittest.TestCase):
         return run(sys.executable, os.path.join(SCRIPTS, 'new_guide.py'), '--repo', self.app, '--app', app, *extra,
                    cwd=self.tmp, check=False)
 
-    def build(self, guide):
-        return run(sys.executable, os.path.join(guide, 'build', 'build.py'), check=False)
+    def build(self, guide, *extra):
+        return run(sys.executable, os.path.join(guide, 'build', 'build.py'), *extra, check=False)

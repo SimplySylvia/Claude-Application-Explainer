@@ -31,11 +31,8 @@
     <tr><td><b>fetch</b></td><td>The browser API for HTTP requests; check <code>response.ok</code> for errors.</td><td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">MDN</a></td></tr>
     <tr><td><b>pg / node-postgres / Pool</b></td><td>The Postgres client; one shared pool from <code>DATABASE_URL</code>, used through <code>db.query</code> with <code>$1</code> placeholders.</td><td><code>server/db.js</code></td></tr>
     <tr class="group" style="--accent: var(--c-data)"><td colspan="3"><span class="row-icon" data-icon="db"></span>PostgreSQL</td></tr>
-    <tr><td><b>PostgreSQL / Postgres</b></td><td>The relational database that stores Shopfront&#39;s products and orders. See the <a href="#postgresql-overview">PostgreSQL deep dive</a>.</td><td><code>server/db.js</code></td></tr>
+    <tr><td><b>PostgreSQL / Postgres</b></td><td>The relational database that stores Shopfront&#39;s products and orders. See the <a href="../shopfront-postgresql-guide/shopfront-postgresql-guide.html#postgresql-overview">PostgreSQL guide</a>.</td><td><code>server/db.js</code></td></tr>
     <tr><td><b>Parameterized query / Parameterized SQL</b></td><td>SQL with <code>$1</code>, <code>$2</code>… placeholders and a separate values array, so values are never read as SQL. Every Shopfront query is one.</td><td><code>server/routes/orders.js:6</code></td></tr>
     <tr><td><b>RETURNING</b></td><td>SQL clause that makes an INSERT or UPDATE send back columns of the rows it changed, such as a generated id.</td><td><code>server/routes/orders.js:6</code></td></tr>
-    <tr><td><b>Transaction</b></td><td>Several statements that succeed or fail together (BEGIN … COMMIT, or ROLLBACK), run on one checked-out client. Not used in Shopfront yet.</td><td><a href="https://node-postgres.com/features/transactions">docs</a></td></tr>
-    <tr><td><b>SQLSTATE</b></td><td>The five-character code on every PostgreSQL error (<code>err.code</code>), e.g. <code>23505</code> for a duplicate key.</td><td><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">docs</a></td></tr>
-    <tr><td><b>psql</b></td><td>PostgreSQL&#39;s command-line client, for running SQL by hand against a database.</td><td><a href="https://www.postgresql.org/docs/current/tutorial-table.html">docs</a></td></tr>
   </table>
 </section>

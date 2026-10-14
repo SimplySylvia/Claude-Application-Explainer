@@ -1,7 +1,7 @@
 <!-- ============ GUIDED WALKTHROUGH ============ -->
 <section id="postgresql-walkthrough">
   <h2>Guided walkthrough</h2>
-  <p class="sub">Follow one write, placing an order with <code>POST /api/orders</code>, from the handler to PostgreSQL and back. The <a href="#express-walkthrough">Express walkthrough</a> covers the same request up to the handler; this one picks up there. Sources: <code>server/routes/orders.js</code>, <code>server/db.js</code>.</p>
+  <p class="sub">Follow one write, placing an order with <code>POST /api/orders</code>, from the handler to PostgreSQL and back. The <a href="../shopfront-guide/shopfront-guide.html#express-walkthrough">Express walkthrough</a> covers the same request up to the handler; this one picks up there. Sources: <code>server/routes/orders.js</code>, <code>server/db.js</code>.</p>
 
   <h3>1 · The handler calls db.query</h3>
   <p><code>createOrder</code> passes two things: SQL with a <code>$1</code> placeholder, and an array of values. The cart is turned into a JSON string first. Concept: <a href="#postgresql-concepts">parameterized queries</a>.</p>
@@ -22,7 +22,7 @@ module.exports = new Pool({ connectionString: process.env.DATABASE_URL });</code
 -- $1 = '[{"productId":42,"qty":1}]'</code></pre>
 
   <h3 style="margin-top:24px">5 · The result</h3>
-  <p><code>db.query</code> resolves to a result object; Shopfront uses only <code>rows</code>, an array of plain objects keyed by column name. <code>rows[0].id</code> is the new order's id. If the query fails, the promise rejects, and because the handler has no <code>try/catch</code>, that crashes the process in Express 4 (see the <a href="#express-conventions">Express gotchas</a>).</p>
+  <p><code>db.query</code> resolves to a result object; Shopfront uses only <code>rows</code>, an array of plain objects keyed by column name. <code>rows[0].id</code> is the new order's id. If the query fails, the promise rejects, and because the handler has no <code>try/catch</code>, that crashes the process in Express 4 (see the <a href="../shopfront-guide/shopfront-guide.html#express-conventions">Express gotchas</a>).</p>
 
   <h3 style="margin-top:24px">Try it yourself</h3>
   <p>None of the repo's tests touch the database, and it has no schema, so you need a local PostgreSQL with an <code>orders</code> table you create yourself (<a href="#postgresql-recipes">recipe</a>). Then:</p>

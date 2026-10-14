@@ -1,0 +1,21 @@
+<!-- ============ GLOSSARY ============ -->
+<section id="glossary">
+  <h2>Glossary</h2>
+  <p class="sub">Across the guide, the first mention of a term in each section is underlined: hover it for the definition, or click to jump here.</p>
+
+  <h3>Terms by area</h3>
+  <table class="stack">
+    <colgroup><col style="width:20%"><col><col style="width:30%"></colgroup>
+    <tr><th>Term</th><th>Meaning (as used in Shopfront)</th><th>Where it shows up (repo path)</th></tr>
+    <tr class="group" style="--accent: var(--c-data)"><td colspan="3"><span class="row-icon" data-icon="db"></span>PostgreSQL</td></tr>
+    <tr><td><b>PostgreSQL / Postgres</b></td><td>The relational database that stores Shopfront&#39;s products and orders. See <a href="#postgresql-overview">What is PostgreSQL?</a>.</td><td><code>server/db.js</code></td></tr>
+    <tr><td><b>Parameterized query / Parameterized SQL</b></td><td>SQL with <code>$1</code>, <code>$2</code>… placeholders and a separate values array, so values are never read as SQL. Every Shopfront query is one.</td><td><code>server/routes/orders.js:6</code></td></tr>
+    <tr><td><b>RETURNING</b></td><td>SQL clause that makes an INSERT or UPDATE send back columns of the rows it changed, such as a generated id.</td><td><code>server/routes/orders.js:6</code></td></tr>
+    <tr><td><b>Transaction</b></td><td>Several statements that succeed or fail together (BEGIN … COMMIT, or ROLLBACK), run on one checked-out client. Not used in Shopfront yet.</td><td><a href="https://node-postgres.com/features/transactions">docs</a></td></tr>
+    <tr><td><b>SQLSTATE</b></td><td>The five-character code on every PostgreSQL error (<code>err.code</code>), e.g. <code>23505</code> for a duplicate key.</td><td><a href="https://www.postgresql.org/docs/current/errcodes-appendix.html">docs</a></td></tr>
+    <tr><td><b>psql</b></td><td>PostgreSQL&#39;s command-line client, for running SQL by hand against a database.</td><td><a href="https://www.postgresql.org/docs/current/tutorial-table.html">docs</a></td></tr>
+    <tr class="group" style="--accent: var(--c-edge)"><td colspan="3"><span class="row-icon" data-icon="code"></span>Code &amp; config</td></tr>
+    <tr><td><b>pg / node-postgres / Pool</b></td><td>The Postgres client; one shared pool from <code>DATABASE_URL</code>, used through <code>db.query</code> with <code>$1</code> placeholders.</td><td><code>server/db.js</code></td></tr>
+    <tr><td><b>DATABASE_URL</b></td><td>PostgreSQL connection string read by the pool.</td><td><code>server/db.js</code></td></tr>
+  </table>
+</section>

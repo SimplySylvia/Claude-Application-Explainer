@@ -61,15 +61,33 @@ class BuildTest(TempDirCase):
         self.assertFalse(os.path.exists(os.path.join(guide, 'shopfront-guide-no-screenshots.html')))
 
     def test_demo_source_builds_without_warnings_or_todos(self):
-        self.scaffold()
+        # The same steps as docs/demo/make-demo.sh: two guides and the hub that links them.
+        demo = os.path.join(ROOT, 'docs', 'demo')
+        self.scaffold('Shopfront', '--no-hub')
+        self.scaffold('Shopfront', '--topic', 'PostgreSQL', '--no-hub')
+        run(sys.executable, os.path.join(SCRIPTS, 'new_hub.py'), '--repo', self.app, '--app', 'Shopfront', cwd=self.tmp)
         guide = os.path.join(self.tmp, 'shopfront-guide')
-        shutil.copytree(os.path.join(ROOT, 'docs', 'demo', 'source'), guide, dirs_exist_ok=True)
-        r = self.build(guide)
+        topic = os.path.join(self.tmp, 'shopfront-postgresql-guide')
+        hub = os.path.join(self.tmp, 'shopfront-guides')
+        shutil.copytree(os.path.join(demo, 'source'), guide, dirs_exist_ok=True)
+        shutil.rmtree(os.path.join(topic, 'sections'))
+        shutil.copytree(os.path.join(demo, 'source-postgresql'), topic, dirs_exist_ok=True)
+        shutil.copy(os.path.join(demo, 'source-hub', 'hub_config.py'), hub)
+        for g in (guide, topic):
+            r = run(sys.executable, os.path.join(g, 'build', 'build.py'), '--no-hub', check=False)
+            self.assertEqual(r.returncode, 0, r.stderr)
+            self.assertNotIn('WARNING', r.stdout)
+        r = run(sys.executable, os.path.join(hub, 'build', 'build.py'), check=False)
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertNotIn('WARNING', r.stdout)
+        self.assertIn('2 guides', r.stdout)
+        for page in (os.path.join(guide, 'shopfront-guide.html'), os.path.join(topic, 'shopfront-postgresql-guide.html')):
+            html = read(page)
+            self.assertNotRegex(re.sub(r'<script.*?</script>', '', html, flags=re.S), r'\bTODO\b')
+            for href in set(re.findall(r'href="(\.\./[^"#]+)#([^"]+)"', html)):
+                target = os.path.normpath(os.path.join(os.path.dirname(page), href[0]))
+                self.assertIn(f'id="{href[1]}"', read(target), f'{os.path.basename(page)} links to {href}')
         html = read(os.path.join(guide, 'shopfront-guide.html'))
-        main = re.sub(r'<script.*?</script>', '', html, flags=re.S)
-        self.assertNotRegex(main, r'\bTODO\b')
 
         out = os.path.join(self.tmp, 'text')
         r = run(sys.executable, os.path.join(SCRIPTS, 'extract_text.py'), os.path.join(guide, 'shopfront-guide.html'), out)
@@ -96,11 +114,11 @@ class BuildTest(TempDirCase):
         shutil.copytree(os.path.join(ROOT, 'docs', 'demo', 'source'), guide, dirs_exist_ok=True)
         write(os.path.join(guide, 'sections', 'cheatsheet.html'),
               '<section id="cheatsheet">\n  <h2>Cheat sheet</h2>\n  <p class="sub">Run <code>npm test</code>.</p>\n</section>\n')
-        r = self.build(guide)
+        r = self.build(guide, '--no-hub')
         self.assertIn("section 'cheatsheet' cites no repo paths", r.stdout)
         write(os.path.join(guide, 'sections', 'cheatsheet.html'),
               '<section id="cheatsheet">\n  <h2>Cheat sheet</h2>\n  <p class="sub">From <code>package.json</code>.</p>\n</section>\n')
-        self.assertNotIn('WARNING', self.build(guide).stdout)
+        self.assertNotIn('WARNING', self.build(guide, '--no-hub').stdout)
 
     def test_unplaced_diagram_warns(self):
         self.scaffold()

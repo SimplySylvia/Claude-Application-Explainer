@@ -141,7 +141,7 @@ def header(logo_svg, page_tabs='', title='Guide', short_title='Guide', hub_url=N
         + f'<h1 title="{title}">{short_title}</h1>'
         f'{page_tabs}<nav class="topbar-crumb" id="crumb" aria-label="You are here"></nav></div>'
         '<span class="topbar-spacer"></span>'
-        + (f'<a class="hub-link" href="{hub_url}" title="{hub_title}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>All guides</a>' if hub_url else '')
+        + (f'<a class="hub-link" href="{hub_url}" title="{hub_title}" aria-label="All guides"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg><span class="hub-link-text">All guides</span></a>' if hub_url else '')
         + '<button id="theme-toggle" type="button">☾ Dark</button>'
         '</header>')
 
@@ -259,6 +259,15 @@ header.topbar .logo svg { width: 20px; height: 20px; }
   font-size: var(--font-size-body-sm); font-weight: var(--font-weight-emphasis); text-decoration: none; white-space: nowrap; }
 .hub-link:hover { background: var(--color-button-default-hover); text-decoration: none; }
 .hub-link svg { width: 14px; height: 14px; fill: currentcolor; }
+/* Many page tabs plus the hub controls can outgrow the bar: drop the button labels first, then let the tabs scroll. */
+@media (max-width: 1600px) { .hub-link-text, .gnav-btn-text { display: none; } .hub-link { padding: 7px 9px; } }
+.page-tabs { min-width: 0; flex-shrink: 1; overflow-x: auto; scrollbar-width: none; position: relative; }
+.topbar-crumb { flex-shrink: 1000; }
+header.tabs-tight .topbar-crumb { display: none; }
+header.tabs-tight .doc-search { flex-basis: 220px; }
+.page-tabs.compact a:not([aria-current]) .page-tab-label { display: none; } .page-tabs.compact a:not([aria-current]) { padding-right: 5px; }
+.page-tabs::-webkit-scrollbar { display: none; }
+.page-tabs a { flex: none; }
 header.topbar #theme-toggle { margin-left: var(--space-sm); align-self: center; }
 .icon-btn { display: inline-grid; place-items: center; width: 32px; height: 32px; flex: none; border-radius: var(--border-radius-md);
   border: 0; background: var(--color-button-icon); color: var(--color-icon); cursor: pointer; }

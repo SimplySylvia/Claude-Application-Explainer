@@ -36,10 +36,11 @@ jobs:
         run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Build demo and run qa_check.py
         run: docs/demo/make-demo.sh --no-screenshots
-      - name: Check docs/demo/index.html is committed up to date
+      - name: Check docs/demo/ is committed up to date
         run: |
-          git diff --exit-code docs/demo/index.html || {
-            echo "::error::docs/demo/index.html is stale. Run docs/demo/make-demo.sh and commit the result."
+          git add -N docs/demo
+          git diff --exit-code docs/demo || {
+            echo "::error::docs/demo/ is stale. Run docs/demo/make-demo.sh and commit the result."
             exit 1
           }
 

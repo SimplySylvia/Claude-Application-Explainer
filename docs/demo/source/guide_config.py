@@ -6,6 +6,13 @@ OUTPUT_NAME = 'shopfront-guide'                    # writes shopfront-guide.html
 BRAND_COLOR = '#1f6feb'                           # logo tile, part badges; use the app's primary brand color
 LOGO_SVG = ('<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>')  # white glyph on the brand tile
 
+GUIDE_KIND = 'app'
+# The demo hub (docs/demo/source-hub) links this guide and the PostgreSQL topic guide.
+HUB_URL = '../shopfront-guides/index.html'
+HUB_TITLE = 'Shopfront guides'
+THEME_KEY = 'shopfront-guides-theme'
+SOURCE_REPO = '../app'   # the fixture app, beside the guide folders in the demo build
+
 # Design tokens. Default: build/tokens.css. Point at the app's own token CSS (copied into this folder) if it has one;
 # it must define the variables the styles use (see "Styling and branding" in the skill's references/authoring.md).
 TOKENS_CSS = None
@@ -44,16 +51,6 @@ PARTS = [
             ('express-versions', 'Versions & what changed'),
             ('express-resources', 'Official docs & further reading'),
         ]),
-        ('postgresql', 'PostgreSQL', 'What PostgreSQL is and how Shopfront uses it.', [
-            ('postgresql-overview', 'What is PostgreSQL?'),
-            ('postgresql-concepts', 'Core concepts'),
-            ('postgresql-usage', 'Where Shopfront uses it'),
-            ('postgresql-walkthrough', 'Guided walkthrough'),
-            ('postgresql-conventions', 'Patterns & gotchas'),
-            ('postgresql-recipes', 'Common changes'),
-            ('postgresql-versions', 'Versions & what changed'),
-            ('postgresql-resources', 'Official docs & further reading'),
-        ]),
     ]),
     ('reference', 'Reference', 'Quick lookups: commands and terms.', [
         ('cheatsheet', 'Cheat sheet'),
@@ -70,4 +67,4 @@ COLLAPSED_TABLE_GROUPS = set()
 
 # Technology deep dives: {slug: {"name": ..., "docs_checked": "YYYY-MM-DD"}}. changed_since.py flags docs
 # checked more than 90 days ago; `changed_since.py <guide> --mark-docs <slug>` records a re-check.
-TOPICS = {'express': {'name': 'Express', 'docs_checked': '2026-10-13'}, 'postgresql': {'name': 'PostgreSQL', 'docs_checked': '2026-10-13'}}
+TOPICS = {'express': {'name': 'Express', 'docs_checked': '2026-10-13'}}

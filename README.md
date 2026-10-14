@@ -187,9 +187,10 @@ last checked, and updates flag docs older than 90 days.
 
 ### Example
 
-**[Open the live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/)**: a complete guide for **Shopfront**, the small fictional app used by the evals
-(`evals/_fixture/make-app.sh`), with two deep dives built by the topic explainer on its Topics page: **Express** and **PostgreSQL**. A real app
-produces more sections and longer tables. The screenshots below are from the same guide.
+**[Open the live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/)**: a hub for **Shopfront**, the small fictional app used by the evals
+(`evals/_fixture/make-app.sh`). It links a complete Product & Engineering Guide, which has an **Express** deep dive on its Topics page, and a
+separate **PostgreSQL** topic guide, both built by the topic explainer. A real app produces more sections and longer tables. The screenshots
+below are from the same demo.
 
 <table>
   <tr>
@@ -216,14 +217,35 @@ The Topics page, added with the topic explainer:
     the app pins (dark theme).</td>
   </tr>
   <tr>
-    <td width="50%"><img src="docs/images/guide-topics.png" alt="Topics page: the PostgreSQL topic banner, with Express and PostgreSQL as separate groups in the sidebar"></td>
     <td width="50%"><img src="docs/images/guide-topic-link.png" alt="Tech stack table: the Express row links to the Express deep dive"></td>
+    <td width="50%"><img src="docs/images/guide-menu.png" alt="The PostgreSQL topic guide with its Guides menu open, listing the Shopfront Guide and marking the current guide"></td>
   </tr>
   <tr>
-    <td><b>More topics, one page:</b> a second deep dive (PostgreSQL) gets its own banner and sidebar group on the
-    same Topics page.</td>
-    <td><b>Linked from the main guide:</b> the Tech stack rows (and the Architecture summary) point readers to each
-    deep dive, and the two deep dives link to each other.</td>
+    <td><b>Linked from the main guide:</b> the Tech stack rows (and the Architecture summary) point readers to the
+    Express deep dive and the separate PostgreSQL guide, which links back.</td>
+    <td><b>A separate topic guide</b> (PostgreSQL) on the same hub: its color, a breadcrumb root, and a
+    <b>Guides</b> menu that lists every guide for the app.</td>
+  </tr>
+</table>
+
+The hub that links them (`new_hub.py`):
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/images/hub.png" alt="Hub page: headline, search, topic buttons, Continue reading cards, and the main guide with a tile per page"></td>
+    <td width="50%"><img src="docs/images/hub-search.png" alt="Hub search for &quot;walkthrough&quot;: results grouped by guide, with sections and headings"></td>
+  </tr>
+  <tr>
+    <td><b>One front door:</b> the main guide with a tile per page, topic buttons, and "Continue reading" where you
+    left off in each guide.</td>
+    <td><b>Search every guide</b> at once, down to the headings inside sections, grouped by guide (dark theme).</td>
+  </tr>
+  <tr>
+    <td colspan="2"><img src="docs/images/hub-table.png" alt="Topic guides table with the PostgreSQL row's sections previewed"></td>
+  </tr>
+  <tr>
+    <td colspan="2"><b>Topic guides stay a short table</b> as the list grows: filter it, sort by name, size, or date, and
+    preview a guide's sections before opening it.</td>
   </tr>
 </table>
 
@@ -247,7 +269,7 @@ pass is there to catch.
 | `skills/application-explainer/` | The skill: `SKILL.md`, build `engine/`, guide `hub/` engine, `starter/` template, `scripts/`, `references/` |
 | `skills/topic-explainer/` | The topic skill: `SKILL.md`, `starter/` topic template, `references/` (reuses the engine and scripts above) |
 | `agents/` | Subagents the skills fan out to: `repo-researcher`, `structure-reviewer`, `section-verifier`, `glossary-scout`, `glossary-drafter`, and for topics `tech-researcher` and `source-verifier` (web) |
-| `docs/` | [`HOW-IT-WORKS.md`](docs/HOW-IT-WORKS.md) workflow and agents; `demo/` live demo and its source; `images/` README screenshots (served by GitHub Pages) |
+| `docs/` | [`HOW-IT-WORKS.md`](docs/HOW-IT-WORKS.md) workflow and agents; `demo/` live demo (a hub, the main guide, and a topic guide) and their sources; `images/` README screenshots (served by GitHub Pages) |
 | `evals/` | `claude plugin eval` suite: trigger, near-miss, and end-to-end cases on a small fixture app |
 | `tests/` | Unit tests for the scaffold, build, hub, diagrams, and glossary scripts |
 | `.github/` | CI workflow, issue templates, and the pull request template |
@@ -287,16 +309,21 @@ change to its rules.
 
 ### Demo and screenshots
 
-The live demo and the README screenshots are built from [`docs/demo/source/`](docs/demo/source/) with the current
-engine. The deep dives' sections are the `express-*.html` and `postgresql-*.html` files there, with their flow
-diagrams in `diagrams.py` and their `TOPICS` entries and Topics part in `guide_config.py`. After changing the engine or the demo source, regenerate both and commit the results:
+The live demo and the README screenshots are built with the current engine from three sources in `docs/demo/`:
+[`source/`](docs/demo/source/) (the Shopfront guide; its Express deep dive is the `express-*.html` sections, the
+`express-flow` diagram, and the `TOPICS` entry and Topics part in `guide_config.py`),
+[`source-postgresql/`](docs/demo/source-postgresql/) (the PostgreSQL topic guide), and
+[`source-hub/`](docs/demo/source-hub/) (the hub). The build writes `shopfront-guide/`, `shopfront-postgresql-guide/`
+and `shopfront-guides/` there, and `index.html` redirects to the hub. After changing the engine or the demo
+source, regenerate everything and commit the results:
 
 ```bash
 docs/demo/make-demo.sh                   # build, run QA, recapture docs/images/*.png
 docs/demo/make-demo.sh --no-screenshots  # build and QA only
 ```
 
-CI fails if `docs/demo/index.html` is out of date.
+CI fails if anything under `docs/demo/` is out of date. The build pins the hub's dates with `SOURCE_DATE_EPOCH`, so
+rebuilding without changes leaves the files untouched.
 
 ### Releasing
 
