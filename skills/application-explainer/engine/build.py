@@ -2,6 +2,7 @@
 
     python3 build/build.py                   # full guide (+ the no-screenshots share version if screenshots exist)
     python3 build/build.py --no-screenshots  # share version only
+    python3 build/build.py --no-hub          # don't refresh the guide hub (HUB_URL) afterwards
 
 Output goes to the guide root: <OUTPUT_NAME>.html and <OUTPUT_NAME>-no-screenshots.html.
 """
@@ -183,6 +184,8 @@ for family, weight, path in getattr(cfg, 'FONTS', []):
     fonts += f"@font-face{{font-family:'{family}';font-weight:{weight};src:url(data:font/woff2;base64,{data}) format('woff2');}}"
 brand = f':root {{ --guide-brand: {cfg.BRAND_COLOR}; }}' if getattr(cfg, 'BRAND_COLOR', None) else ''
 css = fonts + '\n' + tokens + '\n' + read(E, 'styles.css') + '\n' + brand + '\n' + layout.CSS
+if getattr(cfg, 'DEPTH_CSS', True):
+    css += '\n' + read(E, 'depth.css')
 
 THEME_JS = '''<script>
 (function () {
@@ -206,6 +209,12 @@ THEME_JS = '''<script>
 DEFS = ('<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>'
         '<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
         '<path class="arrowhead" d="M0,1 L10,5 L0,9 z"/></marker></defs></svg>')
+
+# A guide hub (new_hub.py) lists every guide for the repo. Its nav.js adds the guide switcher, reading position and
+# cross-guide search; the guide still works without it.
+HUB_URL = getattr(cfg, 'HUB_URL', None)
+HUB_DIR = os.path.normpath(os.path.join(ROOT, os.path.dirname(HUB_URL))) if HUB_URL else None
+nav_script = f'<script src="{esc(os.path.dirname(HUB_URL) or ".")}/nav.js" defer></script>\n' if HUB_URL else ''
 
 viewer = read(E, 'diagram-viewer.js').replace('__ICONS__', json.dumps({k: ICONS[k] for k in ('expand', 'zoomIn', 'zoomOut', 'fit', 'close')}))
 tail = '<script>\n' + read(E, 'layout.js') + '</script>\n<script>\n' + viewer + '</script>\n'
@@ -233,16 +242,16 @@ doc = f'''<!DOCTYPE html>
 </head>
 <body>
 {DEFS}
-{layout.header(getattr(cfg, 'LOGO_SVG', ''), PAGE_TABS, esc(cfg.TITLE), esc(cfg.SHORT_TITLE))}
+{layout.header(getattr(cfg, 'LOGO_SVG', ''), PAGE_TABS, esc(cfg.TITLE), esc(cfg.SHORT_TITLE), HUB_URL and esc(HUB_URL), getattr(cfg, 'HUB_TITLE', None) or 'All guides')}
 {layout.sidebar(PARTS, subsections, esc)}
 <main>
 {''.join(pages)}
 <footer><p class="caption">{footer}</p></footer>
 </main>
-{tail}</body>
+{tail}{nav_script}</body>
 </html>
 '''
-doc = doc.replace('__GUIDE_KEY__', KEY)
+doc = doc.replace('__GUIDE_KEY__-theme', getattr(cfg, 'THEME_KEY', None) or f'{KEY}-theme')
 open(OUT, 'w', encoding='utf-8').write(doc)
 
 for w in warnings:
@@ -251,3 +260,16 @@ print('OK' if not warnings else f'{len(warnings)} WARNINGS', OUT, f'{os.path.get
 
 if not NO_SHOTS and HAS_SHOTS:
     subprocess.run([sys.executable, os.path.abspath(__file__), '--no-screenshots'], check=True)
+
+# Refresh the hub so its contents, search, and dates match this build. --no-hub skips it.
+hub_build = HUB_DIR and os.path.join(HUB_DIR, 'build', 'build.py')
+if hub_build and not NO_SHOTS and '--no-hub' not in sys.argv:
+    if os.path.exists(hub_build):
+        r = subprocess.run([sys.executable, hub_build], capture_output=True, text=True)
+        if r.returncode == 0:
+            for line in r.stdout.strip().splitlines():
+                print('hub:', line)
+        else:
+            print(f'WARNING hub build failed: {r.stderr.strip()[-300:]}')
+    else:
+        print(f'WARNING HUB_URL points at {HUB_DIR}, which has no build/build.py; see new_hub.py')

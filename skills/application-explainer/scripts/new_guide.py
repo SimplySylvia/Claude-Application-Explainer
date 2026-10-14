@@ -6,7 +6,8 @@
     python3 new_guide.py --app "Acme" --topic "GraphQL" --into ~/acme-guide
 
 The first form creates <dest>/ with build/ (the engine), sections/, diagrams.py, shots.py, guide_config.py,
-PROGRESS.md, screenshots/, and initializes a git repo there. --topic uses the topic-explainer starter instead: a
+PROGRESS.md, screenshots/, and initializes a git repo there. If a guide hub for the same repo sits next to <dest>
+(new_hub.py), the new guide is connected to it; --no-hub leaves it standalone. --topic uses the topic-explainer starter instead: a
 smaller guide about one technology and how the app uses it. --into adds that topic as a deep dive in an existing
 guide instead: a group on its Topics page (created before Reference on first use), with sections prefixed by the
 topic slug and glossary rows merged into the guide's own glossary. The target application repo is only read (for its name, branch, and commit).
@@ -121,7 +122,19 @@ def new_guide(a):
                   '- `build/`: the engine (copied from the skill; update it by re-copying)\n')
     open(os.path.join(dest, 'README.md'), 'w').write(readme)
     subprocess.run(['git', 'init', '-q', dest])
-    print(f'Created {dest}\nNext: edit guide_config.py and sections/, then run: python3 {dest}/build/build.py')
+    print(f'Created {dest}')
+    if not a.no_hub:
+        from new_hub import connect, guides_beside, hubs_beside
+        hubs = hubs_beside(dest, os.path.realpath(repo))
+        if len(hubs) == 1:
+            connect(dest, hubs[0], quiet=True)
+            print(f'Connected to the guide hub at {hubs[0]}; building this guide refreshes it.')
+        elif len(hubs) > 1:
+            print(f'Found {len(hubs)} hubs for this repo; connect one with: new_hub.py --connect {dest} --hub <hub>')
+        elif len(guides_beside(dest, os.path.realpath(repo))) >= 1:
+            print(f'Other guides for this repo sit next to it. To link them all from one page, run: '
+                  f'new_hub.py --repo {repo} --app "{a.app}"')
+    print(f'Next: edit guide_config.py and sections/, then run: python3 {dest}/build/build.py')
 
 
 def add_topic(a):
@@ -198,7 +211,8 @@ def add_topic(a):
 
     print(f'Added a {a.topic} deep dive to {guide}: {len(files)} section(s) prefixed {prefix!r}, a group on the Topics page, '
           f'TOPICS[{tslug!r}], a diagram in diagrams.py, and a checklist in PROGRESS.md.\n'
-          f'Next: fill in sections/{prefix}*.html, then run: python3 {guide}/build/build.py')
+          f'Next: fill in sections/{prefix}*.html, then run: python3 {guide}/build/build.py'
+          + (' (it refreshes its guide hub too).' if config_value(src, 'HUB_URL') else ''))
 
 
 def main():
@@ -208,6 +222,7 @@ def main():
     ap.add_argument('--dest', help='where to create the guide (default: a sibling folder <app>-guide, or <app>-<topic>-guide)')
     ap.add_argument('--topic', help='build a topic guide about one technology, e.g. "GraphQL"')
     ap.add_argument('--into', help='with --topic: add the topic to the Topics page of this existing guide instead of a new folder')
+    ap.add_argument('--no-hub', action='store_true', help="don't connect the new guide to a guide hub next to it")
     a = ap.parse_args()
     if a.into:
         if not a.topic or a.dest:

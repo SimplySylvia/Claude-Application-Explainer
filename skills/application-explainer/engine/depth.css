@@ -1,0 +1,30 @@
+/* Surfaces and shadows shared by guides and their hub (new_hub.py copies this file into the hub). It overrides the
+   token surfaces, so set DEPTH_CSS = False in guide_config.py to keep a custom TOKENS_CSS's own backgrounds.
+   Color stays in small markers: --guide-brand on the logo, part badges and topic rules. */
+:root {
+  --color-bg: #eef1f8; --color-bg-light: #ffffff; --surface-2: #f6f8fc; --color-border-light: rgba(23, 33, 66, .09);
+  --shadow-lv1: 0 1px 2px rgba(16, 24, 48, .05), 0 2px 6px rgba(16, 24, 48, .06);
+  --shadow-lv2: 0 2px 4px rgba(16, 24, 48, .05), 0 10px 24px -6px rgba(16, 24, 48, .14);
+  --shadow-lv3: 0 4px 8px rgba(16, 24, 48, .06), 0 24px 48px -12px rgba(16, 24, 48, .24);
+}
+[data-theme='dark'] {
+  --color-bg: #0c1020; --color-bg-light: #141a2e; --surface-2: #1a2139; --color-border-light: rgba(255, 255, 255, .08);
+  --color-menu-item-hover: rgba(255, 255, 255, .06);
+  --shadow-lv1: 0 1px 2px rgba(0, 0, 0, .4), 0 2px 8px rgba(0, 0, 0, .25);
+  --shadow-lv2: 0 2px 4px rgba(0, 0, 0, .4), 0 12px 28px -6px rgba(0, 0, 0, .55);
+  --shadow-lv3: 0 4px 8px rgba(0, 0, 0, .45), 0 28px 56px -12px rgba(0, 0, 0, .7);
+}
+
+/* Guide pages. svg.dg also uses .card for diagram nodes, so only HTML cards are targeted. */
+header.topbar { background: color-mix(in srgb, var(--color-bg-light) 80%, transparent); backdrop-filter: blur(12px);
+  border-bottom-color: var(--color-border-light); }
+.sidebar { border-color: var(--color-border-light); box-shadow: var(--shadow-lv2); }
+div.card, .diagram, .code-block, .pager a { border-color: var(--color-border-light); box-shadow: var(--shadow-lv1); }
+main table { border-color: var(--color-border-light); box-shadow: var(--shadow-lv1); }
+main th { background: var(--surface-2); }
+div.card, .pager a { transition: box-shadow .15s, transform .15s, border-color .15s; }
+.pager a:hover { border-color: var(--color-border); box-shadow: var(--shadow-lv2); }
+.doc-search-results, .gnav-menu { border-color: var(--color-border-light); box-shadow: var(--shadow-lv3); }
+.part-num { box-shadow: 0 4px 10px -4px var(--guide-brand, var(--color-button-primary)); }
+[data-theme='dark'] .topic-kicker { color: color-mix(in srgb, var(--guide-brand) 55%, white); }
+@media (prefers-reduced-motion: reduce) { .pager a:hover { transform: none; } }

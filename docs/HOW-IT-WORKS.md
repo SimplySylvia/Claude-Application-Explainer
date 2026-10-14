@@ -150,6 +150,15 @@ update one:
 3. It rebuilds, runs QA, records the new commit with `changed_since.py --mark`, and re-shares through the same
    channel as before.
 
+## Guide hubs
+
+A repo with several guides gets one front door: `new_hub.py` creates `<app>-guides/` next to them. The hub finds
+every sibling guide with the same `SOURCE_REPO`. It features whole-app guides (`GUIDE_KIND = 'app'`), puts topic
+guides in a sortable, filterable table, and indexes every page, section and heading for search. It also writes
+`nav.js`, which connected guides load (via `HUB_URL`) for a Guides menu, a breadcrumb root, cross-guide search and
+reading position. `new_guide.py` connects new guides to the hub beside them, and each guide build re-runs the hub
+build, so the hub never needs a separate step. Links are relative, so the folders travel together.
+
 ## Who does what
 
 | Worker | Phase | Can | Job |

@@ -75,6 +75,16 @@ to build a topic guide. It never starts one on its own.
 Later, when the code has changed, ask Claude to update the guide. It checks which sections cite files that changed
 since the guide was built and re-verifies only those.
 
+### Guide hubs
+
+Once a repo has two or more guides, ask Claude to link them (or run `new_hub.py`). A **hub** page, `<app>-guides/`,
+features the Product & Engineering Guide and lists topic guides in a sortable table with section previews. It
+searches every guide's sections and headings, and keeps a "Continue reading" list. Every connected guide gets a
+breadcrumb back to the hub, a **Guides** menu, a "Search all guides" link in its own search, and the hub's
+light/dark setting. New guides join the hub when they're scaffolded, and every guide build refreshes it, so the hub
+stays current as you add and update guides. See
+[`references/hub.md`](skills/application-explainer/references/hub.md).
+
 Claude confirms the scope with you, then works through the phases below.
 
 <details>
@@ -234,12 +244,12 @@ pass is there to catch.
 |---|---|
 | `.claude-plugin/plugin.json` | Plugin manifest |
 | `.claude-plugin/marketplace.json` | Marketplace manifest (lists this repo as its only plugin) |
-| `skills/application-explainer/` | The skill: `SKILL.md`, build `engine/`, `starter/` template, `scripts/`, `references/` |
+| `skills/application-explainer/` | The skill: `SKILL.md`, build `engine/`, guide `hub/` engine, `starter/` template, `scripts/`, `references/` |
 | `skills/topic-explainer/` | The topic skill: `SKILL.md`, `starter/` topic template, `references/` (reuses the engine and scripts above) |
 | `agents/` | Subagents the skills fan out to: `repo-researcher`, `structure-reviewer`, `section-verifier`, `glossary-scout`, `glossary-drafter`, and for topics `tech-researcher` and `source-verifier` (web) |
 | `docs/` | [`HOW-IT-WORKS.md`](docs/HOW-IT-WORKS.md) workflow and agents; `demo/` live demo and its source; `images/` README screenshots (served by GitHub Pages) |
 | `evals/` | `claude plugin eval` suite: trigger, near-miss, and end-to-end cases on a small fixture app |
-| `tests/` | Unit tests for the scaffold, build, diagrams, and glossary scripts |
+| `tests/` | Unit tests for the scaffold, build, hub, diagrams, and glossary scripts |
 | `.github/` | CI workflow, issue templates, and the pull request template |
 | [`CHANGELOG.md`](CHANGELOG.md) · [`LICENSE`](LICENSE) | Release notes · MIT license |
 

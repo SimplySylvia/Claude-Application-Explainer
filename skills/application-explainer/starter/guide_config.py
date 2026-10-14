@@ -6,6 +6,15 @@ OUTPUT_NAME = '__SLUG__-guide'                    # writes __SLUG__-guide.html (
 BRAND_COLOR = '#1f6feb'                           # logo tile, part badges; use the app's primary brand color
 LOGO_SVG = ('<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>')  # white glyph on the brand tile
 
+GUIDE_KIND = 'app'                               # 'app' (whole-app guide) or 'topic'; the hub lists them separately
+
+# Guide hub (scripts/new_hub.py): one page linking every guide for this repo. new_guide.py and new_hub.py --connect
+# fill these in; None leaves the guide standalone.
+HUB_URL = None       # path to the hub's index.html; adds the breadcrumb root, Guides menu, and cross-guide search
+HUB_TITLE = None     # breadcrumb label: the hub's TITLE
+THEME_KEY = None     # localStorage key for light/dark, shared with the hub so all guides match
+DEPTH_CSS = True     # build/depth.css surfaces and shadows; False keeps a custom TOKENS_CSS's own backgrounds
+
 # Design tokens. Default: build/tokens.css. Point at the app's own token CSS (copied into this folder) if it has one;
 # it must define the variables the styles use (see "Styling and branding" in the skill's references/authoring.md).
 TOKENS_CSS = None

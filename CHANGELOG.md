@@ -3,6 +3,35 @@
 All notable changes to this plugin. Versions match `version` in `.claude-plugin/plugin.json`; update an installed
 copy with `/plugin marketplace update`.
 
+## 1.6.0 (2026-10-14)
+
+### Skill
+
+- **Guide hubs.** New `scripts/new_hub.py` creates `<app>-guides/`, one page for every guide about a repo. It
+  features the whole-app guide with a tile per page, lists topic guides in a sortable, filterable table with
+  section previews, searches every guide's pages, sections and headings (a combobox with results grouped by guide,
+  recent pages when empty, `?q=` links), and shows "Continue reading". The hub engine lives in `hub/`. Guides with
+  the same `SOURCE_REPO` beside the hub are found automatically; `OTHER_GUIDES` lists guides built another way.
+- **Connected guides.** With `HUB_URL` set, a guide's header gets a breadcrumb root (`HUB_TITLE`) and a **Guides**
+  menu (disclosure pattern; arrow keys, Esc). The logo links to the hub, the guide's search ends with "Search all
+  guides for …", the light/dark choice is shared (`THEME_KEY`), and reading position feeds the hub's "Continue
+  reading". This comes from the hub's `nav.js`; a guide without it keeps a plain "All guides" link.
+- `new_guide.py` connects a new guide to the hub next to it for the same repo (`--no-hub` skips this), and
+  suggests `new_hub.py` when a repo gets its second guide. `new_hub.py --connect` connects an existing guide, gives
+  a topic guide still on the default brand color a palette color of its own, and with `--update-engine` re-copies
+  an engine that predates hubs.
+- Every build of a connected guide re-runs its hub's build (`--no-hub` skips it), so the hub stays current.
+- **Depth.** New `engine/depth.css`, shared with hubs: layered surfaces (gray-blue and white in light mode, deep
+  navy in dark), soft shadows on cards, tables, code blocks, diagrams and the sidebar, and a frosted header. Color
+  stays in small markers. `DEPTH_CSS = False` keeps a custom `TOKENS_CSS`'s own surfaces.
+- Starter configs gain `GUIDE_KIND`, `HUB_URL`, `HUB_TITLE`, `THEME_KEY` and `DEPTH_CSS`. New
+  `references/hub.md`.
+
+### Repo
+
+- New `tests/test_hub.py`: hub creation and auto-connect, guide builds refreshing the hub, every hub link and search
+  entry resolving to a real anchor, standalone guides, and the refusal paths.
+
 ## 1.5.1 (2026-10-13)
 
 ### Skill

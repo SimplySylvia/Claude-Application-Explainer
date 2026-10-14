@@ -123,16 +123,26 @@ def _sec_item(sid, label, subsections, esc):
             f'<span class="tree-dot" title="Collapsed on the page"></span>{sub_html}</li>')
 
 
-def header(logo_svg, page_tabs='', title='Guide', short_title='Guide'):
+def esc_attr(s):
+    return str(s).replace('&', '&amp;').replace('"', '&quot;').replace('<', '&lt;')
+
+
+def header(logo_svg, page_tabs='', title='Guide', short_title='Guide', hub_url=None, hub_title='All guides'):
+    """hub_url (from HUB_URL) adds a breadcrumb root and an "All guides" link; the hub's nav.js turns the link into a
+    guide switcher."""
+    hub_title = esc_attr(hub_title)
     return (
         '<header class="topbar">'
         '<button type="button" class="icon-btn" id="sidebar-open" title="Show contents ([)" aria-label="Show contents" aria-controls="sidebar">'
         '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1m0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1M3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1"/></svg></button>'
         f'<div class="logo">{logo_svg}</div>'
-        f'<div class="topbar-title"><h1 title="{title}">{short_title}</h1>'
+        '<div class="topbar-title">'
+        + (f'<a class="hub-crumb" href="{hub_url}">{hub_title}</a><span class="hub-crumb-sep" aria-hidden="true">›</span>' if hub_url else '')
+        + f'<h1 title="{title}">{short_title}</h1>'
         f'{page_tabs}<nav class="topbar-crumb" id="crumb" aria-label="You are here"></nav></div>'
         '<span class="topbar-spacer"></span>'
-        '<button id="theme-toggle" type="button">☾ Dark</button>'
+        + (f'<a class="hub-link" href="{hub_url}" title="{hub_title}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>All guides</a>' if hub_url else '')
+        + '<button id="theme-toggle" type="button">☾ Dark</button>'
         '</header>')
 
 
@@ -240,6 +250,15 @@ header.topbar .logo svg { width: 20px; height: 20px; }
 .topbar-crumb:empty { display: none; }
 @media (max-width: 1500px) { .topbar-crumb a:not(:last-child), .topbar-crumb .sep { display: none; } }
 @media (max-width: 1360px) { .topbar-crumb { display: none; } }
+.hub-crumb { flex: none; color: var(--color-text-light); font-size: var(--font-size-body-sm); text-decoration: none; white-space: nowrap; }
+.hub-crumb:hover { color: var(--color-text); text-decoration: underline; }
+.hub-crumb-sep { flex: none; color: var(--color-text-light); margin: 0 -4px; }
+@media (max-width: 1500px) { .hub-crumb, .hub-crumb-sep { display: none; } }
+.hub-link { display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 5px 12px; border-radius: var(--border-radius-full);
+  border: 1px solid var(--color-button-default-border); background: var(--color-button-default); color: var(--color-text);
+  font-size: var(--font-size-body-sm); font-weight: var(--font-weight-emphasis); text-decoration: none; white-space: nowrap; }
+.hub-link:hover { background: var(--color-button-default-hover); text-decoration: none; }
+.hub-link svg { width: 14px; height: 14px; fill: currentcolor; }
 header.topbar #theme-toggle { margin-left: var(--space-sm); align-self: center; }
 .icon-btn { display: inline-grid; place-items: center; width: 32px; height: 32px; flex: none; border-radius: var(--border-radius-md);
   border: 0; background: var(--color-button-icon); color: var(--color-icon); cursor: pointer; }
@@ -417,7 +436,7 @@ td.shot-none { font-size: 12px; color: var(--color-text-light); }
 
 @media print {
   h2.sec-title, h3.subsec-title { position: static !important; box-shadow: none !important; }
-  .sidebar, #sidebar-open, #theme-toggle, .dg-expand, .dg-scroll-hint { display: none !important; }
+  .sidebar, #sidebar-open, #theme-toggle, .hub-link, .dg-expand, .dg-scroll-hint { display: none !important; }
   .sec.collapsed > .sec-body, .subsec.collapsed > .subsec-body { display: block !important; }
   tr.row-hidden { display: table-row !important; }
   body.sidebar-open main { margin-left: auto; }

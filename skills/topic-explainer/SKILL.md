@@ -81,6 +81,7 @@ Details are in `references/workflow.md`. Don't tick a phase until its **Done whe
    ```bash
    python3 AE_DIR/scripts/new_guide.py --app "<App>" --topic "<Topic>" --into <existing-guide>
    ```
+   A separate guide is connected to the guide hub next to it for the same repo, if there is one, and its builds refresh the hub. If the scaffold reports other guides for the repo but no hub, offer one (`AE_DIR/references/hub.md`): a topic guide is usually the second guide, which is when a hub starts to help.
    **Done when:** `python3 GUIDE/build/build.py` prints `OK` and the guide folder has a commit with the scaffold.
 2. **Discover.** Two tracks, in parallel:
    - **Repo:** where the technology is used: imports, config, codegen, wrappers, tests, CI. Count usages with a command and say "about". Pick one real flow for the walkthrough. Research it yourself, or for big repos (more than about 1,000 tracked files) run `repo-researcher` agents per area (`AE_DIR/references/agent-prompts.md` §1).
@@ -114,7 +115,7 @@ Technologies change on two clocks: the repo (new usages, version bumps) and the 
 2. Tell the user what's stale and what you plan to re-check.
 3. Re-run `section-verifier` on affected sections. For a version bump or stale docs, re-run `tech-researcher` with the new version, then `source-verifier` on the concept, versions, and resources sections.
 4. Rebuild and run QA, then record the update: `changed_since.py GUIDE --mark` (repo commit) and `--mark-docs <topic-slug>` (docs date).
-5. Re-share through the same channel.
+5. Re-share through the same channel. A guide on a hub refreshed the hub when it built; re-share the hub with it.
 
 ## Files
 
@@ -125,8 +126,8 @@ Technologies change on two clocks: the repo (new usages, version bumps) and the 
 | `references/workflow.md` | Phase details and the `tech-researcher` and `source-verifier` prompts |
 | `references/sections.md` | Topic section catalog: what each answers, where to look, shape |
 | `references/web-research.md` | Source rules: what may go into a query, which sources count, versions, citing and dating links |
-| `AE_DIR/scripts/` | `new_guide.py --topic / --into`, `changed_since.py` (with `--mark-docs`), `qa_check.py`, `extract_text.py`, `merge_glossary.py` |
-| `AE_DIR/references/` | `authoring.md` (HTML, diagrams, styling), `agent-prompts.md`, `sharing.md`, `lessons.md` |
+| `AE_DIR/scripts/` | `new_guide.py --topic / --into`, `new_hub.py` (guide hubs), `changed_since.py` (with `--mark-docs`), `qa_check.py`, `extract_text.py`, `merge_glossary.py` |
+| `AE_DIR/references/` | `authoring.md` (HTML, diagrams, styling), `agent-prompts.md`, `sharing.md`, `hub.md` (guide hubs), `lessons.md` |
 | `PROMPT.md` | Kickoff prompt for agents that don't load skills |
 
 Requirements: Python 3.9+, Google Chrome or Chromium (for `qa_check.py`), and web access for the research agents.

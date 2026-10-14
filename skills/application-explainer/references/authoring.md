@@ -122,7 +122,8 @@ def request():
 
 ## Styling and branding
 
-- **Brand:** `BRAND_COLOR` and `LOGO_SVG` in `guide_config.py`. The logo is a white glyph on a brand-colored tile.
+- **Brand:** `BRAND_COLOR` and `LOGO_SVG` in `guide_config.py`. The logo is a white glyph on a brand-colored tile. On a guide hub, a topic guide's `BRAND_COLOR` is also its marker color there, so keep it distinct from the other guides' colors (`new_hub.py --connect` picks one).
+- **Depth:** `build/depth.css` layers the surfaces (a gray-blue page and white cards in light mode, deep navy in dark) and adds soft shadows and a frosted header. Color stays in small markers: the logo, part badges and topic rules. It overrides the tokens' background and border colors; set `DEPTH_CSS = False` to keep a custom `TOKENS_CSS`'s own.
 - **Design tokens:** `build/tokens.css` by default. To match the app's look, copy its token CSS into the guide and set `TOKENS_CSS`. It must define the variables the styles use; map missing ones to the app's equivalents:
   - color families: blue, purple, teal, orange, pink, gray (`-bg`, `-fg`, `-fg-alt`)
   - text, link, border, background, button, input, and nav colors

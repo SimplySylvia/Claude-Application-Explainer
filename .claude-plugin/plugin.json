@@ -1,9 +1,9 @@
 {
   "name": "application-explainer",
-  "version": "1.5.1",
-  "description": "Build internal, self-contained HTML guides verified against the code: a Product & Engineering Guide for any application repo (product overview, features, site map, architecture diagrams, tech stack, environments, local dev, testing, glossary, search, optional screenshots), or a smaller topic guide to one technology and how the app uses it, with links to the official docs for the version it pins.",
+  "version": "1.6.0",
+  "description": "Build internal, self-contained HTML guides verified against the code: a Product & Engineering Guide for any application repo (product overview, features, site map, architecture diagrams, tech stack, environments, local dev, testing, glossary, search, optional screenshots), or a smaller topic guide to one technology and how the app uses it, with links to the official docs for the version it pins, and a hub page that links all of an app's guides with shared navigation and search.",
   "author": {
     "name": "Sylvia Hart"
   },
-  "keywords": ["documentation", "onboarding", "explainer", "architecture", "guide", "topic-guide", "tech-deep-dive"]
+  "keywords": ["documentation", "onboarding", "explainer", "architecture", "guide", "topic-guide", "tech-deep-dive", "hub"]
 }

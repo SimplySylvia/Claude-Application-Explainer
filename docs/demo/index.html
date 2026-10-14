@@ -535,6 +535,15 @@ header.topbar .logo svg { width: 20px; height: 20px; }
 .topbar-crumb:empty { display: none; }
 @media (max-width: 1500px) { .topbar-crumb a:not(:last-child), .topbar-crumb .sep { display: none; } }
 @media (max-width: 1360px) { .topbar-crumb { display: none; } }
+.hub-crumb { flex: none; color: var(--color-text-light); font-size: var(--font-size-body-sm); text-decoration: none; white-space: nowrap; }
+.hub-crumb:hover { color: var(--color-text); text-decoration: underline; }
+.hub-crumb-sep { flex: none; color: var(--color-text-light); margin: 0 -4px; }
+@media (max-width: 1500px) { .hub-crumb, .hub-crumb-sep { display: none; } }
+.hub-link { display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 5px 12px; border-radius: var(--border-radius-full);
+  border: 1px solid var(--color-button-default-border); background: var(--color-button-default); color: var(--color-text);
+  font-size: var(--font-size-body-sm); font-weight: var(--font-weight-emphasis); text-decoration: none; white-space: nowrap; }
+.hub-link:hover { background: var(--color-button-default-hover); text-decoration: none; }
+.hub-link svg { width: 14px; height: 14px; fill: currentcolor; }
 header.topbar #theme-toggle { margin-left: var(--space-sm); align-self: center; }
 .icon-btn { display: inline-grid; place-items: center; width: 32px; height: 32px; flex: none; border-radius: var(--border-radius-md);
   border: 0; background: var(--color-button-icon); color: var(--color-icon); cursor: pointer; }
@@ -712,11 +721,42 @@ td.shot-none { font-size: 12px; color: var(--color-text-light); }
 
 @media print {
   h2.sec-title, h3.subsec-title { position: static !important; box-shadow: none !important; }
-  .sidebar, #sidebar-open, #theme-toggle, .dg-expand, .dg-scroll-hint { display: none !important; }
+  .sidebar, #sidebar-open, #theme-toggle, .hub-link, .dg-expand, .dg-scroll-hint { display: none !important; }
   .sec.collapsed > .sec-body, .subsec.collapsed > .subsec-body { display: block !important; }
   tr.row-hidden { display: table-row !important; }
   body.sidebar-open main { margin-left: auto; }
 }
+
+/* Surfaces and shadows shared by guides and their hub (new_hub.py copies this file into the hub). It overrides the
+   token surfaces, so set DEPTH_CSS = False in guide_config.py to keep a custom TOKENS_CSS's own backgrounds.
+   Color stays in small markers: --guide-brand on the logo, part badges and topic rules. */
+:root {
+  --color-bg: #eef1f8; --color-bg-light: #ffffff; --surface-2: #f6f8fc; --color-border-light: rgba(23, 33, 66, .09);
+  --shadow-lv1: 0 1px 2px rgba(16, 24, 48, .05), 0 2px 6px rgba(16, 24, 48, .06);
+  --shadow-lv2: 0 2px 4px rgba(16, 24, 48, .05), 0 10px 24px -6px rgba(16, 24, 48, .14);
+  --shadow-lv3: 0 4px 8px rgba(16, 24, 48, .06), 0 24px 48px -12px rgba(16, 24, 48, .24);
+}
+[data-theme='dark'] {
+  --color-bg: #0c1020; --color-bg-light: #141a2e; --surface-2: #1a2139; --color-border-light: rgba(255, 255, 255, .08);
+  --color-menu-item-hover: rgba(255, 255, 255, .06);
+  --shadow-lv1: 0 1px 2px rgba(0, 0, 0, .4), 0 2px 8px rgba(0, 0, 0, .25);
+  --shadow-lv2: 0 2px 4px rgba(0, 0, 0, .4), 0 12px 28px -6px rgba(0, 0, 0, .55);
+  --shadow-lv3: 0 4px 8px rgba(0, 0, 0, .45), 0 28px 56px -12px rgba(0, 0, 0, .7);
+}
+
+/* Guide pages. svg.dg also uses .card for diagram nodes, so only HTML cards are targeted. */
+header.topbar { background: color-mix(in srgb, var(--color-bg-light) 80%, transparent); backdrop-filter: blur(12px);
+  border-bottom-color: var(--color-border-light); }
+.sidebar { border-color: var(--color-border-light); box-shadow: var(--shadow-lv2); }
+div.card, .diagram, .code-block, .pager a { border-color: var(--color-border-light); box-shadow: var(--shadow-lv1); }
+main table { border-color: var(--color-border-light); box-shadow: var(--shadow-lv1); }
+main th { background: var(--surface-2); }
+div.card, .pager a { transition: box-shadow .15s, transform .15s, border-color .15s; }
+.pager a:hover { border-color: var(--color-border); box-shadow: var(--shadow-lv2); }
+.doc-search-results, .gnav-menu { border-color: var(--color-border-light); box-shadow: var(--shadow-lv3); }
+.part-num { box-shadow: 0 4px 10px -4px var(--guide-brand, var(--color-button-primary)); }
+[data-theme='dark'] .topic-kicker { color: color-mix(in srgb, var(--guide-brand) 55%, white); }
+@media (prefers-reduced-motion: reduce) { .pager a:hover { transform: none; } }
 
 </style>
 <script>
@@ -1709,8 +1749,8 @@ module.exports = pool;</code></pre></figure>
 </main>
 <script>
 (function () {
-  var STATE_KEY = 'shopfront-guide-collapse';
-  var SIDEBAR_KEY = 'shopfront-guide-sidebar';
+  var STATE_KEY = '__GUIDE_KEY__-collapse';
+  var SIDEBAR_KEY = '__GUIDE_KEY__-sidebar';
   var GROUP_CHEVRON = '<svg class="group-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.29 6.71a.996.996 0 0 0 0 1.41L13.17 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.7 6.7c-.38-.38-1.02-.38-1.41.01"/></svg>';
 
   function readState() {
