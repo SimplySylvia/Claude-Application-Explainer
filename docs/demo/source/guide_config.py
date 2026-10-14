@@ -33,15 +33,17 @@ PARTS = [
         ('localdev', 'Local development'),
         ('testing', 'Testing strategy'),
     ]),
-    ('express', 'Express deep dive', 'What Express is and how Shopfront uses it.', [
-        ('express-overview', 'What is Express?'),
-        ('express-concepts', 'Core concepts'),
-        ('express-usage', 'Where Shopfront uses it'),
-        ('express-walkthrough', 'Guided walkthrough'),
-        ('express-conventions', 'Patterns & gotchas'),
-        ('express-recipes', 'Common changes'),
-        ('express-versions', 'Versions & what changed'),
-        ('express-resources', 'Official docs & further reading'),
+    ('topics', 'Topics', 'Deep dives into the technologies Shopfront is built on.', [
+        ('express', 'Express', 'What Express is and how Shopfront uses it.', [
+            ('express-overview', 'What is Express?'),
+            ('express-concepts', 'Core concepts'),
+            ('express-usage', 'Where Shopfront uses it'),
+            ('express-walkthrough', 'Guided walkthrough'),
+            ('express-conventions', 'Patterns & gotchas'),
+            ('express-recipes', 'Common changes'),
+            ('express-versions', 'Versions & what changed'),
+            ('express-resources', 'Official docs & further reading'),
+        ]),
     ]),
     ('reference', 'Reference', 'Quick lookups: commands and terms.', [
         ('cheatsheet', 'Cheat sheet'),

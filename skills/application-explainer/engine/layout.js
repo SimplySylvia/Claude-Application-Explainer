@@ -220,6 +220,9 @@
         sec.classList.toggle('filtered-out', !selfHit && !subMatch);
         sec.classList.toggle('open', subMatch);
       });
+      sidebar.querySelectorAll('.tree-group').forEach(function (group) {
+        group.classList.toggle('filtered-out', !group.querySelector('.tree-sec:not(.filtered-out)'));
+      });
       sidebar.querySelectorAll('.tree-part').forEach(function (part) {
         var any = part.querySelector('.tree-sec:not(.filtered-out)');
         part.classList.toggle('filtered-out', !any);
@@ -267,7 +270,14 @@
     function update() {
       var current = null;
       targets.forEach(function (t) { if (visible.has(t) && (!current || t.compareDocumentPosition(current) & Node.DOCUMENT_POSITION_PRECEDING)) current = t; });
-      if (!current) return;
+      if (!current) {
+        // Nothing in the band, e.g. a page whose banners push its first section down, or inside a long section:
+        // use the last section on the current page that starts above the band's bottom, else its first section.
+        var page = document.querySelector('main .page:not([hidden])');
+        var secs = page ? page.querySelectorAll('section.sec') : [];
+        Array.prototype.forEach.call(secs, function (s) { if (!current || s.getBoundingClientRect().top <= innerHeight * 0.4) current = s; });
+        if (!current) return;
+      }
       var sec = current.closest('section.sec');
       sidebar.querySelectorAll('.tree a.active').forEach(function (a) { a.classList.remove('active'); });
       var secLink = sidebar.querySelector('.tree-sec[data-sec="' + sec.id + '"] > a');
@@ -309,6 +319,7 @@
       update();
     }, { rootMargin: '-64px 0px -60% 0px' });
     targets.forEach(function (t) { io.observe(t); });
+    document.addEventListener('guide:pagechange', function () { requestAnimationFrame(update); });
   }
 
   function initStickyShadows() {

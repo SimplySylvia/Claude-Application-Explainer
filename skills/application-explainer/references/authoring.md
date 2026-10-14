@@ -23,7 +23,8 @@ Write one file per section: `sections/<id>.html`. The build depends on this skel
 - **Collapsible subsections:** subsection `<h3>` tags must be indented exactly 2 spaces, on their own line, and be direct children of `<section>`. Those become collapsible. An `<h3>` inside a card is indented deeper and stays a card title.
 - **Headings and scripts:** use one `<h2>` only, the first line. No inline `<script>` and no external assets. Everything must be self-contained.
 - **Escaping:** write `&` as `&amp;`, `<` as `&lt;`, and `>` as `&gt;` in text.
-- **Cross-links:** link to other sections with `<a href="#<id>">Title</a>`. Any element id works, and the page switches automatically.
+- **Cross-links:** link to other sections with `<a href="#<id>">Title</a>`. Any element id works, and the page switches automatically. Link a whole deep dive with `#topic-<slug>`.
+- **Topic groups:** a part's items in `PARTS` can include groups shaped like a part, `('express', 'Express', 'One-line blurb.', [(id, label), …])`. Each renders as a "Topic · Express" banner before its sections and a labeled group in the sidebar. The topic explainer puts deep dives on a Topics part this way.
 
 ## Building blocks
 

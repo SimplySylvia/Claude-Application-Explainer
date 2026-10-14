@@ -9,7 +9,7 @@ The phase numbers match the checklist in `SKILL.md`, which also gives each phase
 - **Audience.** New engineers who've never used it, or experienced engineers new to this repo? This decides how long the concept part is.
 - **Separate guide or deep dive.** Look for an existing guide: sibling folders matching `*-guide/` whose `guide_config.py` has `SOURCE_REPO` pointing at this repo, or one the user names. If you find one, ask which they want:
   - *Separate topic guide (default):* `<app>-<topic>-guide/`, own git repo, shared on its own. Best for a quick learning aid or when the main guide is owned by someone else.
-  - *Deep dive in `<existing guide>`:* adds one part to it. Best when the team keeps that guide as its main internal doc, so the topic stays current alongside everything else, and updates and sharing happen once.
+  - *Deep dive in `<existing guide>`:* adds a topic group to its Topics page. Best when the team keeps that guide as its main internal doc, so the topic stays current alongside everything else, and updates and sharing happen once.
 - **Location** for a separate guide: default sibling `<app>-<topic>-guide/`. Never inside the app repo; `new_guide.py` refuses that.
 
 ## 1 · Scaffold
@@ -18,7 +18,7 @@ The phase numbers match the checklist in `SKILL.md`, which also gives each phase
 
 `new_guide.py --topic --into <guide>` instead:
 - writes `sections/<topic-slug>-*.html` (the starter sections minus the glossary),
-- inserts one part named "<Topic> deep dive" into `PARTS`, before the Reference part,
+- adds a topic group `(<topic-slug>, "<Topic>", blurb, [sections])` to the guide's Topics part in `PARTS`, creating that part before Reference if it doesn't exist yet (the page shows a "Topic · <Topic>" banner, and the sidebar a labeled group),
 - adds the topic to `TOPICS`, appends its flow diagram to `diagrams.py`, and appends the topic checklist to `PROGRESS.md`.
 
 It refuses to overwrite existing sections or add a topic that's already in `TOPICS`. Commit the existing guide before running it, and tell the user which files it changed.

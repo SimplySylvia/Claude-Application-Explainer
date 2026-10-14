@@ -42,7 +42,7 @@ EXTERNAL_LINK = re.compile(r'<a href="(https?://[^"]+)"(?![^>]*\btarget=)')
 PARTS = [(pid, str(i + 1), title, blurb, items) for i, (pid, title, blurb, items) in enumerate(cfg.PARTS)]
 sections = {}
 for pid, num, title, blurb, items in PARTS:
-    for sid, _label in items:
+    for sid, _label in layout.flat(items):
         path = os.path.join(ROOT, 'sections', sid + '.html')
         src = read(path)
         assert f'<section id="{sid}">' in src, f'{path} must contain <section id="{sid}">'
@@ -159,7 +159,12 @@ for i, (pid, num, title, blurb, items) in enumerate(PARTS):
     pages.append(f'\n<div class="page" id="page-{pid}" data-page="{pid}">'
                  f'\n<div class="part" id="part-{pid}"><span class="part-num">Part {num}</span>'
                  f'<span class="part-title">{esc(title)}</span><span class="part-blurb">{esc(blurb)}</span></div>\n')
-    pages.extend(sections[sid] + '\n' for sid, _ in items)
+    for it in items:
+        if layout.is_group(it):
+            pages.append(layout.topic_head(it[0], it[1], it[2], esc) + '\n')
+            pages.extend(sections[sid] + '\n' for sid, _ in it[3])
+        else:
+            pages.append(sections[it[0]] + '\n')
     pager = []
     for j, cls, arrow in ((i - 1, 'prev', '← Previous'), (i + 1, 'next', 'Next →')):
         if 0 <= j < len(PARTS):

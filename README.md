@@ -169,7 +169,8 @@ A separate topic guide lives in `<app>-<topic>-guide/` with the same layout (no 
 - **Reference:** the version the repo pins vs. the latest release (including security fixes in between), official
   docs with the date each was checked, and a glossary.
 
-As a **deep dive**, the same sections become one part of an existing guide, with ids prefixed by the topic
+As a **deep dive**, the same sections go on the existing guide's **Topics** page as one topic group (the page is
+created before Reference the first time, and later deep dives join it), with ids prefixed by the topic
 (`express-walkthrough`) and its terms merged into the guide's glossary. Link to it from the rest of the guide, for
 example from the tech stack row for that technology. `guide_config.py` records each topic and when its docs were
 last checked, and updates flag docs older than 90 days.
@@ -177,7 +178,7 @@ last checked, and updates flag docs older than 90 days.
 ### Example
 
 **[Open the live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/)**: a complete guide for **Shopfront**, the small fictional app used by the evals
-(`evals/_fixture/make-app.sh`), with an **Express deep dive** built by the topic explainer as part 5. A real app
+(`evals/_fixture/make-app.sh`), with an **Express deep dive** built by the topic explainer on its Topics page. A real app
 produces more sections and longer tables. The screenshots below are from the same guide.
 
 <table>
@@ -199,8 +200,8 @@ The Express deep dive, added with the topic explainer:
     <td width="50%"><img src="docs/images/guide-topic-code.png" alt="Concepts in code: highlighted Express examples with Copy buttons"></td>
   </tr>
   <tr>
-    <td><b>A deep dive is one more part</b> of the main guide: its own header tab and sidebar group, cited to the
-    official Express 4 docs (↗) and the repo.</td>
+    <td><b>Deep dives live on one Topics page</b> of the main guide, each under its own topic banner and sidebar
+    group, cited to the official Express 4 docs (↗) and the repo.</td>
     <td><b>Concepts in code:</b> a highlighted, copyable example for each idea, adapted from the docs for the version
     the app pins (dark theme).</td>
   </tr>

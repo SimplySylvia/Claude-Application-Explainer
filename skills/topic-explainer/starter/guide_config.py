@@ -26,7 +26,8 @@ FOOTER = ('Generated from the <code>__REPO_NAME__</code> repository on __DATE__ 
           'and the official __TOPIC__ documentation linked in each section. Internal use only.')
 
 # Parts become pages (tabs in the header). Each item is (section id, sidebar label); the file is sections/<id>.html.
-# When this topic is added to an existing guide (new_guide.py --into), these items become one part, minus the glossary.
+# When this topic is added to an existing guide (new_guide.py --into), these items become one topic group on that
+# guide's Topics page, minus the glossary.
 PARTS = [
     ('concept', 'The concept', 'What __TOPIC__ is and the ideas you need before reading the code.', [
         ('__T__overview', 'What is __TOPIC__?'),

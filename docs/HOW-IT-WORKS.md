@@ -115,9 +115,12 @@ pinned version. The walkthrough quotes the real repo lines at each step and says
 doesn't run end to end.
 
 When the repo already has a guide, Claude asks where the topic should live. A **separate guide** is its own folder
-(`<app>-<topic>-guide/`). A **deep dive** adds one part to the existing guide (`sections/<topic>-*.html`, before
-Reference) and records the topic in its `TOPICS` registry, so updates and sharing happen once. The [live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/) has an Express deep dive as
-part 5, linked from its Tech stack and Architecture sections.
+(`<app>-<topic>-guide/`). A **deep dive** goes on the existing guide's **Topics** page (created before Reference the first time) as one
+topic group: a "Topic · Express" banner on the page and a labeled group in the sidebar, holding its
+`sections/<topic>-*.html`. Every later deep dive joins the same page, and each is recorded in the guide's `TOPICS`
+registry, so updates and sharing happen once. The
+[live demo](https://simplysylvia.github.io/Claude-Application-Explainer/demo/) has an Express deep dive on its
+Topics page, linked from its Tech stack and Architecture sections.
 
 ## Choosing glossary terms
 

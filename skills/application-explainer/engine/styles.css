@@ -42,6 +42,13 @@ header p { margin: 0; color: var(--color-text-light); max-width: 920px; }
   color: var(--color-bg-light); background: var(--guide-brand); border-radius: var(--border-radius-full); padding: 2px var(--space-md); align-self: center; }
 .part-title { font-size: var(--font-size-heading-lg); line-height: var(--line-height-heading-lg); letter-spacing: var(--letter-spacing-heading-lg); font-weight: var(--font-weight-emphasis); }
 .part-blurb { color: var(--color-text-light); }
+/* Topic groups inside a part (e.g. a Topics page of deep dives): a smaller banner before the topic's sections. */
+.topic-head { margin-top: 56px; padding: var(--space-md) 0 var(--space-sm) var(--space-lg); border-left: 4px solid var(--guide-brand);
+  display: grid; grid-template-columns: auto 1fr; column-gap: var(--space-md); align-items: baseline; scroll-margin-top: 64px; }
+.part + .topic-head { margin-top: var(--space-2xl, 40px); }
+.topic-kicker { font-size: 11px; font-weight: var(--font-weight-emphasis); letter-spacing: .08em; text-transform: uppercase; color: var(--guide-brand); }
+.topic-title { font-size: var(--font-size-heading-md, 22px); font-weight: var(--font-weight-emphasis); }
+.topic-blurb { grid-column: 2; color: var(--color-text-light); }
 #theme-toggle { font: inherit; font-size: var(--font-size-body-sm); font-weight: var(--font-weight-emphasis); cursor: pointer;
   color: var(--color-text); background: var(--color-button-default); border: 1px solid var(--color-button-default-border);
   border-radius: var(--border-radius-md); padding: var(--space-xs) var(--space-md); }

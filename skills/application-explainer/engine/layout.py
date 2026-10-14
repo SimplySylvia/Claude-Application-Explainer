@@ -65,21 +65,34 @@ def strip_step(title):
     return re.sub(r'^\d+ · ', '', title)
 
 
+def is_group(item):
+    """A part's items are sections, (id, label), or topic groups, (id, title, blurb, [sections])."""
+    return len(item) == 4 and isinstance(item[3], (list, tuple))
+
+
+def flat(items):
+    """The (id, label) sections of a part, in order, with topic groups expanded."""
+    return [s for it in items for s in (it[3] if is_group(it) else [it])]
+
+
+def topic_head(gid, title, blurb, esc):
+    return (f'<div class="topic-head" id="topic-{gid}"><span class="topic-kicker">Topic</span>'
+            f'<span class="topic-title">{esc(title)}</span><span class="topic-blurb">{esc(blurb)}</span></div>')
+
+
 def sidebar(parts, subsections, esc):
+    """Contents tree: parts > (topic groups >) sections > subsections."""
     items = []
-    for pid, num, title, _blurb, sections in parts:
+    for pid, num, title, _blurb, part_items in parts:
         links = []
-        for sid, label in sections:
-            subs = subsections.get(sid, [])
-            sub_html = ''
-            if subs:
-                sub_html = ('<ul class="tree-sub">' + ''.join(
-                    f'<li><a href="#{sub_id}" data-target="{sub_id}">{strip_step(t)}</a></li>' for sub_id, t in subs) + '</ul>')
-            twisty = (f'<button type="button" class="tree-twisty" aria-label="Show {esc(label)} subsections" aria-expanded="false">{CHEVRON}</button>'
-                      if subs else '<span class="tree-twisty-spacer"></span>')
-            links.append(f'<li class="tree-sec{" has-sub" if subs else ""}" data-sec="{sid}">{twisty}'
-                         f'<a href="#{sid}" data-target="{sid}">{esc(label)}</a>'
-                         f'<span class="tree-dot" title="Collapsed on the page"></span>{sub_html}</li>')
+        for it in part_items:
+            if is_group(it):
+                gid, gtitle, _gblurb, gsecs = it
+                links.append(f'<li class="tree-group" data-group="{gid}"><a class="tree-group-label" href="#topic-{gid}" '
+                             f'data-target="topic-{gid}">{esc(gtitle)}</a><ul class="tree-secs">'
+                             + ''.join(_sec_item(sid, label, subsections, esc) for sid, label in gsecs) + '</ul></li>')
+            else:
+                links.append(_sec_item(it[0], it[1], subsections, esc))
         items.append(f'<li class="tree-part" data-part="{pid}"><button type="button" class="tree-part-toggle" aria-expanded="true">'
                      f'{CHEVRON}<span class="tree-part-num">{num}</span>{esc(title)}</button>'
                      f'<ul class="tree-secs">{"".join(links)}</ul></li>')
@@ -95,6 +108,19 @@ def sidebar(parts, subsections, esc):
         f'<nav class="tree"><ul>{"".join(items)}</ul></nav>'
         '<div class="sidebar-foot">Shortcuts: <kbd>[</kbd> toggle contents · <kbd>/</kbd> filter · <kbd>⌘K</kbd> search · <kbd>Enter</kbd> find on page</div>'
         '</aside>')
+
+
+def _sec_item(sid, label, subsections, esc):
+    subs = subsections.get(sid, [])
+    sub_html = ''
+    if subs:
+        sub_html = ('<ul class="tree-sub">' + ''.join(
+            f'<li><a href="#{sub_id}" data-target="{sub_id}">{strip_step(t)}</a></li>' for sub_id, t in subs) + '</ul>')
+    twisty = (f'<button type="button" class="tree-twisty" aria-label="Show {esc(label)} subsections" aria-expanded="false">{CHEVRON}</button>'
+              if subs else '<span class="tree-twisty-spacer"></span>')
+    return (f'<li class="tree-sec{" has-sub" if subs else ""}" data-sec="{sid}">{twisty}'
+            f'<a href="#{sid}" data-target="{sid}">{esc(label)}</a>'
+            f'<span class="tree-dot" title="Collapsed on the page"></span>{sub_html}</li>')
 
 
 def header(logo_svg, page_tabs='', title='Guide', short_title='Guide'):
@@ -263,6 +289,10 @@ body.sidebar-open .sidebar { transform: none; }
   border: 1px solid var(--color-input-border); border-radius: var(--border-radius-md); padding: 6px var(--space-sm); }
 .tree-filter input:focus { outline: none; border-color: var(--color-input-border-focus); box-shadow: var(--focus-glow); }
 .tree li.filtered-out { display: none; }
+.tree-group { margin: var(--space-xs) 0; }
+.tree .tree-group-label { font-size: 11px; font-weight: var(--font-weight-emphasis); letter-spacing: .06em; text-transform: uppercase;
+  padding: var(--space-xs) var(--space-sm) 2px 28px; color: var(--color-text-light); }
+.tree-group > .tree-secs { margin-left: 12px; padding-left: 4px; border-left: 1px solid var(--color-border-light); }
 .sidebar-foot { padding: var(--space-sm) var(--space-lg); border-top: 1px solid var(--color-border-light); font-size: 12px; color: var(--color-text-light); }
 kbd { font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; padding: 0 4px; border: 1px solid var(--color-border); border-radius: var(--border-radius-sm); background: var(--color-bg); }
 

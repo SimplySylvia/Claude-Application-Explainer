@@ -81,13 +81,17 @@ class DeepDiveTest(TopicCase):
         self.assertNotIn('react-router-glossary.html', sections)
         self.assertIn('<section id="react-router-usage">', read(os.path.join(self.guide, 'sections', 'react-router-usage.html')))
         config = read(os.path.join(self.guide, 'guide_config.py'))
-        self.assertLess(config.index("('react-router', 'React Router deep dive'"), config.index("('reference', 'Reference'"))
+        self.assertLess(config.index("('topics', 'Topics'"), config.index("('react-router', 'React Router'"))
+        self.assertLess(config.index("('react-router', 'React Router'"), config.index("('reference', 'Reference'"))
         self.assertIn("TOPICS = {'react-router': {'name': 'React Router', 'docs_checked': ''}}", config)
         self.assertIn("@diagram('react-router-flow')", read(os.path.join(self.guide, 'diagrams.py')))
         self.assertIn('## Deep dive: React Router', read(os.path.join(self.guide, 'PROGRESS.md')))
         b = self.build(self.guide)
         self.assertEqual(b.returncode, 0, b.stderr)
         self.assertNotIn('WARNING', b.stdout)
+        html = read(os.path.join(self.guide, 'shopfront-guide.html'))
+        self.assertIn('<div class="topic-head" id="topic-react-router">', html)
+        self.assertIn('data-target="topic-react-router">React Router</a>', html)    # sidebar group label
         self.assertEqual(run('git', '-C', self.app, 'status', '--porcelain').stdout, '')
 
     def test_second_topic_and_duplicate(self):
@@ -96,6 +100,9 @@ class DeepDiveTest(TopicCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         config = read(os.path.join(self.guide, 'guide_config.py'))
         self.assertIn("'express': {'name': 'Express', 'docs_checked': ''}", config)
+        self.assertEqual(config.count("('topics', 'Topics'"), 1)                   # both topics share one page
+        self.assertLess(config.index("('react-router', 'React Router'"), config.index("('express', 'Express'"))
+        self.assertLess(config.index("('express', 'Express'"), config.index("('reference', 'Reference'"))
         self.assertEqual(self.build(self.guide).returncode, 0)
         r = self.add()
         self.assertNotEqual(r.returncode, 0)

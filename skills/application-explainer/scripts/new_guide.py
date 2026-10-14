@@ -7,9 +7,9 @@
 
 The first form creates <dest>/ with build/ (the engine), sections/, diagrams.py, shots.py, guide_config.py,
 PROGRESS.md, screenshots/, and initializes a git repo there. --topic uses the topic-explainer starter instead: a
-smaller guide about one technology and how the app uses it. --into adds that topic as one "deep dive" part of an
-existing guide (sections prefixed with the topic slug, glossary rows merged into the guide's own glossary) instead
-of creating a new folder. The target application repo is only read (for its name, branch, and commit).
+smaller guide about one technology and how the app uses it. --into adds that topic as a deep dive in an existing
+guide instead: a group on its Topics page (created before Reference on first use), with sections prefixed by the
+topic slug and glossary rows merged into the guide's own glossary. The target application repo is only read (for its name, branch, and commit).
 """
 import argparse, ast, datetime, os, re, shutil, subprocess, sys
 
@@ -125,7 +125,7 @@ def new_guide(a):
 
 
 def add_topic(a):
-    """Add the topic starter to an existing guide as one part, placed before its Reference part."""
+    """Add the topic starter to an existing guide as a group on its Topics page, creating the page if needed."""
     guide = os.path.abspath(os.path.expanduser(a.into))
     cfg_path = os.path.join(guide, 'guide_config.py')
     if not os.path.exists(cfg_path):
@@ -140,8 +140,8 @@ def add_topic(a):
         sys.exit(f'{cfg_path} has no SOURCE_REPO. Pass --repo.')
 
     tslug = slugify(a.topic)
-    topics = config_value(src, 'TOPICS') or {}
-    if tslug in topics:
+    registry = config_value(src, 'TOPICS') or {}
+    if tslug in registry:
         sys.exit(f'{guide} already has a {a.topic!r} deep dive (TOPICS[{tslug!r}]). Update it instead.')
     prefix = tslug + '-'
     values = {'__APP__': a.app, '__SLUG__': slugify(a.app), **repo_values(repo), **topic_values(a.topic, prefix)}
@@ -163,14 +163,21 @@ def add_topic(a):
         start = next(i for i, l in enumerate(lines) if l.startswith('PARTS = ['))
         end = next(i for i in range(start + 1, len(lines)) if lines[i].startswith(']'))
     except StopIteration:
-        sys.exit(f'Could not find a "PARTS = [ ... ]" block in {cfg_path}. Add the part by hand:\n{items}')
-    at = next((i for i in range(start, end) if lines[i].startswith("    ('reference',")), end)
-    part = ([f'    ({tslug!r}, {a.topic + " deep dive"!r}, {f"What {a.topic} is and how {a.app} uses it."!r}, ['] +
-            [f'        ({sid!r}, {label!r}),' for sid, label in items] + ['    ]),'])
-    lines[at:at] = part
+        sys.exit(f'Could not find a "PARTS = [ ... ]" block in {cfg_path}. Add the topic by hand:\n{items}')
+    # Every deep dive is a group on one Topics page: (id, title, blurb, [sections]), the same shape as a part.
+    group = ([f'        ({tslug!r}, {a.topic!r}, {f"What {a.topic} is and how {a.app} uses it."!r}, ['] +
+             [f'            ({sid!r}, {label!r}),' for sid, label in items] + ['        ]),'])
+    topics = next((i for i in range(start, end) if lines[i].startswith("    ('topics',")), None)
+    if topics is not None:
+        close = next(i for i in range(topics + 1, end + 1) if lines[i] == '    ]),' or lines[i].startswith(']'))
+        lines[close:close] = group
+    else:
+        at = next((i for i in range(start, end) if lines[i].startswith("    ('reference',")), end)
+        lines[at:at] = ([f"    ('topics', 'Topics', {f'Deep dives into the technologies {a.app} is built on.'!r}, ["] +
+                        group + ['    ]),'])
     src = '\n'.join(lines)
-    topics[tslug] = {'name': a.topic, 'docs_checked': ''}
-    open(cfg_path, 'w', encoding='utf-8').write(set_topics(src, topics))
+    registry[tslug] = {'name': a.topic, 'docs_checked': ''}
+    open(cfg_path, 'w', encoding='utf-8').write(set_topics(src, registry))
 
     for f, target in targets.items():
         text = open(os.path.join(starter_sections, f), encoding='utf-8').read()
@@ -189,7 +196,7 @@ def add_topic(a):
     with open(progress, 'a', encoding='utf-8') as fh:
         fh.write(f'\n## Deep dive: {a.topic} (added {values["__DATE__"]}, sections `{prefix}*`)\n\n{checklist}\n')
 
-    print(f'Added a {a.topic} deep dive to {guide}: {len(files)} section(s) prefixed {prefix!r}, a part in PARTS, '
+    print(f'Added a {a.topic} deep dive to {guide}: {len(files)} section(s) prefixed {prefix!r}, a group on the Topics page, '
           f'TOPICS[{tslug!r}], a diagram in diagrams.py, and a checklist in PROGRESS.md.\n'
           f'Next: fill in sections/{prefix}*.html, then run: python3 {guide}/build/build.py')
 
@@ -200,7 +207,7 @@ def main():
     ap.add_argument('--app', required=True, help='display name of the application, e.g. "Acme Portal"')
     ap.add_argument('--dest', help='where to create the guide (default: a sibling folder <app>-guide, or <app>-<topic>-guide)')
     ap.add_argument('--topic', help='build a topic guide about one technology, e.g. "GraphQL"')
-    ap.add_argument('--into', help='with --topic: add the topic as a part of this existing guide instead of a new folder')
+    ap.add_argument('--into', help='with --topic: add the topic to the Topics page of this existing guide instead of a new folder')
     a = ap.parse_args()
     if a.into:
         if not a.topic or a.dest:

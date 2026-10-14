@@ -3,6 +3,22 @@
 All notable changes to this plugin. Versions match `version` in `.claude-plugin/plugin.json`; update an installed
 copy with `/plugin marketplace update`.
 
+## 1.5.0 (2026-10-13)
+
+### Skill
+
+- Deep dives now land on one **Topics** page in the main guide instead of a new top-level page each.
+  `new_guide.py --into` adds each topic as a group on that page, creating it before Reference the first time.
+- Engine: a part's items in `PARTS` can include topic groups, `(id, title, blurb, [sections])`. Each renders as a
+  "Topic · <name>" banner before its sections (linkable as `#topic-<id>`) and a labeled group in the sidebar, which
+  the sidebar filter hides when none of its sections match.
+- Fixed the sidebar highlight and breadcrumb keeping the previous page's section when a page's banners push its
+  first section below the scroll-tracking band.
+
+### Repo
+
+- The demo's Express deep dive moved to a Topics page; screenshots recaptured.
+
 ## 1.4.0 (2026-10-13)
 
 ### Skill

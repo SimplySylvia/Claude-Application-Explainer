@@ -1,6 +1,6 @@
 ---
 name: topic-explainer
-description: Builds a smaller, self-contained HTML guide to one technology (library, framework, protocol, or service) and how the application repo you're in uses it — what it is, core concepts, a usage map, a guided walkthrough of one real flow, gotchas, recipes, versions, and links to the official docs researched online for the version the repo pins. Can instead add the topic as a deep-dive part of an existing application-explainer guide. Run it only when the user invokes /topic-explainer, explicitly asks for a topic explainer, topic guide, or deep-dive guide, or says yes after you offer one. When someone just asks what a technology is or how this app uses it, answer the question directly; if they seem to want to learn it properly, offer to build a topic explainer, and don't start until they say yes.
+description: Builds a smaller, self-contained HTML guide to one technology (library, framework, protocol, or service) and how the application repo you're in uses it — what it is, core concepts, a usage map, a guided walkthrough of one real flow, gotchas, recipes, versions, and links to the official docs researched online for the version the repo pins. Can instead add the topic as a deep dive on the Topics page of an existing application-explainer guide. Run it only when the user invokes /topic-explainer, explicitly asks for a topic explainer, topic guide, or deep-dive guide, or says yes after you offer one. When someone just asks what a technology is or how this app uses it, answer the question directly; if they seem to want to learn it properly, offer to build a topic explainer, and don't start until they say yes.
 ---
 
 # Topic explainer
@@ -69,7 +69,7 @@ Details are in `references/workflow.md`. Don't tick a phase until its **Done whe
 
 0. **Scope.** Confirm the topic and repo, the audience, and look up the version first: find the package(s) in the manifests and the exact resolved version in the lockfile. Then look for an existing application-explainer guide for this repo (a sibling `*-guide/guide_config.py` whose `SOURCE_REPO` is this repo, or one the user names). **If one exists, ask the user to choose:**
    - **Separate topic guide** (the default): its own folder, `<app>-<topic>-guide/`, shared on its own.
-   - **Deep dive in the existing guide:** one new part in that guide, so the team's main doc stays in one place and gets updated together.
+   - **Deep dive in the existing guide:** a topic group on that guide's Topics page (created on first use), so the team's main doc stays in one place and gets updated together.
 
    If there's no existing guide, use a separate guide and confirm its location (default: sibling `<app>-<topic>-guide/`).
    **Done when:** topic, version, audience, mode, and location are answered and written under Scope in `PROGRESS.md` (right after phase 1 creates it).
@@ -77,7 +77,7 @@ Details are in `references/workflow.md`. Don't tick a phase until its **Done whe
    ```bash
    python3 AE_DIR/scripts/new_guide.py --repo <repo> --app "<App>" --topic "<Topic>" [--dest <folder>]
    ```
-   Deep dive (adds `sections/<topic>-*.html`, a part before Reference in `PARTS`, a `TOPICS` entry, a diagram, and a checklist in `PROGRESS.md`; commit the guide first so the change is easy to review):
+   Deep dive (adds `sections/<topic>-*.html`, a topic group on the Topics page in `PARTS` (created before Reference if needed), a `TOPICS` entry, a diagram, and a checklist in `PROGRESS.md`; commit the guide first so the change is easy to review):
    ```bash
    python3 AE_DIR/scripts/new_guide.py --app "<App>" --topic "<Topic>" --into <existing-guide>
    ```
