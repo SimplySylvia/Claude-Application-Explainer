@@ -36,7 +36,8 @@ Produces one self-contained HTML file per app: five part pages (Product, Enginee
                ◆ environment + synthetic data confirmed │
                capture → scrub → shots.py               │
  6 GLOSSARY ◄──────────────────────────────────────────┘
-               extract_text → ⫴ glossary-drafter → merge_glossary ↻ aliases
+               extract_text → glossary-scout ──◆ explainers offered
+               → ⫴ glossary-drafter → merge_glossary ↻ aliases
  7 QA ─────────↻ qa_check.py on both builds: PASS, 0 TODOs
  8 SHARE ──────◆ internal channel chosen → recorded in GUIDE/README.md
 ```
@@ -50,7 +51,7 @@ Show this checklist in your first reply. The scaffold writes the same list to `G
 - [ ] 3 Sections and diagrams written; build has 0 warnings
 - [ ] 4 Structure review and per-section verification applied
 - [ ] 5 Screenshots captured, or skipped by agreement
-- [ ] 6 Glossary drafted, merged, aliases checked
+- [ ] 6 Glossary scouted, drafted, merged, aliases checked; explainers offered
 - [ ] 7 qa_check.py PASS on both outputs, 0 TODOs
 - [ ] 8 Shared internally; method recorded in the guide README
 ```
@@ -78,8 +79,8 @@ Details for each phase are in `references/workflow.md`. Don't tick a phase until
    **Done when:** you've checked every P1 finding against the cited code yourself and either fixed it or logged why you rejected it in `PROGRESS.md`, you've spot-checked at least 3 P2 findings (all of them if there are fewer), and the rebuild has 0 warnings.
 5. **Screenshots** (optional): `references/screenshots.md`.
    **Done when:** every screen in the site map is captured and scrubbed, or listed in `NOT_CAPTURED` with what would unblock it; or the user agreed to skip screenshots.
-6. **Glossary:** `scripts/extract_text.py`, then `glossary-drafter` agents by area (§5), then `scripts/merge_glossary.py`. Rename aliases that are everyday words or ambiguous acronyms; they get auto-linked everywhere.
-   **Done when:** the merge prints no `BAD` rows, you've reviewed every `dup` it reported, and you've checked the 10 most-linked terms (count `class="gl-term"` links per term in the built HTML) and confirmed each links only real mentions, not everyday words.
+6. **Glossary:** `scripts/extract_text.py`, then one `glossary-scout` (§5) that decides which terms the audience needs defined, which need a fuller explainer, and which existing rows to fix. Review its report, offer the explainers to the user, then run `glossary-drafter` agents for the areas with terms to add (§6), and `scripts/merge_glossary.py`. Rename aliases that are everyday words or ambiguous acronyms; they get auto-linked everywhere.
+   **Done when:** every P1 ADD term from the scout is in the glossary or logged as rejected, every FIX is applied or logged, the user has seen the EXPLAINER list and their answer is in `PROGRESS.md`, the merge prints no `BAD` rows, you've reviewed every `dup` it reported, and you've checked the 10 most-linked terms (count `class="gl-term"` links per term in the built HTML) and confirmed each links only real mentions, not everyday words.
 7. **QA** on both the full guide and `-no-screenshots`. Fix and re-run until it passes with zero TODOs:
    ```bash
    python3 SKILL_DIR/scripts/qa_check.py GUIDE/<name>-guide.html

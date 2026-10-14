@@ -1,13 +1,15 @@
 # Agent prompts
 
-The plugin ships four agents whose rules (read-only, cite paths, no secrets) are built in, and whose tools are limited so they can't edit the app repo:
+The plugin ships these agents. Their rules (read-only, cite paths, no secrets) are built in, and their tools are limited so they can't edit the app repo:
 
 | Agent | Tools | Used in |
 |---|---|---|
 | `repo-researcher` | Read, Grep, Glob | 2 · Discover |
 | `structure-reviewer` | Read, Grep, Glob | 4 · Review |
 | `section-verifier` | Read, Grep, Glob | 4 · Review |
+| `glossary-scout` | Read, Grep, Glob, Write (its report file only) | 6 · Glossary |
 | `glossary-drafter` | Read, Grep, Glob, Write (its draft file only) | 6 · Glossary |
+| `tech-researcher`, `source-verifier` | Web search and fetch; never the repo | topic-explainer only |
 
 Section writers (§2) need to edit and build, so they run as general-purpose agents with the ground rules pasted in.
 
@@ -53,18 +55,31 @@ Review the guide built at {GUIDE}/{OUTPUT}.html. Text dump: {TEXT_DUMP}. Section
 Verify sections {IDS} of the guide (text dump: {TEXT_DUMP}; source: {GUIDE}/sections/) against the repo at {REPO}.
 ```
 
-## 5. Glossary drafting (`glossary-drafter`, one per area: domain, product, engineering, internal/process)
+## 5. Glossary scouting (`glossary-scout`, one for the whole guide)
+
+```
+Scout the glossary for the guide at {GUIDE}. Audience: {AUDIENCE from PROGRESS.md}. Repo: {REPO}.
+Inputs: {WORK}/guide-text.txt, {WORK}/glossary-terms.txt, {WORK}/glossary-usage.txt, {WORK}/candidates.txt,
+and the glossary section {GUIDE}/sections/glossary.html.
+{For a deep dive: "Focus on sections {TOPIC_SLUG}-*; the rest of the guide's glossary is already reviewed."}
+Write ONLY to {WORK}/scout.md.
+```
+
+For a very large guide (more than about 15,000 words in `guide-text.txt`), run one scout per part, each given its section ids and its own report path (`scout-{PART}.md`).
+
+## 6. Glossary drafting (`glossary-drafter`, one per area: domain, product, engineering, internal, vendor)
 
 ```
 Draft glossary rows for the guide at {GUIDE}, area: {AREA}. Repo: {REPO}.
-Inputs: {WORK}/guide-text.txt, current glossary {GUIDE}/sections/glossary.html, candidates {WORK}/candidates.txt.
-Cover every term in your area a reader meets in the guide that the glossary doesn't.
+Terms to draft: the ADD rows for area "{AREA}" in {WORK}/scout.md (use the proposed names unless the repo shows a
+better one), plus the short ADD rows for its EXPLAINER terms, linking to the explainer once it exists.
+Context: {WORK}/guide-text.txt, current glossary {GUIDE}/sections/glossary.html.
 Write ONLY to {WORK}/gl-{AREA_SLUG}.html.
 ```
 
-Merge the drafts with `scripts/merge_glossary.py`.
+Skip areas with no ADD rows. Merge the drafts with `scripts/merge_glossary.py`.
 
-## 6. Applying review findings (you, not an agent)
+## 7. Applying review findings (you, not an agent)
 
 - Spot-check every P1 claim yourself before editing. Agents can misread code.
 - Fix the guide text. Never "fix" the app repo; list repo problems for the user instead.

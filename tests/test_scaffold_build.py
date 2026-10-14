@@ -75,7 +75,20 @@ class BuildTest(TempDirCase):
         r = run(sys.executable, os.path.join(SCRIPTS, 'extract_text.py'), os.path.join(guide, 'shopfront-guide.html'), out)
         terms = read(os.path.join(out, 'glossary-terms.txt')).splitlines()
         self.assertIn('requireStaff', terms)
-        self.assertIn('===== #arch =====', read(os.path.join(out, 'guide-text.txt')))
+        text = read(os.path.join(out, 'guide-text.txt'))
+        self.assertIn('===== #arch =====', text)
+        self.assertIn('Guided walkthrough', text)                     # section titles survive chrome stripping
+        self.assertNotRegex(text, r'(?m)^\s*(Copy|Collapsed)\s*$')    # page chrome doesn't
+        usage = {line.split('\t')[1]: line.split('\t') for line in read(os.path.join(out, 'glossary-usage.txt')).splitlines()}
+        count, _, sections = usage['requireStaff']
+        self.assertGreater(int(count), 0)
+        self.assertIn('express-conventions', sections.split(','))
+        cands = [line.split('\t') for line in read(os.path.join(out, 'candidates.txt')).splitlines()]
+        self.assertTrue(all(len(c) == 3 for c in cands))
+        names = [c[1] for c in cands]
+        self.assertIn('Shopfront', names)
+        self.assertNotIn('Express', names)                           # already a glossary term
+        self.assertNotIn('The', names)                               # sentence-initial ordinary words are dropped
 
     def test_section_without_sources_warns(self):
         self.scaffold()

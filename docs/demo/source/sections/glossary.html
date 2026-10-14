@@ -14,17 +14,21 @@
     <tr class="group" style="--accent: var(--c-edge)"><td colspan="3"><span class="row-icon" data-icon="code"></span>Code &amp; config</td></tr>
     <tr><td><b>requireStaff</b></td><td>Express middleware that returns 403 unless the staff header is present. Guards <code>/api/admin</code>.</td><td><code>server/auth.js</code></td></tr>
     <tr><td><b>createOrder</b></td><td>Handler for <code>POST /api/orders</code>: validates the cart, inserts the row, returns the id.</td><td><code>server/routes/orders.js</code></td></tr>
-    <tr><td><b>newAdmin</b></td><td>Feature flag that adds the <code>/admin</code> route. Set with <code>VITE_FLAG_NEW_ADMIN</code> at build time.</td><td><code>client/src/flags.js</code></td></tr>
+    <tr><td><b>newAdmin / VITE_FLAG_NEW_ADMIN</b></td><td>Feature flag that adds the <code>/admin</code> route. Set with <code>VITE_FLAG_NEW_ADMIN</code> at build time.</td><td><code>client/src/flags.js</code></td></tr>
     <tr><td><b>DATABASE_URL</b></td><td>PostgreSQL connection string read by the pool.</td><td><code>server/db.js</code></td></tr>
-    <tr><td><b>SSO proxy (single sign-on)</b></td><td>Company proxy in front of the app that, per a code comment, identifies staff.</td><td><code>server/auth.js</code></td></tr>
+    <tr><td><b>SSO proxy / SSO (single sign-on)</b></td><td>Company proxy in front of the app that, per a code comment, identifies staff.</td><td><code>server/auth.js</code></td></tr>
+    <tr><td><b>React Router / createBrowserRouter</b></td><td>The client-side routing library: <code>createBrowserRouter</code> maps URLs to page components. Not the same as an Express router.</td><td><code>client/src/routes.jsx</code></td></tr>
+    <tr><td><b>Vite</b></td><td>The client&#39;s dev server (port 5173) and production bundler. It inlines <code>VITE_*</code> variables at build time, which is why <code>/admin</code> only exists in builds made with the flag on.</td><td><code>package.json</code>, <code>client/src/flags.js</code></td></tr>
     <tr class="group" style="--accent: var(--c-run)"><td colspan="3"><span class="row-icon" data-icon="server"></span>Express</td></tr>
+    <tr><td><b>Express</b></td><td>The Node.js web framework Shopfront&#39;s API is built on: one app, routers per resource, and middleware. See the <a href="#express-overview">Express deep dive</a>.</td><td><code>server/index.js</code></td></tr>
+    <tr><td><b>app.use</b></td><td>Registers middleware or mounts a router at a path prefix; matches any HTTP method, and runs in the order registered.</td><td><code>server/index.js:7-10</code></td></tr>
     <tr><td><b>Middleware</b></td><td>A <code>(req, res, next)</code> function in the request pipeline that responds or passes the request on.</td><td><code>server/index.js:7-10</code></td></tr>
     <tr><td><b>Router (as in express.Router)</b></td><td>A group of routes mounted at a path prefix.</td><td><code>server/routes/</code></td></tr>
     <tr><td><b>express.json</b></td><td>Middleware that parses JSON request bodies into <code>req.body</code>.</td><td><code>server/index.js:7</code></td></tr>
-    <tr><td><b>Error-handling middleware</b></td><td>A four-argument <code>(err, req, res, next)</code> function that turns errors into responses. Not used in Shopfront.</td><td><a href="https://expressjs.com/en/4x/guide/error-handling.html">docs</a></td></tr>
+    <tr><td><b>Error-handling middleware / Error middleware</b></td><td>A four-argument <code>(err, req, res, next)</code> function that turns errors into responses. Not used in Shopfront.</td><td><a href="https://expressjs.com/en/4x/guide/error-handling.html">docs</a></td></tr>
     <tr><td><b>Unhandled rejection</b></td><td>A rejected promise nobody catches; on current Node versions it crashes the process.</td><td><a href="https://expressjs.com/en/4x/guide/error-handling.html">docs</a></td></tr>
     <tr><td><b>supertest</b></td><td>Test library that sends HTTP requests to an Express app in-process.</td><td><code>test/orders.test.js</code></td></tr>
     <tr><td><b>fetch</b></td><td>The browser API for HTTP requests; check <code>response.ok</code> for errors.</td><td><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">MDN</a></td></tr>
-    <tr><td><b>pg (node-postgres) / Pool</b></td><td>The Postgres client; one shared pool from <code>DATABASE_URL</code>.</td><td><code>server/db.js</code></td></tr>
+    <tr><td><b>pg / node-postgres / Pool</b></td><td>The Postgres client; one shared pool from <code>DATABASE_URL</code>, used through <code>db.query</code> with <code>$1</code> placeholders.</td><td><code>server/db.js</code></td></tr>
   </table>
 </section>

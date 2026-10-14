@@ -10,7 +10,7 @@ read it first and continue from the first unticked phase.
 - [ ] 2 Usage mapped in the repo, pinned version found, docs researched; outline approved by the user
 - [ ] 3 Sections and diagram written; build has 0 warnings
 - [ ] 4 Repo claims and web claims verified
-- [ ] 5 Glossary drafted, merged, aliases checked
+- [ ] 5 Glossary scouted, drafted, merged, aliases checked
 - [ ] 6 qa_check.py PASS, 0 TODOs
 - [ ] 7 Shared internally; method recorded in the guide README
 

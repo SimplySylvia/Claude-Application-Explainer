@@ -148,7 +148,8 @@ Claude writes to a **guide folder** outside the app repo (default: a sibling `<a
   [`references/sections.md`](skills/application-explainer/references/sections.md).
 - **SVG diagrams** with a pan/zoom viewer.
 - **Code blocks** with syntax highlighting and a Copy button, highlighted when the guide is built.
-- **A glossary** of domain, vendor, and internal terms. Mentions of a term link to it and show its definition on hover.
+- **A glossary** of domain, vendor, and internal terms, chosen by a scout agent that reads the guide as its audience
+  would and flags terms that need a fuller explainer. Mentions of a term link to it and show its definition on hover.
 - **⌘K search** across all pages.
 - **Dark and light themes.**
 - **An optional screenshot gallery**, captured only from an environment with synthetic data that you've approved.
@@ -231,7 +232,7 @@ pass is there to catch.
 | `.claude-plugin/marketplace.json` | Marketplace manifest (lists this repo as its only plugin) |
 | `skills/application-explainer/` | The skill: `SKILL.md`, build `engine/`, `starter/` template, `scripts/`, `references/` |
 | `skills/topic-explainer/` | The topic skill: `SKILL.md`, `starter/` topic template, `references/` (reuses the engine and scripts above) |
-| `agents/` | Subagents the skills fan out to: `repo-researcher`, `structure-reviewer`, `section-verifier`, `glossary-drafter`, and for topics `tech-researcher` and `source-verifier` (web) |
+| `agents/` | Subagents the skills fan out to: `repo-researcher`, `structure-reviewer`, `section-verifier`, `glossary-scout`, `glossary-drafter`, and for topics `tech-researcher` and `source-verifier` (web) |
 | `docs/` | [`HOW-IT-WORKS.md`](docs/HOW-IT-WORKS.md) workflow and agents; `demo/` live demo and its source; `images/` README screenshots (served by GitHub Pages) |
 | `evals/` | `claude plugin eval` suite: trigger, near-miss, and end-to-end cases on a small fixture app |
 | `tests/` | Unit tests for the scaffold, build, diagrams, and glossary scripts |

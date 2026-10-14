@@ -54,11 +54,16 @@ Follow `screenshots.md`: capture each screen, map them in `shots.py`, add the `<
 
 ## 6 · Glossary
 
-1. `python3 SKILL_DIR/scripts/extract_text.py GUIDE/<name>-guide.html GUIDE/qa/glossary-work/` writes the guide text and candidate terms.
-2. Run `glossary-drafter` agents by area (§5). Each writes rows to its own draft file.
-3. `python3 SKILL_DIR/scripts/merge_glossary.py GUIDE/sections/glossary.html GUIDE/qa/glossary-work/gl-*.html` and review the duplicates and names it prints.
-4. Rename aliases that are everyday words or collide with other meanings (e.g. "PR" = pull request vs public relations). The first mention of every term in each section is auto-linked.
-5. Re-run with `--write`, rebuild, then check the most-linked terms for false matches.
+1. `python3 SKILL_DIR/scripts/extract_text.py GUIDE/<name>-guide.html GUIDE/qa/glossary-work/` writes the guide text, the current terms with how often each is used (`glossary-usage.txt`), and regex candidates.
+2. Run one `glossary-scout` (`agent-prompts.md` §5). It reads the guide as the audience would and writes `scout.md`: terms to **ADD**, terms that need an **EXPLAINER**, terms to **SKIP**, and existing rows to **FIX**.
+3. Review the report yourself before drafting:
+   - Spot-check the P1 ADD terms in the guide text: is each one really unclear to this audience?
+   - Apply the FIX items to `sections/glossary.html` (remove unused rows, add missing names, rename risky aliases), or log why not.
+   - **EXPLAINER terms:** show the user the list. For kind **topic** (a technology), offer a topic explainer, as a deep dive in this guide or a separate guide, and don't start one unless they say yes (the topic-explainer skill takes it from there). For kind **section** (an app concept), propose the new or expanded section. Log their answers in `PROGRESS.md`.
+4. Run `glossary-drafter` agents, one per area that has ADD rows (§6). Each writes rows to its own draft file.
+5. `python3 SKILL_DIR/scripts/merge_glossary.py GUIDE/sections/glossary.html GUIDE/qa/glossary-work/gl-*.html` and review the duplicates and names it prints.
+6. Rename aliases that are everyday words or collide with other meanings (e.g. "PR" = pull request vs public relations). The first mention of every term in each section is auto-linked.
+7. Re-run with `--write`, rebuild, then check the most-linked terms for false matches.
 
 ## 7 · QA
 

@@ -45,7 +45,7 @@ A question like "what is GraphQL and how does this app use it?" is not a request
  3 WRITE        sections/*.html, diagram ↻ build.py until 0 warnings
  4 REVIEW ─────⫴ section-verifier (repo claims) + source-verifier (web claims)
                spot-check → apply → ↻ build
- 5 GLOSSARY     extract_text → glossary-drafter → merge_glossary
+ 5 GLOSSARY     extract_text → glossary-scout → glossary-drafter → merge_glossary
  6 QA ─────────↻ qa_check.py: PASS, 0 TODOs
  7 SHARE ──────◆ internal channel (a deep dive re-shares through its guide's channel)
 ```
@@ -58,7 +58,7 @@ Show this checklist in your first reply after the user says yes. The scaffold wr
 - [ ] 2 Usage mapped in the repo, pinned version found, docs researched; outline approved by the user
 - [ ] 3 Sections and diagram written; build has 0 warnings
 - [ ] 4 Repo claims and web claims verified
-- [ ] 5 Glossary drafted, merged, aliases checked
+- [ ] 5 Glossary scouted, drafted, merged, aliases checked
 - [ ] 6 qa_check.py PASS, 0 TODOs
 - [ ] 7 Shared internally; method recorded in the guide README
 ```
@@ -95,8 +95,8 @@ Details are in `references/workflow.md`. Don't tick a phase until its **Done whe
    **Done when:** no section contains `TODO`, every section cites repo paths or official URLs, the concepts, walkthrough, and recipes sections have code examples, and the build prints `OK` with 0 warnings.
 4. **Review.** In parallel: a `section-verifier` for the in-app sections (`AE_DIR/references/agent-prompts.md` §4) and a `source-verifier` for the concept, versions, and resources sections (`references/workflow.md`).
    **Done when:** you've checked every P1 finding yourself and fixed it or logged why you rejected it, you've spot-checked at least 3 P2 findings (all if fewer), and the rebuild has 0 warnings.
-5. **Glossary.** As in application-explainer phase 6 (`AE_DIR/references/workflow.md`). For a deep dive, merge into the existing guide's `sections/glossary.html` under a group named after the topic.
-   **Done when:** the merge prints no `BAD` rows, you've reviewed every `dup`, and the most-linked topic terms link only real mentions.
+5. **Glossary.** As in application-explainer phase 6 (`AE_DIR/references/workflow.md`): `extract_text.py`, one `glossary-scout`, then drafters for its ADD terms. For a deep dive, tell the scout to focus on the topic's sections, and merge into the existing guide's `sections/glossary.html` under a group named after the topic. A scout EXPLAINER inside a topic guide usually belongs in the concepts section (a row and a code example) rather than a new guide.
+   **Done when:** every P1 ADD term is in the glossary or logged as rejected, the merge prints no `BAD` rows, you've reviewed every `dup`, and the most-linked topic terms link only real mentions.
 6. **QA:**
    ```bash
    python3 AE_DIR/scripts/qa_check.py GUIDE/<output>.html

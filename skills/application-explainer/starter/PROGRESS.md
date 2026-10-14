@@ -11,7 +11,7 @@ read it first and continue from the first unticked phase.
 - [ ] 3 Sections and diagrams written; build has 0 warnings
 - [ ] 4 Structure review and per-section verification applied
 - [ ] 5 Screenshots captured, or skipped by agreement
-- [ ] 6 Glossary drafted, merged, aliases checked
+- [ ] 6 Glossary scouted, drafted, merged, aliases checked; explainers offered
 - [ ] 7 qa_check.py PASS on both outputs, 0 TODOs
 - [ ] 8 Shared internally; method recorded in the guide README
 

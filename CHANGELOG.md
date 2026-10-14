@@ -3,6 +3,28 @@
 All notable changes to this plugin. Versions match `version` in `.claude-plugin/plugin.json`; update an installed
 copy with `/plugin marketplace update`.
 
+## 1.4.0 (2026-10-13)
+
+### Skill
+
+- New **`glossary-scout`** agent for the glossary phase of both skills. It reads the guide as its audience would
+  and writes `qa/glossary-work/scout.md`, sorting terms into **add** (a row), **explainer** (needs a topic deep dive
+  or a section; offered to the user, never started without a yes), **skip** (known to the audience, one-off, or an
+  everyday word the auto-linker would over-match), and **fix** (unused rows, missing names, colliding aliases),
+  with priorities and evidence. `glossary-drafter` now drafts from the scout's add list instead of every candidate.
+- `extract_text.py` writes `glossary-usage.txt` (how often each glossary term is used, and where), adds the sections
+  each candidate appears in to `candidates.txt`, strips page chrome (Copy buttons, collapse badges) from the text,
+  and drops sentence-initial ordinary words from the candidates.
+- The glossary phase's **Done when** now requires the scout's P1 terms and fixes to be handled and its explainer
+  suggestions shown to the user.
+
+### Repo
+
+- Demo glossary updated from a `glossary-scout` run: new Express, `app.use`, React Router, and Vite rows; missing
+  names added (Error middleware, SSO, `VITE_FLAG_NEW_ADMIN`, node-postgres). "React Router" in the tech stack no
+  longer links to the Express router definition.
+- Tests for the new `extract_text.py` outputs.
+
 ## 1.3.0 (2026-10-13)
 
 ### Skill
